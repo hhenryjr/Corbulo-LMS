@@ -1,0 +1,370 @@
+@{
+    Layout = "~/Views/Shared/_simpleLayout.cshtml";
+}
+
+<link href="http://lms.dev/Content/toastr.css" rel="stylesheet" />
+<img id="picture" ng-src="" alt="Login Full Background" class="full-bg animation-pulseSlow">
+<!-- Login Full Background -->
+<!-- For best results use an image with a resolution of 1280x1280 pixels (prefer a blurred image for smaller file size) -->
+<div data-ng-controller="registrationController as register" id="registrationCtrl">
+
+    <!-- END Login Full Background -->
+    <!-- Login Container -->
+    <div id="login-container" class="animation-fadeIn">
+        <!-- Login Title -->
+        <div class="login-title text-center">
+            <h1><strong><img src="http://2.bp.blogspot.com/-CYonRunOdeg/UcYsi3yyoUI/AAAAAAAAAFk/MUPbzj3fphg/s1600/Sabio.gif" height="30" width="30"> Sabio.la</strong><br><small>Please <strong>Login</strong> or <strong>Register</strong></small></h1>
+
+        </div>
+        <!-- END Login Title -->
+        <!-- Login Block -->
+        <div id="formContainer" class="block push-bit">
+            <!-- Login Form -->
+            <form name="register.registrationForm" class="form-horizontal form-bordered form-control-borderless" id="registrationForm" ng-submit="register.onRegisterForm()" novalidate>
+                <div class="form-group">
+                    <div class="col-xs-6">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="gi gi-user"></i></span>
+                            <input type="text" class="form-control
+                                   ng-class: {'error': register.showRegisterErrors && !register.registrationForm.userName.$valid}"
+                                   placeholder="Username..."
+                                   name="userName"
+                                   id="userName"
+                                   ng-model="register.newUser.userName"
+                                   ng-minlength="6"
+                                   ng-maxlength="20"
+                                   ensure-unique="userName" required>
+                            <div class="error-container" style="color: red">
+                                <span class="error" ng-show="register.showRegisterErrors && register.registrationForm.userName.$error.required">Please input a username</span>
+                                <span class="error" ng-show="register.showRegisterErrors && register.registrationForm.userName.$error.minlength">Your username is required to be at least 6 characters</span>
+                                <span class="error" ng-show="register.showRegisterErrors && register.registrationForm.userName.$error.maxlength">Your username is required to be 20 characters or less</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="gi gi-envelope"></i></span>
+                            <input type="email" class="form-control
+                                   ng-class: {'error': register.showRegisterErrors && !register.registrationForm.email.$valid}"
+                                   placeholder="Email..."
+                                   name="email"
+                                   id="email"
+                                   ng-model="register.newUser.email"
+                                   ng-minlength="6"
+                                   required>
+                            <div class="error-container" style="color: red">
+                                <span class="error" ng-show="register.showRegisterErrors && register.registrationForm.email.$error.required">Your email is required</span>
+                                <span class="error" ng-show="register.showRegisterErrors && register.registrationForm.email.$error.minlength">Your email is required to be at least 6 characters</span>
+                                <br><span class="error" ng-show="register.showRegisterErrors && register.registrationForm.email.$error.email">Please input a valid email</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="gi gi-lock"></i></span>
+                            <input type="password" class="form-control
+                                   ng-class: {'error': register.showRegisterErrors && !register.registrationForm.passwordHash.$valid}"
+                                   placeholder="Password..."
+                                   name="passwordHash"
+                                   id="passwordHash"
+                                   ng-model="register.newUser.passwordHash"
+                                   ng-minlength="8" required>
+                            <div class="error-container" style="color: red">
+                                <span class="error" ng-show="register.showRegisterErrors && register.registrationForm.passwordHash.$error.required">Your password is required</span>
+                                <span class="error" ng-show="register.showRegisterErrors && register.registrationForm.passwordHash.$error.minlength">Your password is required to be at least 8 characters</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="gi gi-lock"></i></span>
+                            <input type="password" class="form-control
+                                   ng-class: {'error': register.showRegisterErrors && !register.registrationForm.passwordConfirm.$valid}"
+                                   placeholder="Confirm Password..."
+                                   name="passwordConfirm"
+                                   id="passwordConfirm"
+                                   ng-model="register.newUser.passwordConfirm"
+                                   pw-check="passwordHash" required>
+                            <div class="error-container" style="color: red">
+                                <span class="error" ng-show="register.showRegisterErrors && register.registrationForm.passwordConfirm.$error.pwmatch">Passwords don't match! Please enter the same value</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-actions">
+                    <div class="col-xs-6">
+                        <a href="#modal-terms" data-toggle="modal" class="terms">Terms</a>
+                        <label class="switch switch-primary" data-toggle="tooltip" title="Agree to the terms">
+                            <input type="checkbox" class="form-control
+                                   ng-class: {'error': register.showRegisterErrors && !register.registrationForm.terms.$valid}"
+                                   name="terms"
+                                   id="terms"
+                                   ng-model="register.newUser.terms"
+                                   required>
+                            <span></span>
+                        </label>
+                        <div class="error-container" style="color: red">
+                            <span class="error" ng-show="register.showRegisterErrors && register.registrationForm.terms.$error.required">Please agree to Sabio's Terms</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 text-right">
+                        <button type="submit" id="cmdRegister" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> Register Account</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12 text-center">
+                        <small>Do you have an account?</small> <a href="http://lms.dev/login" id="link-register"><small>Login</small></a>
+                    </div>
+                </div>
+            </form>
+            <!-- END Register Form -->
+        </div>
+        <!-- END Login Block -->
+    </div>
+</div>
+<!-- END Login Container -->
+<!-- Modal Terms -->
+<div id="modal-terms" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Terms &amp; Conditions</h4>
+            </div>
+            <div class="modal-body">
+                <h4>Title</h4>
+                <p>Donec lacinia venenatis metus at bibendum? In hac habitasse platea dictumst. Proin ac nibh rutrum lectus rhoncus eleifend. Sed porttitor pretium venenatis. Suspendisse potenti. Aliquam quis ligula elit. Aliquam at orci ac neque semper dictum. Sed tincidunt scelerisque ligula, et facilisis nulla hendrerit non. Suspendisse potenti. Pellentesque non accumsan orci. Praesent at lacinia dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p>Donec lacinia venenatis metus at bibendum? In hac habitasse platea dictumst. Proin ac nibh rutrum lectus rhoncus eleifend. Sed porttitor pretium venenatis. Suspendisse potenti. Aliquam quis ligula elit. Aliquam at orci ac neque semper dictum. Sed tincidunt scelerisque ligula, et facilisis nulla hendrerit non. Suspendisse potenti. Pellentesque non accumsan orci. Praesent at lacinia dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <h4>Title</h4>
+                <p>Donec lacinia venenatis metus at bibendum? In hac habitasse platea dictumst. Proin ac nibh rutrum lectus rhoncus eleifend. Sed porttitor pretium venenatis. Suspendisse potenti. Aliquam quis ligula elit. Aliquam at orci ac neque semper dictum. Sed tincidunt scelerisque ligula, et facilisis nulla hendrerit non. Suspendisse potenti. Pellentesque non accumsan orci. Praesent at lacinia dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p>Donec lacinia venenatis metus at bibendum? In hac habitasse platea dictumst. Proin ac nibh rutrum lectus rhoncus eleifend. Sed porttitor pretium venenatis. Suspendisse potenti. Aliquam quis ligula elit. Aliquam at orci ac neque semper dictum. Sed tincidunt scelerisque ligula, et facilisis nulla hendrerit non. Suspendisse potenti. Pellentesque non accumsan orci. Praesent at lacinia dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <h4>Title</h4>
+                <p>Donec lacinia venenatis metus at bibendum? In hac habitasse platea dictumst. Proin ac nibh rutrum lectus rhoncus eleifend. Sed porttitor pretium venenatis. Suspendisse potenti. Aliquam quis ligula elit. Aliquam at orci ac neque semper dictum. Sed tincidunt scelerisque ligula, et facilisis nulla hendrerit non. Suspendisse potenti. Pellentesque non accumsan orci. Praesent at lacinia dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p>Donec lacinia venenatis metus at bibendum? In hac habitasse platea dictumst. Proin ac nibh rutrum lectus rhoncus eleifend. Sed porttitor pretium venenatis. Suspendisse potenti. Aliquam quis ligula elit. Aliquam at orci ac neque semper dictum. Sed tincidunt scelerisque ligula, et facilisis nulla hendrerit non. Suspendisse potenti. Pellentesque non accumsan orci. Praesent at lacinia dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+
+    <script src="~/Scripts/toastr.js"></script>
+    <script src="~/Scripts/app/services/alertService.js"></script>
+    <script src="~/Scripts/sabio.services.registration.js"></script>
+    <script src="~/Scripts/sabio.services.messaging.js"></script>
+    <script src="~/Scripts/sabio.services.userTokens.js"></script>
+    <script type="text/javascript">
+        sabio.page.startUp = function () {
+            sabio.page.userController = sabio.ng.getControllerInstance($("#registrationCtrl"));
+        }
+
+        sabio.services.registrationFactory = function ($baseService) {
+            var aSabioServiceObject = sabio.services.registration;
+            var newService = $baseService.merge(true, {}, aSabioServiceObject, $baseService);
+            return newService;
+        }
+
+        sabio.services.userTokensFactory = function ($baseService) {
+            var aSabioServiceObject = sabio.services.userTokens;
+            var newService = $baseService.merge(true, {}, aSabioServiceObject, $baseService);
+            return newService;
+        }
+
+        sabio.services.messagingFactory = function ($baseService) {
+            var aSabioServiceObject = sabio.services.messaging;
+            var newService = $baseService.merge(true, {}, aSabioServiceObject, $baseService);
+            return newService;
+        }
+
+        sabio.ng.addService(sabio.ng.app.module,
+            "$registrationService",
+            ["$baseService"],
+            sabio.services.registrationFactory);
+
+        sabio.ng.addService(sabio.ng.app.module,
+            "$userTokensService",
+            ["$baseService"],
+            sabio.services.userTokensFactory);
+
+        sabio.ng.addService(sabio.ng.app.module,
+            "$messagingService",
+            ["$baseService"],
+            sabio.services.messagingFactory);
+
+        sabio.page.registrationControllerFactory = function (
+            $scope
+            , $baseController
+            , $registrationService
+            , $userTokensService
+            , $messagingService
+            , $alertService) {
+
+            var vm = this;
+
+            $baseController.merge(vm, $baseController);
+
+            vm.$registrationService = $registrationService;
+            vm.$userTokensService = $userTokensService;
+            vm.$messagingService = $messagingService;
+            vm.$alertService = $alertService;
+            vm.$scope = $scope;
+
+            vm.settings = _settings;
+            vm.cycleThruBackgroundPic = _cycleThruBackgroundPic;
+            vm.thisBackGroundPic = _thisBackGroundPic;
+            vm.onRegisterForm = _onRegisterForm;
+            vm.onRegisterSuccess = _onRegisterSuccess;
+            vm.onRegisterError = _onRegisterError;
+            vm.onGetTokenSuccess = _onGetTokenSuccess;
+            vm.onGetTokenError = _onGetTokenError;
+            //vm.onSendConfirmEmailSuccess = _onSendConfirmEmailSuccess;
+            //vm.onSendConfirmEmailError = _onSendConfirmEmailError;
+
+            vm.newUser = null;
+            vm.showRegisterErrors = false;
+
+
+            vm.notify = vm.$registrationService.getNotifier($scope);
+
+            render();
+
+            function render() {
+                vm.settings();
+                vm.cycleThruBackgroundPic();
+            };
+
+            function _cycleThruBackgroundPic() {
+
+                var randomNumber = (Math.random()) * 10;
+                var Number = Math.floor(randomNumber) + 1;
+
+                var src;
+                switch (Number) {
+                    case 1:
+                    case 2:
+                        src = "http://sabio.la/images/hacks/IMG_6094.JPG";
+                        break;
+                    case 3:
+                    case 4:
+                        src = "http://sabio.la/images/hacks/img19.jpg";
+                        break;
+                    case 5:
+                    case 6:
+                        src = "http://sabio.la/images/hacks/IMG_6021.JPG";
+                        break;
+                    case 7:
+                    case 8:
+                        src = "http://sabio.la/images/hacks/women.JPG";
+                        break;
+                    case 9:
+                    case 10:
+                        src = "http://sabio.la/images/hacks/IMG_6057.JPG";
+                        break;
+                }
+
+                vm.thisBackGroundPic(src);
+            }
+
+            function _thisBackGroundPic(pic) {
+                angular.element("#picture").attr("src", pic);
+            }
+
+            function _settings() {
+                vm.showRegisterErrors = false;
+            }
+
+            function _onRegisterForm() {
+                console.log("validating");
+                vm.showRegisterErrors = true;
+                if (vm.registrationForm.$valid) {
+                    console.log("form is valid");
+                    var form = vm.newUser;
+                    vm.$registrationService.add(form, vm.onRegisterSuccess, vm.onRegisterError);
+                } else {
+                    console.log("form is not valid");
+                }
+            }
+
+            function _onRegisterSuccess(data, status, xhr) {
+                vm.dataSuccess = "A Confirmation Email has been sent to your mailbox. Please confirm your email to continue.";
+                console.log(vm.dataSuccess);
+                vm.$alertService.onSuccess(vm.dataSuccess);
+
+                var registerToken = 1;
+                var form = vm.newUser;
+                var newTokenData = form + "&tokenType=" + registerToken;
+                vm.$userTokensService.add(newTokenData, vm.onGetTokenSuccess, vm.onGetTokenError);
+            }
+
+            function _onRegisterError(jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR.responseJSON.errors[0]);
+                vm.$alertService.onError(jqXHR.responseJSON.errors[0]);
+            }
+
+            function _onGetTokenSuccess(data, status, xhr) {
+                var form = $("#registrationForm");
+                var registrationData = $(form).serialize();
+                var token = data.item;
+                var registrationDataWithToken = registrationData + "&token=" + token;
+                sabio.services.messaging.sendConfirmEmail(registrationDataWithToken, vm.onSendConfirmEmailSuccess, vm.onSendConfirmEmailError);
+            }
+
+            function _onGetTokenError(jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR.responseJSON.errors[0]);
+                vm.$alertService.onError(jqXHR.responseJSON.errors[0]);
+            }
+
+            function _onSendConfirmEmailSuccess() {
+                vm.success = "Confirmation Email Sent";
+                vm.$alertService.onSuccess(vm.success);
+            }
+
+            function _onSendConfirmEmailError() {
+                vm.$alertService.onError(jqXHR.responseJSON.errors);
+                console.log(jqXHR.responseJSON.errors[0]);
+                console.log("Confirmation Email failed to send");
+            }
+
+            }
+
+        sabio.ng.app.module.directive('pwCheck', [function () {
+            return {
+                require: 'ngModel',
+                link: function (scope, elem, attrs, ctrl) {
+                    var firstPassword = '#' + attrs.pwCheck;
+                    elem.add(firstPassword).on('keyup', function () {
+                        scope.$apply(function () {
+                            var v = elem.val() === $(firstPassword).val();
+                            ctrl.$setValidity('pwmatch', v);
+                        });
+                    });
+                }
+            }
+        }]);
+
+        sabio.ng.addController(sabio.ng.app.module,
+            "registrationController",
+            ['$scope', '$baseController', "$registrationService", "$userTokensService", "$messagingService", "$alertService"],
+            sabio.page.registrationControllerFactory);
+
+    </script>
+
+}
+
+
+
+
+
+
+
+
+
+
+
