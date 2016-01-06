@@ -1,0 +1,156 @@
+@{
+    ViewBag.Title = "ListAddresses";
+    Layout = "~/Views/Shared/_dashboardLayout.cshtml";
+
+}
+<div data-ng-controller="addressesController as dashboard">
+    <div class="content-header">
+        <div class="header-section">
+            <h1>
+                <i class="gi gi-show_big_thumbnails"></i><strong>{{dashboard.pageTitle}}</strong>
+            </h1>
+            <p>
+                @Html.ActionLink("Create New Address", "Add")
+            </p>
+
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="container body-content">
+            <div class="col-lg-4 col-lg-offset-1 widgetContainer" data-ng-repeat="address in dashboard.addresses">
+                <div class="block full block-alt-noborder widget-simple">
+
+                    <input type="hidden" class="addressId" name="addressId" value=" ">
+                    <img ng-src="https://maps.googleapis.com/maps/api/staticmap?center={{dashboard.getGoogleUrl(address)|encodeUri}},&&zoom=15&size=300x200&markers=color:red%7Clabel:A%7C{{dashboard.getGoogleUrl(address)|encodeUri}},&maptype=roadmap18&sensor=false&key={{dashboard.getGoogleKey()}}" class="googleMap" />
+                    @*<img ng-src="https://maps.googleapis.com/maps/api/staticmap?center={{address.line1|encodeUri}},{{address.line2|encodeUri}},{{address.city|encodeUri}},{{address.stateProvince.stateProvinceCode|encodeUri}},{{address.stateProvince.countryRegionCode|encodeUri}},{{address.zipCode|encodeUri}}&&zoom=15&size=300x200&markers=color:red%7Clabel:A%7C{{address.line1|encodeUri}},{{address.line2|encodeUri}},{{address.city|encodeUri}},{{address.stateProvince.stateProvinceCode|encodeUri}},{{address.stateProvince.countryRegionCode|encodeUri}},{{address.zipCode|encodeUri}}&maptype=roadmap18&sensor=false" class="googleMap" />*@
+                    @*<img ng-src="https://maps.googleapis.com/maps/api/staticmap?center={{address.line1}}{{address.line2}},{{address.city}},{{address.stateProvince.stateProvinceCode}},{{address.stateProvince.countryRegionCode}},{{address.zipCode}}&&zoom=15&size=300x200&markers=color:red%7Clabel:A%7C{{address.line1}}{{address.line2}},{{address.city}},{{address.stateProvince.stateProvinceCode}},{{address.stateProvince.countryRegionCode}},{{address.zipCode}}&maptype=roadmap18&sensor=false" class="googleMap" />*@
+
+
+                    <address>
+                        <div>{{address.line1}}, {{address.line2}}</div>
+                        <div>{{address.city}},</div>
+                        <div>{{address.stateProvince.stateProvinceCode}}, {{address.stateProvince.countryRegionCode}}, {{address.zipCode}}</div>
+                    </address>
+                    <p>
+                        <a ng-href="http://lms.dev/Addresses/{{address.id}}/edit" data-toggle="tooltip" title="Edit" class="btn-xs btn-default edit"><i class="fa fa-pencil"></i></a>
+                        <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" class="btn-xs btn-danger delete" ng-click="dashboard.onDeleteAddress(address)"><i class="fa fa-times"></i></a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Scripts/sabio.services.address.js"></script>
+    <script type="text/javascript">
+
+        sabio.services.addressesFactory = function ($baseService) {
+
+            var aSabioServiceObject = sabio.services.address;
+
+            var newService = $baseService.merge(true, {}, aSabioServiceObject, $baseService);
+
+            return newService;
+        }
+
+        sabio.ng.addService(sabio.ng.app.module,
+                    "$addressesService",
+                    ["$baseService"],
+                    sabio.services.addressesFactory
+                );
+
+        sabio.services.addressesControllerFactory = function (
+            $scope
+            , $baseController
+            , $addressesService
+            ) {
+
+            var vm = this; //vm is the view model of the controller; new instance of a controller function
+
+            $baseController.merge(vm, $baseController);
+
+            vm.$addressesService = $addressesService;
+            vm.$scope = $scope;
+
+            vm.pageTitle = "Addresses";
+            vm.receiveItems = _receiveItems;
+            vm.onAddressError = _onAddressError;
+            vm.onDeleteAddress = _onDeleteAddress;
+            vm.onDeleteSuccess = _onDeleteSuccess;
+            vm.onDeleteError = _onDeleteError;
+            vm.getGoogleUrl = _getGoogleUrl;
+            vm.getGoogleKey = _getGoogleKey;
+
+            vm.addresses = null;
+            vm.deletedAddress = null;
+
+            vm.notify = vm.$addressesService.getNotifier($scope);
+
+            render();
+
+            function render() {
+
+                vm.$addressesService.getAddresses(vm.receiveItems, vm.onAddressError);
+            }
+
+
+            function _receiveItems(data) {
+                vm.notify(function () {
+                    vm.addresses = data.items;
+                    console.log(vm.addresses);
+                });
+            }
+
+            function _onAddressError(jqXhr, error) {
+                console.log(error);
+            }
+
+            function _onDeleteAddress(address) {
+
+                vm.$addressesService.delete(address.id, vm.onDeleteSuccess, vm.onDeleteError);
+                vm.deletedAddress = address;
+
+            }
+
+            function _onDeleteSuccess() {
+                console.log("Deleting address");
+                vm.notify(function () {
+                    var index = vm.addresses.indexOf(vm.deletedAddress);
+                    if (index > -1) {
+                        vm.addresses.splice(index, 1);
+                    }
+                });
+            }
+
+
+            function _onDeleteError(jqXhr, error) {
+
+                console.log(error);
+            }
+
+            function _getGoogleUrl(data) {
+                var location = data.line1 + ',' + data.city + ',' + data.stateProvince.stateProvinceCode
+                    + ',' + data.stateProvince.countryRegionCode + ',' + data.zipCode;
+                return location;
+            }
+
+            function _getGoogleKey() {
+
+                return "AIzaSyAKTReNrWACHZ8T7rughmp_4sgYl0AGn1w";
+            }
+
+        }
+
+        sabio.ng.addController(sabio.ng.app.module,
+            "addressesController",
+            ['$scope', '$baseController', "$addressesService"],
+            sabio.services.addressesControllerFactory
+        );
+
+    </script>
+}
+
+
