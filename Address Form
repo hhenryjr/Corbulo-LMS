@@ -1,0 +1,360 @@
+@model Sabio.Web.Models.ViewModels.ItemViewModel<int>
+
+
+@*<h2><strong>Address</strong></h2>
+    <legend><i class="fa fa-angle-right"></i>Please enter an address</legend>*@
+
+<div class="content-header">
+    <div class="header-section">
+        <h1>
+            <i class="gi gi-show_big_thumbnails"></i><strong>Address</strong>
+        </h1>
+        <p>
+            <i class="fa fa-5x"></i>Please enter an address
+        </p>
+
+    </div>
+</div>
+
+<div class="row-fluid">
+    <div class="span6">
+        <div class="span3 offset3">
+
+            <div class="block full block-alt-noborder">
+                <form action="page_forms_components.html" id="form" method="post" class="form-horizontal form-bordered" onsubmit="return false;">
+                    <fieldset>
+                        <input type="hidden" class="form-control" id="id" name="Id" value="@Model.Item" />
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="example-text-input">Address 1</label>
+                            <div class="col-md-6">
+                                <input type="text" id="Line1" name="Line1" class="form-control" placeholder="Text">
+                                <span class="help-block">Street Address, P.O. box, company name</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="example-text-input">Address 2</label>
+                            <div class="col-md-6">
+                                <input type="text" id="Line2" name="Line2" class="form-control" placeholder="Text">
+                                <span class="help-block">Apartment, suite, unit, building, floor, etc.</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="example-text-input">City</label>
+                            <div class="col-md-6">
+                                <input type="text" id="City" name="City" class="form-control" placeholder="Text">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="example-select2">Country</label>
+                            <div class="col-md-3">
+                                <select type="button" id="countries" name="CountryId" class="select-select2 form-control"
+                                        data-placeholder="Select" style="width: 250px;"></select>
+                                <label class="col-md-5 control-label"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="example-select2">State</label>
+                            <div class="col-md-3">
+                                <span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span>
+                                <select id="states" name="StateProvinceId" class="select-select2 form-control" data-placeholder="Select" style="width: 250px;"></select>
+                                <label class="col-md-5 control-label"></label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="example-text-input">Zip Code</label>
+                            <div class="col-md-2">
+                                <input type="text" id="ZipCode" name="ZipCode" class="form-control" placeholder="Text">
+                            </div>
+                        </div>
+
+                        <div class="form-group form-actions">
+                            <div class="col-md-8 col-md-offset-4">
+                                <button type="submit" id="buttonSubmit" class="btn btn-sm btn-primary"><i class="fa fa-angle-right"></i> Submit</button>
+                                <button type="button" class="btn btn-sm btn-warning" id="cmdReset"><i class="fa fa-repeat"></i> Reset</button>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+
+
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/sabio.services.address.js"></script>
+    <script type="text/javascript">
+        //The sabio.page.startUp() function which is used on all Sabio pages contains
+        //a single binding. This function is connecting the "click" event fired from
+        //the button with id="cmdEchoPerson" to the sabio.page.handlers.echoInputs handler.
+        sabio.page.startUp = function () {
+
+            //  call a separate function to set up validation rules
+            console.log("Checking");
+            sabio.page.rulesForValidation();
+            sabio.page.getCountries();
+
+            $('#countries').on("change", sabio.page.handlers.onSelectChangeState);
+            $("#buttonSubmit").on("click", sabio.page.handlers.onSubmitForm);
+            $("#cmdReset").on("click", sabio.page.handlers.onResetForm);
+        };
+
+        sabio.page.rulesForValidation = function () {
+            console.log("Valid");
+
+            //  set defaults for the entire plugin
+            jQuery.validator.setDefaults({
+                debug: true
+            });
+
+            //  set rules and error messages
+            $('#form').validate({
+
+                errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+                errorElement: 'div',
+                errorPlacement: function (error, e) {
+                    e.parents('.form-group').append(error);
+
+                },
+                highlight: function (e) {
+                    $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                    $(e).closest('.help-block').remove();
+
+                },
+                success: function (e) {
+                    // You can use the following if you would like to highlight with green color the input after successful validation!
+                    e.closest('.form-group').removeClass('has-success has-error'); // e.closest('.form-group').removeClass('has-success has-error').addClass('has-success');
+                    e.closest('.help-block').remove();
+                },
+
+                rules: {
+                    "Line1": {
+                        required: true  //  Line 1 is required
+                    },
+
+                    "City": {
+                        required: true,  //  City is required
+                        minlength: 5,
+                        maxlength: 20
+                    },
+
+                    "CountryId": {
+                        required: true  //  Country is required
+                    },
+
+                    "StateProvinceId": {
+                        required: true  //  State is required
+                    },
+
+                    "ZipCode": {
+                        required: true,  //  ZipCode is required
+                        minlength: 5,
+                        maxlength: 20
+                    }
+                },
+                //  here you can provide custom error messages if you want to - this part is optional
+                messages: {
+                    "Line1": {
+                        required: "Address is required."
+                    },
+                    "City": {
+                        required: "City is required.",
+                        minlength: jQuery.validator.setDefaults("At least {5} characters required!")
+                    },
+
+                    "CountryId": {
+                        required: "Country is required."
+                    },
+
+                    "StateProvinceId": {
+                        required: "State is required."
+
+                    },
+                    "ZipCode": {
+                        required: "Zip Code is required.",
+                        minlength: jQuery.validator.setDefaults("At least {5} characters required!")
+                    }
+                }
+            });
+        };
+
+        sabio.page.handlers.onSelectChangeState = function () {
+
+            var id = $("#countries").find(":selected").val();
+            $('#states').empty();
+            sabio.services.address.onSelectChangeState(id, sabio.page.getStateProvincesSuccess, sabio.page.ajaxError)
+        }
+
+        sabio.page.handlers.onSubmitForm = function (evt) {
+            evt.preventDefault();
+            //sabio.page.echoInputs();
+            console.log("Submitting form");
+
+            //  this line checks the data from the form against the rules defined on startUp.
+            if ($('#form').valid()) {
+                sabio.page.clickSerialize();
+                console.log("Serial");
+                var id = $("#id").val();
+
+                if (id > 0) {                                                // if id is an empty string run POST or INSERT
+                    var id = $("#id").val();                 //declaring it and giving it the value of hidden id
+                    var myData = $("#form").serialize();
+                    sabio.services.address.update(id, myData, sabio.page.ajaxUpdateSuccess, sabio.page.ajaxError);                             //otherwise run PUT or UPDATE
+                    console.log("update");
+                }
+                else {
+                    var myData = $("#form").serialize();
+                    sabio.services.address.add(myData, sabio.page.ajaxSuccess, sabio.page.ajaxError);                            // POST OR INSERT
+                    console.log("insert");
+                }
+            }
+            else {
+                console.log("form is not valid")                // if form is not valid do not run
+            }
+        }
+
+        sabio.page.handlers.onResetForm = function () {
+
+            console.log("Resetting form");
+            $("#id").val(null).trigger('change');
+            $("#Line1").val(null).trigger('change');
+            $("#Line2").val(null).trigger('change');
+            $("#City").val(null).trigger('change');
+            $("#countries").val(null).trigger('change');
+            $("#states").val(null).trigger('change');
+            $("#ZipCode").val(null).trigger('change');
+
+        }
+
+        sabio.page.getCountries = function () {
+
+            sabio.services.address.getCountries(sabio.page.getCountriesSuccess, sabio.page.ajaxError);
+        }
+
+        sabio.page.getCountriesSuccess = function (data) {
+
+            console.log("Getting list of countries");
+
+            for (var i = 0; i < data.items.length; i++) {
+
+                var html = '<option value="' + data.items[i].id + '">' + data.items[i].name + '</option>';
+                $('#countries').append(html);
+            }
+
+            $("#countries").val(null);
+            sabio.page.getAddress();
+        }
+
+        sabio.page.getStateProvincesSuccess = function (data) {
+
+            console.log("Getting list of states");
+
+            for (var i = 0; i < data.items.length; i++) {
+
+                var html = '<option value="' + data.items[i].stateProvinceId + '">' + data.items[i].name + '</option>';
+                $('#states').append(html);
+            }
+            $('#states').val(null).trigger('change');
+
+            if (sabio.page.stateProvinceId) {
+
+                $("#states").val(sabio.page.stateProvinceId);
+                $("#states").trigger("change");
+                sabio.page.stateProvinceId = null;
+            }
+        }
+
+        sabio.page.clickSerialize = function () {
+
+            var serializedData = $("#form").serialize();
+
+            console.log(serializedData);
+            //sabio.page.echoInputs();
+        };
+
+        sabio.page.getAddress = function () {        //calls the update function to connect to the API controller;
+            console.log("Getting address");
+
+            if ($("#id").val() != 0) {                       // tells function if id is not there do not run!
+                var addressId = $("#id").val();
+                sabio.services.address.get(addressId, sabio.page.ajaxGetSuccess, sabio.page.ajaxError);
+
+            }
+
+        }
+
+        sabio.page.getAndFillInTheForm = function (address) {
+            console.log("Filling form");
+            $("#id").val(address.id);
+            $("#Line1").val(address.line1);
+            $("#Line2").val(address.line2);
+            $("#City").val(address.city);
+            sabio.page.stateProvinceId = address.stateProvince.stateProvinceId
+            $("#countries").val(address.stateProvince.countryId);
+            $("#ZipCode").val(address.zipCode);
+
+            $("#countries").trigger("change");
+        }
+
+        sabio.page.ajaxGetSuccess = function (data, status, xhr) {
+            //console.log(JSON.stringify(data));
+            sabio.page.logToBottom(data);
+
+            if (data && data.item) {
+                sabio.page.getAndFillInTheForm(data.item);
+            }
+            $("#msgWindow").removeClass("alert-danger");
+            $("#msgWindow").addClass("alert-info");
+        }
+
+        sabio.page.ajaxSuccess = function (data, status, xhr) {     //data has your id
+            console.log("ajax success");
+
+            console.log(JSON.stringify(data));
+
+            sabio.page.logToBottom(data);
+
+            if (data && data.item) {  //data{item:id, issuccessful:1, transaction id: 0000000000000000} is an array for data with property item and its value
+                sabio.page.insertToHiddenId(data.item);
+            }
+
+            $("#msgWindow").removeClass("alert-danger");
+            $("#msgWindow").addClass("alert-info");
+
+        }
+
+        sabio.page.ajaxUpdateSuccess = function (data, status, xhr) {  //declaring a function with a combination of your JavaScript array (which is your data), status?, xhr?
+            console.log(JSON.stringify(data));
+            sabio.page.logToBottom(data);                   //calls this function which appears below this function
+            $("#msgWindow").removeClass("alert-danger");    //if Ajax call is successful, it will remove this class "alert-danger" from msgWindow
+            $("#msgWindow").addClass("alert-info");         // and add class "alert-info" into your message (its the blue banner that appears on your view
+        }
+
+        sabio.page.ajaxError = function (jqXHR, textStatus, errorThrown) {          // opposite from success; simliar process
+
+            sabio.page.logToBottom(jqXHR.responseJSON);
+            $("#msgWindow").addClass("alert-danger");
+            $("#msgWindow").removeClass("alert-info");
+        }
+
+        sabio.page.logToBottom = function (data) {
+            $("#msgWindow").html((JSON.stringify(data)));
+        }
+
+        sabio.page.insertToHiddenId = function (data) {                           //function for data that has an id
+            $("#id").val(data);
+        }
+
+    </script>
+
+}
