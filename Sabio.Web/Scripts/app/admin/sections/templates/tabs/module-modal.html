@@ -1,0 +1,32 @@
+﻿<!-- Modal Header -->
+<div class="modal-header text-center">
+    <h2 class="modal-title"><i class="fa fa-copy"></i> Copy a Module</h2>
+</div>
+<!-- END Modal Header -->
+<!-- Modal Body -->
+<div class="modal-body">
+    <form action="index.html" method="post" enctype="multipart/form-data" class="form-horizontal form-bordered" onsubmit="return false;">
+        <fieldset>
+            <legend>Module information</legend>
+            <div class="form-group animate-repeat" data-ng-repeat="module in modal.modules track by module.id">
+                <label class="col-md-4 control-label" for="module-name">{{module.moduleName}}</label>
+                <div class="col-md-8">
+                    <input class="hidden" name="settingId" />
+                    <button name="value"
+                            data-ng-click="modal.submitData(module.id, module.items.sectionId)"
+                            value="{{module.moduleName}}"
+                            class="btn btn-warning">
+                        <i class="fa fa-copy"></i> Copy
+                    </button>
+                </div>
+            </div>
+        </fieldset>
+        <div class="form-group form-actions">
+            <div class="col-xs-12 text-right">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal" data-ng-click="modal.cancel()">Close</button>
+                <button type="submit" class="btn btn-sm btn-primary" data-ng-click="modal.ok();">Save Changes</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- END Modal Body -->

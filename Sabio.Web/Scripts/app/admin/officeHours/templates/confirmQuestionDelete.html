@@ -1,0 +1,19 @@
+﻿
+<div class="modal-header text-center">
+    <h2 class="modal-title"><i class="fa fa-pencil fa-6"></i> Confirm Deletion</h2>
+</div>
+<div class="modal-dialog" role="document">
+    <div class="modal-header" style="margin-right:5px;align-content:center">
+        <h4 class="modal-title" id="contactUs">Question: &nbsp;<strong>{{officeHour.items[0].question}}</strong></h4>
+    </div>
+
+
+    <div class="modal-body">
+            <div class="modal-footer" style="margin-right:5px">
+                <label class="successMessage" type="text" id="messageResponse"></label>
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="officeHour.cancel('cancel')">Close</button>
+                <button type="submit" class="btn btn-primary" ng-click="officeHour.ok(officeHour.items[0].id)">Delete</button>
+            </div>
+       
+    </div>
+</div>

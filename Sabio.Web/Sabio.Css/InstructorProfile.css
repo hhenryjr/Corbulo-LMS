@@ -1,0 +1,28 @@
+﻿ .instHeader {
+        left: 100% !important;
+        width: 100% !important;
+        height: 100% !important;
+        margin-left: -100% !important;
+    }
+
+    .instLink {
+        font-size: 25px;
+    }
+
+    .instEmail {
+        font-size:15px;
+    }
+
+    .courses {
+        padding-bottom: 15px;
+    }
+
+    .courseBtns {
+        margin:1px; 
+        font-size: 15px;
+        padding: 5px;
+    }
+
+    .linkdin {
+        padding-top: 3px;
+    }

@@ -1,0 +1,83 @@
+﻿
+<div class="content-header content-header-media" data-ng-mouseenter="student.showFileInputButton()" data-ng-mouseleave="student.hideFileInputButton()">
+    <div class="header-section" data-ng-model="student.user">
+        <small>
+            <!-- Avatar Pic here-->
+            <img ng-src="Https://sabio-training.s3-us-west-2.amazonaws.com/C11/{{student.userAvatarPic}}" alt="Avatar" ng-show="student.profileAvatar" class="pull-right img-circle" id="ProfilePic" style="position: absolute; top: 15px; left: 920px; height:100px">
+            <img src="" alt="Avatar" ng-show="student.changeAvatar" class="pull-right img-circle" id="ProfilePic2" style="position: absolute; top: 15px; left: 920px; height:100px">
+
+            <input type="file" name="avatarPicFile" custom-on-change="student.getAvatarPicFromFile" id="avatarPic" data-ng-model="student.avatarPic"
+                   style="top: 200px; left: 50px; position: absolute; display:none">
+            <button type="button" name="triggerAvatarFile" id="triggerAvatarFile" class="btn btn-info"
+                    data-ng-show="student.showChangePicture" style="top: 105px; left: 930px; position: absolute; height:26px; width: 26px; opacity:0.8"
+                    data-ng-click="student.clickAvatarFile()">
+                <i class="fa fa-plus-square"></i>
+            </button>
+            <button type="button" name="saveAvatarButton" id="saveAvatarPicButton" class="btn btn-info"
+                    data-ng-show="student.showChangePicture"
+                    data-ng-disabled="student.saveAvatarButton" style="top: 105px; left: 960px; position: absolute; height:26px; width: 26px"
+                    data-ng-click="student.saveAvatarPicture()">
+                <i class="fa fa-check-square"></i>
+            </button>
+            <button type="button" name="cancelAvatarButton" id="cancelSaveAvatarPicButton" class="btn btn-danger"
+                    data-ng-show="student.showChangePicture" style="top: 105px; left: 990px; position: absolute; height:26px; width: 26px; opacity:0.8"
+                    data-ng-disabled="student.cancelMyAvatarPicture"
+                    data-ng-click="student.cancelAvatarPicture()">
+                <i class="fa fa-minus-square"></i>
+            </button>
+        </small>
+        <h1>{{student.user.firstName}} {{student.user.lastName}}<br><small>{{student.user.bio}}</small></h1>
+    </div>
+    <!-- For best results use an image with a resolution of 2560x248 pixels (You can also use a blurred image with ratio 10:1 - eg: 1000x100 pixels - it will adjust and look great!) -->
+    <!--background pic -->
+    <img ng-src="Https://sabio-training.s3-us-west-2.amazonaws.com/C11/{{student.userBackgroundPic}}" alt="header image" ng-show="student.profileCover" class="animation-pulseSlow" id="landScapePic" style="position: relative">
+    <img src="" ng-show="student.changeCover" alt="header image" class="animation-pulseSlow previewCover" id="landScapePic2" style="position: relative">
+
+
+    <form enctype="multipart/form-data" id="fileForm" name="student.fileForm" novalidate>
+        <input type="file" name="backGroundPicFile" custom-on-change="student.getBackGroundPicFromFile" id="backGroundPic" data-ng-model="student.BackgroundPic"
+               style="top: 200px; left: 50px; position: absolute; display:none">
+        <input type="button" name="clickFileBtn" id="clickFileBtn" class="btn btn-info" data-ng-show="student.showChangePicture"
+               value="Upload File" style="top: 200px; left: 50px; position: absolute; opacity:0.8"
+               data-ng-click="student.clickCoverInputFile()">
+        <input type="button" name="saveCoverButton" id="saveBackGroundPicButton" class="btn btn-info" data-ng-show="student.showChangePicture" data-ng-disabled="userProfile.saveCoverButton"
+               value="Save" style="top: 200px; left: 155px; position: absolute"
+               data-ng-click="student.saveBackGroundPicture()" />
+        <input type="button" name="cancelButton" id="cancelSaveBackGroundPicButton" class="btn btn-danger" data-ng-show="student.showChangePicture"
+               data-ng-disabled="student.cancelMyBgPicture"
+               value="Cancel" style="top: 200px; left: 217px; position: absolute; opacity:0.8"
+               data-ng-click="student.cancelBackGroundPicture()" />
+
+    </form>
+</div>
+
+
+<!--<div class="row">
+    <div class="col-md-12">
+        <div class="block full">
+            <div class="block-title">
+                <div class="block-options pull-right">
+                    <div class="btn-group">
+                        <a href="javascript:void(0)" data-toggle="dropdown" class="btn btn-alt btn-sm btn-default dropdown-toggle" aria-expanded="false"><i class="fa fa-angle-down"></i></a>
+                        <ul class="dropdown-menu dropdown-custom dropdown-menu-right">
+                            <li>
+                                <a href="javascript:void(0)">Tabs aren't showing aren't they?</a>
+                                <a href="javascript:void(0)">Action 2</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li><a href="javascript:void(0)">Another Action</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <ul data-toggle="tabs" class="nav nav-tabs">
+
+                    <li ng-class="{active: student.tabClass(tab)}" ng-repeat="tab in student.tabs">
+                        <a href="{{tab.link}}" ng-click="student.setSelectedTab(tab)">{{tab.label}}</a>
+                    </li>
+                </ul>
+
+            </div>
+
+        </div>
+    </div>
+</div>-->

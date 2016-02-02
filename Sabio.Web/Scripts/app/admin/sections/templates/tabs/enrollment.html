@@ -1,0 +1,52 @@
+﻿
+<div class="simpleDemo row">
+    <div class="row">
+        <div class="col-lg-4 col-lg-offset-1">
+
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Sudents in This Section/s</h3>
+                </div>
+
+                <ul dnd-list="admin.user.lists.Section"
+                    dnd-dragover="admin.dragoverCallback(event, index, external, 'Chosen')"
+                    dnd-drop="admin.dropCallback(event, index, item, external, 'Chosen')">
+
+                    <li ng-repeat="item in admin.user.lists.Section"
+                        dnd-draggable="item"
+                        dnd-moved="admin.user.lists.Section.splice($index, 1)"
+                        dnd-effect-allowed="move"
+                        dnd-selected="admin.user.lists.Section.selected = item"
+                        ng-class="{'selected': admin.user.lists.Section.selected === item}">
+                        <div style="font-size:15px"><strong>{{item.firstName}}&nbsp;{{item.lastName}} </strong> </div>
+                       
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-lg-offset-1">
+
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title"> Student Pool </h3>
+                </div>
+                <ul dnd-list="admin.user.lists.All"
+                    dnd-dragover="admin.dragoverCallback(event, index, external, 'Available')"
+                    dnd-drop="admin.dropCallback(event, index, item, external, 'Available')">
+
+                    <li ng-repeat="item in admin.user.lists.All"
+                        dnd-draggable="item"
+                        dnd-moved="admin.user.lists.All.splice($index, 1)"
+                        dnd-effect-allowed="move"
+                        dnd-selected="admin.user.lists.All.selected = item"
+                        ng-class="{'selected': admin.user.lists.All.selected === item}">
+                        <div style="font-size:15px"><strong>{{item.firstName}}&nbsp;{{item.lastName}} </strong> <span class="FontSmall" style="font-size:13px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start Date:<strong>&nbsp;{{item.desiredSabioStartDate|date:'M/d/yy'}}</strong></span></div>
+                        <span class="FontSmall"><strong>{{item.desiredTrack}}</strong></span>
+                        <span class="FontSmall">Campus:<strong>&nbsp;{{item.desiredCampusLocation}}&nbsp;&nbsp;</strong></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

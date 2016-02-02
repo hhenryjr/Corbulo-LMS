@@ -1,0 +1,255 @@
+﻿@model Sabio.Web.Models.ViewModels.ItemViewModel<int>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+
+<div class="content-header">
+    <div class="header-section">
+        <h1>
+            <i class="gi gi-show_big_thumbnails"></i><strong>Blog</strong><br><small>What's on your mind, developer?</small>
+        </h1>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-7">
+            <div class="block full block-alt-noborder">
+                <form id="frmContainer">
+                    <input type="hidden" id="BlogId" value="@Model.Item" />
+                    <div class="form-group">
+                        <label for="inputTitle">Title</label>
+                        <input type="text" class="form-control" id="txtTitle" name="Title" placeholder="Enter Title" />
+                    </div>
+                    <div class="form-group">
+                        <label for="inputDate">Date Published</label>
+                        <input type="date" class="form-control" id="txtDate" name="publishedDate" placeholder="Enter Date" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputBlog">Blog Content</label>
+                        <textarea type="text" class="form-control ckeditor" id="BlogPost" name="BlogPost" placeholder="Enter Blog Content"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputTags">Enter Tags</label>
+                        <br>
+                        <input type="text" class="form-control" id="tags" name="tags" placeholder="Enter Tags"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="IsFeatured"> IsFeatured </label>
+                        <input type="checkbox" name="IsFeatured" id="IsFeatured" class="checkbox" value="true"/>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="cmdSubmit">Submit Blog</button>
+                    <button type="button" class="btn btn-warning" id="cmdDelete"><i class="fa fa-arrow-left"></i>Delete Blog</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="form-group hidden">
+            <label class="col-md-3 control-label" for="id"></label>
+            <div class="col-md-9">
+                <input type="text" id="id" name="id" class="form-control">
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="alert alert-warning hidden" role="alert">Be Sure to check the Firebug Net Tab for more detailed information</div>
+<div class="alert hidden" id="msgWindow"></div>
+
+
+@section Scripts {
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/moment.js"></script>
+    <script src="~/Scripts/sabio.services.blogs.js"></script>
+    <script src="~/js/helpers/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript">
+
+        sabio.page.startUp = function() {
+
+            //  call a separate function to set up validation rules
+            sabio.page.initializeValidation();
+            sabio.page.getInputs();
+            //  attach a click handler to the form's submit button
+            $("#cmdSubmit").on("click", sabio.page.handlers.onSubmitBlog);
+            $("#cmdDelete").on("click", sabio.page.handlers.deleteBlog);
+
+        };
+
+        sabio.page.initializeValidation = function() {
+            //  set defaults for the entire plugin
+            jQuery.validator.setDefaults({
+                debug: true
+            });
+
+            //  set rules and error messages
+            $('#frmContainer').validate({
+                errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+                errorElement: 'div',
+                errorPlacement: function(error, e) {
+                    e.parents('.form-group').append(error);
+                },
+                highlight: function(e) {
+                    $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                    $(e).closest('.help-block').remove();
+                },
+                success: function(e) {
+                    // You can use the following if you would like to highlight with green color the input after successful validation!
+                    e.closest('.form-group').removeClass('has-success has-error'); // e.closest('.form-group').removeClass('has-success has-error').addClass('has-success');
+                    e.closest('.help-block').remove();
+                },
+
+                rules: {
+                    "Title": {
+                        required: true
+                    },
+                    "publishedDate": {
+                        required: true
+                    },
+                    "BlogPost": {
+                        required: true
+                    },
+                    "tags": {
+                        required: true
+                    }
+                },
+                //  here you can provide custom error messages if you want to - this part is optional
+                messages: {
+                    "Title": {
+                        required: "Please give your blog a title.",
+                    },
+                    "publishedDate": {
+                        required: "Please enter the date.",
+                    },
+                    "BlogPost": {
+                        required: "Please write your blog."
+                    },
+                    "tags": {
+                        required: "Don't forget to add some tags."
+                    }
+                }
+            });
+        };
+
+        sabio.page.handlers.onSubmitBlog = function() {
+            //  this line checks the data from the form against the rules defined on startUp.
+            if ($('#frmContainer').valid()) {
+                console.log("This form is valid");
+                var id = $("#id").val();
+                CKEDITOR.instances.BlogPost.updateElement();
+      
+                var myData = $("#frmContainer").serialize();
+                console.log($('#frmContainer').serialize());
+                if (id == "") {
+                    sabio.services.blogs.add(myData, sabio.page.AjaxSuccess, sabio.page.AjaxError);
+                    console.log("added");
+                    $("#cmdSubmit").html("Update Blog");
+                } else {
+                    sabio.page.putInputs(id);
+                    console.log("updated");
+                    return id;
+                }
+            } else {
+                console.log("This form is NOT valid");
+            }
+            
+        };
+
+        sabio.page.putInputs = function(id) {
+
+            var myData = $("#frmContainer").serialize();
+            var myData2 = "id=" + id + "&" + myData;
+            console.log(myData2);
+            sabio.services.blogs.update(id, myData2, sabio.page.updateSuccess, sabio.page.ajaxError);
+            $("#cmdDelete").on("click", sabio.page.handlers.deleteBlog);
+        }
+
+        sabio.page.getInputs = function(data) {
+
+            var urlId = $("#BlogId").val();
+            sabio.services.blogs.get(urlId, sabio.page.AjaxGetSuccess, sabio.page.AjaxError);
+            $("#cmdDelete").on("click", sabio.page.handlers.deleteBlog);
+        }
+
+        sabio.page.getAndFillInTheForm = function(data) {
+
+            var date = moment(data.datePublished).format('YYYY-MM-DD');
+
+            $("#id").val(data.id);
+            $("#txtTitle").val(data.title);
+            $("#txtDate").val(date);
+            $("#BlogPost").val(data.blogPost);
+            $("#tags").val(data.tags);
+            $("#IsFeatured").prop('checked', data.isFeatured);
+        }
+
+        sabio.page.getId = function(data) {
+            id = data;
+        }
+
+        sabio.page.insertToHiddenId = function(data) {
+            $("#id").val(data);
+        }
+
+        sabio.page.handlers.deleteBlog = function() {
+            var id = $("#BlogId").val();
+            sabio.services.blogs.delete(id, sabio.page.deleteAjaxSuccess, sabio.page.ajaxError);
+        }
+
+        /*This function will be called by $ when the ajax
+            request's response is received as succesful.
+            A successul response has a HTTP_STATUS Code of 200
+        */
+        sabio.page.AjaxSuccess = function(data, status, xhr) {
+            if (data && data.item) {
+                //sabio.page.BlogId = data.item;
+                sabio.page.getId(data.item);
+                sabio.page.insertToHiddenId(data.item);
+            }
+            console.log(JSON.stringify(data));
+            //sabio.page.logToBottom(data);
+            $("#msgWindow").removeClass("alert-danger");
+            $("#msgWindow").addClass("alert-info");
+        }
+
+        sabio.page.UpdateSuccess = function(data, status, xhr) {
+            console.log(JSON.stringify(data));
+            //sabio.page.logToBottom(data);
+            $("#msgWindow").removeClass("alert-danger");
+            $("#msgWindow").addClass("alert-info");
+            $("#msgWindow").show();
+
+        }
+
+        sabio.page.AjaxGetSuccess = function(data, status, xhr) {
+            console.log(JSON.stringify(data));
+            //sabio.page.logToBottom(data);
+            if (data && data.item) {
+                sabio.page.getAndFillInTheForm(data.item);
+            }
+            $("#msgWindow").removeClass("alert-danger");
+            $("#msgWindow").addClass("alert-info");
+        }
+
+        sabio.page.deleteAjaxSuccess = function() {
+            console.log("Deleting Blog #" + " " + id);
+            location.href = 'http://lms.dev/Blogs/add';
+        }
+
+        /*This function will be called by $ when the ajax
+            request's response is NOT received as succesful.
+           This has a HTTP_STATUS Code of something OTHER than 200
+        */
+        sabio.page.AjaxError = function(jqXHR, textStatus, errorThrown) {
+
+            //sabio.page.logToBottom(jqXHR.responseJSON);
+            $("#msgWindow").addClass("alert-danger");
+            $("#msgWindow").removeClass("alert-info");
+        }
+
+
+    </script>
+}

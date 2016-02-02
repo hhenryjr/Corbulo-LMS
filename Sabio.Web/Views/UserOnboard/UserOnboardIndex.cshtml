@@ -1,0 +1,834 @@
+﻿@model Sabio.Web.Models.ViewModels.UserOnboardViewModel
+@{
+    ViewBag.Title = "UserOnboardIndex";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="block">
+    <!-- Wizard with Validation Title -->
+    <div class="block-title">
+        <h2><strong>User Onboard Registration</strong></h2>
+    </div>
+    <!-- END Wizard with Validation Title -->
+    <!-- Wizard with Validation Content -->
+    <form id="advanced-wizard" method="post" class="form-horizontal form-bordered">
+
+        <!-- First Step -->
+        <div id="advanced-first" class="step">
+            <!-- Step Info -->
+            <div class="wizard-steps">
+                <div class="row">
+                    <div class="col-xs-3 active">
+                        <span>Goals</span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span>General Info</span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span>Address</span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span>About Me I</span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span>About Me II</span>
+                    </div>
+                </div>
+            </div>
+            <!-- END Step Info -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="desiredTrack">Desired Track<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <select type="Button" id="desiredTrack" name="desiredTrack" class="select-select2 form-control" data-placeholder="Select a track" size="1" required></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="desiredCampusLocation">Desired Campus<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <select type="button" id="desiredCampusLocation" name="desiredCampusLocation" class="select-select2 form-control" data-placeholder="Select a campus" size="1" required></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="desiredSabioStartDate">Desired Start Date<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" id="desiredSabioStartDate" name="desiredSabioStartDate" class="form-control input-datepicker" data-placeholder="Select a date" data-date-format="mm/dd/yyyy">
+                        <span class="input-group-addon"><i class="gi gi-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="accreditationId">Accreditation<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <select type="button" id="accreditationId" name="accreditationId" class="select-select2 form-control" data-placeholder="please make a selection" size="1" required>
+                        <option value="">Please make a selection</option>
+                        @foreach (var accreditationId in Model.AccreditatonId)
+                        {
+                        <option value="@accreditationId.Key">@accreditationId.Value</option>
+                        }
+                    </select>
+
+                </div>
+            </div>
+            <div class="form-group form-actions">
+                <div class="col-md-8 col-md-offset-4">
+                    @*<input type="reset" class="btn btn-sm btn-warning" id="back2" value="Back">*@
+                    <input type="submit" class="btn btn-sm btn-primary" id="next" value="Next">
+                </div>
+            </div>
+        </div>
+        <!-- END First Step -->
+        <!-- second Step -->
+        <div id="advanced-second" class="step">
+            <!-- Step Info -->
+            <div class="wizard-steps">
+                <div class="row">
+                    <div class="col-xs-2">
+                        <span>Goals</span>
+                    </div>
+                    <div class="col-xs-2 active">
+                        <span>General Info</span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span>Address</span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span>About Me I</span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span>About Me II</span>
+                    </div>
+                </div>
+            </div>
+            <!-- END Step Info -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="firstName">First Name<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" id="firstName" name="firstName" class="form-control" placeholder="Your first name.." required>
+                        <span class="input-group-addon"><i class="gi gi-user"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="lastName">Last Name<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" id="lastName" name="lastName" class="form-control" placeholder="Your last name.." required>
+                        <span class="input-group-addon"><i class="gi gi-user"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="gender">Gender<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <select type="button" id="gender" name="Gender" class="select-select2 form-control" data-placeholder="please make a selection" size="1" required>
+                        <option value="">Please make a selection</option>
+                        @foreach (var gender in Model.Genders)
+                        {
+                        <option value="@gender.Key">@gender.Value</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="ethnicityId">Ethnicity<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <select type="button" id="ethnicityId" name="ethnicityId" class="select-select2 form-control" data-placeholder="please make a selection" size="1" required></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="dateOfBirth">Date Of Birth<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" id="dateOfBirth" name="dateOfBirth" class="form-control input-datepicker" data-date-format="mm/dd/yyyy">
+                        <span class="input-group-addon"><i class="gi gi-gift"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="phone">Telephone<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="tel" id="phone" name="phone" class="form-control" placeholder="(999)999-9999" required>
+                        <span class="input-group-addon"><i class="gi gi-earphone"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-actions">
+                <div class="col-md-8 col-md-offset-4">
+                    <input type="reset" class="btn btn-sm btn-warning" id="back2" value="Back">
+                    <input type="submit" class="btn btn-sm btn-primary" id="next1" value="Next">
+                </div>
+            </div>
+        </div>
+        <!-- END second Step -->
+        <!-- third Step -->
+        <div id="advanced-third" class="step">
+            <!-- Step Info -->
+            <div class="wizard-steps">
+                <div class="row">
+                    <div class="col-xs-2">
+                        <span>Goals</span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span>General Info</span>
+                    </div>
+                    <div class="col-xs-2 active">
+                        <span>Address</span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span>About Me I</span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span>About Me II</span>
+                    </div>
+                </div>
+            </div>
+            <!-- END Step Info -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="countryId">Country<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <select type="button" id="countryId" name="countryId" class="select-select2 form-control" data-placeholder="Select your country" size="1" required></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="streetAddress1">Street Address<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" id="streetAddress1" name="streetAddress1" class="form-control" placeholder="Your street address.." required>
+                        <span class="input-group-addon"><i class="gi gi-road"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="streetAddress2">Street address 2</label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" id="streetAddress2" name="streetAddress2" class="form-control" placeholder="Your street address..">
+                        <span class="input-group-addon"><i class="gi gi-road"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="city">City<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" id="city" name="city" class="form-control" placeholder="Your city.." required>
+                        <span class="input-group-addon"><i class="gi gi-home"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="stateProvinceId">State/Province<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span>
+                    <select id="stateProvinceId" name="StateProvinceId" class="select-select2 form-control" data-placeholder="Select" size="1" required></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="zipCode">Zip code<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" id="zipCode" name="zipCode" class="form-control" placeholder="Your zip code.." required>
+                        <span class="input-group-addon"><i class="gi gi-home"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <input type="text" id="addressId" name="addressId" class="form-control hidden">
+            </div>
+            <div class="form-group form-actions">
+                <div class="col-md-8 col-md-offset-4">
+                    <input type="reset" class="btn btn-sm btn-warning" id="back2" value="Back">
+                    <input type="submit" class="btn btn-sm btn-primary" id="next3" value="Next">
+                </div>
+            </div>
+        </div>
+        <!-- END Third Step -->
+        <!-- fourth Step -->
+        <div id="advanced-fourth" class="step">
+            <!-- Step Info -->
+            <div class="wizard-steps">
+                <div class="row">
+                    <div class="col-xs-2">
+                        <span>Goals</span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span>General Info</span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span>Address</span>
+                    </div>
+                    <div class="col-xs-2 active">
+                        <span>About Me I</span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span>About Me II</span>
+                    </div>
+                </div>
+            </div>
+            <!-- END Step Info -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="referredBy">Referred By<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" id="referredBy" name="referredBy" class="form-control" placeholder="Referred by.." required>
+                        <span class="input-group-addon"><i class="gi gi-certificate"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="extraCurricularActivities">Extracurricular Activities<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" id="extraCurricularActivities" name="extraCurricularActivities" class="form-control" placeholder="What do you do on your free time?" required>
+                        <span class="input-group-addon"><i class="gi gi-camera"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="facebook">Facebook</label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" id="facebook" name="facebook" class="form-control" placeholder="Facebook link">
+                        <span class="input-group-addon"><i class="gi gi-link"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="linkedIn">LinkedIn</label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" id="linkedIn" name="linkedIn" class="form-control" placeholder="LinkedIn profile">
+                        <span class="input-group-addon"><i class="gi gi-link"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="twitter">Twitter handle</label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" id="twitter" name="twitter" class="form-control" placeholder="Twitter handle">
+                        <span class="input-group-addon"><i class="gi gi-link"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="webpage">Webpage</label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="url" id="webpage" name="webpage" class="form-control" placeholder="Webpage (include 'http://')">
+                        <span class="input-group-addon"><i class="gi gi-globe"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-actions">
+                <div class="col-md-8 col-md-offset-4">
+                    <input type="reset" class="btn btn-sm btn-warning" id="back2" value="Back">
+                    <input type="submit" class="btn btn-sm btn-primary" id="next4" value="Next">
+                </div>
+            </div>
+        </div>
+        <!-- END fourth Step -->
+        <!-- fifth Step -->
+        <div id="advanced-fifth" class="step">
+            <!-- Step Info -->
+            <div class="wizard-steps">
+                <div class="row">
+                    <div class="col-xs-2">
+                        <span>Goals</span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span>General Info</span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span>Address</span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span>About Me I</span>
+                    </div>
+                    <div class="col-xs-2 active">
+                        <span>About Me II</span>
+                    </div>
+                </div>
+            </div>
+            <!-- END Step Info -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="employmentStatusId">Employment Status<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <select type="button" id="employmentStatusId" name="employmentStatusId" class="select-select2 form-control" data-placeholder="please make a selection" size="1" required>
+                        @*<option value="">Please make a selection</option>*@
+                        @foreach (var emplomentStatuses in Model.EmploymentStatuses)
+                        {
+                        <option value="@emplomentStatuses.Key">@emplomentStatuses.Value</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="learningObjective">Learning Objective<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" id="learningObjective" name="learningObjective" class="form-control" placeholder="Your learning objectives.." required>
+                        <span class="input-group-addon"><i class="gi gi-book"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="targetEmploymentLocation">Target Employment Location<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" id="targetEmploymentLocation" name="targetEmploymentLocation" class="form-control" placeholder="Where would you eventually like to work?" required>
+                        <span class="input-group-addon"><i class="gi gi-briefcase"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="example-advanced-bio">Brief Bio<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <textarea id="bio" name="bio" rows="6" class="form-control" placeholder="Tell us your story.." required></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="programmingExperience">Programming Experience<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" id="programmingExperience" name="programmingExperience" class="form-control" placeholder="Your programming experience" required>
+                        <span class="input-group-addon"><i class="gi gi-qrcode"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="workExperience">Work Experience<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" id="workExperience" name="workExperience" class="form-control" placeholder="Your work experience.." required>
+                        <span class="input-group-addon"><i class="gi gi-briefcase"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-actions">
+                <div class="col-md-8 col-md-offset-4">
+                    <input type="reset" class="btn btn-sm btn-warning" id="back2" value="Back">
+                    <input type="submit" class="btn btn-sm btn-primary" id="next2" value="Next">
+                </div>
+            </div>
+        </div>
+        <!-- END fifth Step -->
+
+        <div>
+            <input type="text" id="id" name="id" class="form-control hidden" value="@Model.Id">
+            <input type="text" id="onboardStatus" name="onboardStatus" class="form-control hidden" value="0">
+        </div>
+
+    </form>
+    <!-- END Wizard with Validation Content -->
+</div>
+
+
+@section scripts
+{
+
+    <script type="text/javascript" src="~/Scripts/moment.js"></script>
+    <script type="text/javascript" src="~/Scripts/Sabio.Services.UserOnboard.js"></script>
+    <script type="text/javascript" src="~/Scripts/sabio.services.address.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+    <script type="text/javascript" src="~/Scripts/sabio.services.ethnicities.js"></script>
+    <script type="text/javascript" src="~/Scripts/Sabio.Services.Tracks.js"></script>
+    <script type="text/javascript" src="~/Scripts/sabio.services.sections.js"></script>
+    <script type="text/javascript" src="~/Scripts/Sabio.Services.CountryState.js"></script>
+    <script type="text/javascript">
+
+        sabio.page.startUp = function () {
+            $("#next").on('click', sabio.page.handlers.validateSubmitTab1);
+            $("#next1").on('click', sabio.page.handlers.validateSubmitTab2);
+            $("#next3").on('click', sabio.page.handlers.validateSubmitTab3);
+            $("#next4").on('click', sabio.page.handlers.validateSubmitTab4);
+            $("#next2").on('click', sabio.page.handlers.validateSubmitTab5);
+            $('#countryId').on("change", sabio.page.handlers.onSelectState);
+
+            sabio.page.formsWizard.init();
+            sabio.services.ethnicities.getAll(sabio.page.ethnicitiesDropDown, sabio.page.ajaxError);
+            sabio.services.tracks.getTracks(sabio.page.tracksDropDown, sabio.page.ajaxError);
+            sabio.services.sections.getCampuses(sabio.page.campusDropDown, sabio.page.ajaxError);
+            sabio.services.CountryState.getCountries(sabio.page.countriesDropDown, sabio.page.ajaxError);
+        }
+
+        sabio.page.handlers.validateSubmitTab1 = function (evt) {
+            evt.preventDefault();
+            if ($("#advanced-wizard").valid()) {
+                var myData = $("#advanced-wizard").serialize();
+            }
+            var id = $("#id").val();
+            if (id > 0) {
+                sabio.services.userOnboard.update1(id, myData, sabio.page.ajaxSuccess, sabio.page.ajaxError);
+            }
+        }
+
+        sabio.page.handlers.validateSubmitTab2 = function (evt) {
+            evt.preventDefault();
+            if ($("#advanced-wizard").valid()) {
+                var myData = $("#advanced-wizard").serialize();
+            }
+            var id = $("#id").val();
+            if (id > 0) {
+                sabio.services.userOnboard.update2(id, myData, sabio.page.ajaxSuccess, sabio.page.ajaxError);
+            }
+        }
+
+        sabio.page.handlers.validateSubmitTab3 = function (evt) {
+            evt.preventDefault();
+            if ($("#advanced-wizard").valid()) {
+                var myData = $("#advanced-wizard").serialize();
+            }
+            var id = $("#id").val();
+            if (id > 0) {
+                sabio.services.userOnboard.update3(id, myData, sabio.page.ajaxSuccess, sabio.page.ajaxError);
+            }
+        }
+
+        sabio.page.handlers.validateSubmitTab4 = function (evt) {
+            evt.preventDefault();
+            if ($("#advanced-wizard").valid()) {
+                var myData = $("#advanced-wizard").serialize();
+            }
+            var id = $("#id").val();
+            if (id > 0) {
+                sabio.services.userOnboard.update4(id, myData, sabio.page.ajaxSuccess, sabio.page.ajaxError);
+            }
+        }
+
+        sabio.page.handlers.validateSubmitTab5 = function (evt) {
+            evt.preventDefault();
+            var onboardStatus = $("#onboardStatus").val();
+            if (onboardStatus == '') {
+                $("#onboardStatus").val(1);
+            }
+            if ($("#advanced-wizard").valid()) {
+                var myData = $("#advanced-wizard").serialize();
+                location.href = "http://lms.dev/user/current"
+            }            
+            var id = $("#id").val();
+            if (id > 0) {
+                sabio.services.userOnboard.update5(id, myData, sabio.page.ajaxSuccess, sabio.page.ajaxError);
+            }
+        }
+
+        sabio.page.formsWizard = function () {
+            return {
+                init: function () {
+                    /* Initialize Advanced Wizard with Validation */
+                    $('#advanced-wizard').formwizard({
+                        disableUIStyles: true,
+                        validationEnabled: true,
+                        validationOptions: {
+                            errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+                            errorElement: 'span',
+                            errorPlacement: function (error, e) {
+                                e.parents('.form-group > div').append(error);
+                            },
+                            highlight: function (e) {
+                                $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                                $(e).closest('.help-block').remove();
+                            },
+                            success: function (e) {
+                                // You can use the following if you would like to highlight with green color the input after successful validation!
+                                e.closest('.form-group').removeClass('has-success has-error'); // e.closest('.form-group').removeClass('has-success has-error').addClass('has-success');
+                                e.closest('.help-block').remove();
+                            },
+                            rules: {
+                                firstName: {
+                                    required: true,
+                                    minlength: 2
+                                },
+                                lastName: {
+                                    required: true,
+                                    minlength: 2
+                                },
+                                gender: {
+                                    required: true,
+                                },
+                                ethnicity: {
+                                    required: true,
+                                },
+                                dateOfBirth: {
+                                    required: true,
+                                },
+                                phone: {
+                                    required: true,
+                                    minlength: 10
+                                },
+                                countryId: {
+                                    required: true
+                                },
+                                streetAddress1: {
+                                    required: true,
+                                    minlength: 5
+                                },
+                                streetAddress2: {
+                                },
+                                city: {
+                                    required: true,
+                                    minlength: 3
+                                },
+                                stateProvinceId: {
+                                    required: true
+                                },
+                                ZipCode: {
+                                    required: true,
+                                    minlength: 5
+                                },
+                                desiredTrack: {
+                                    required: true
+                                },
+                                desiredCampusLocation: {
+                                    required: true
+                                },
+                                accreditationId: {
+                                    required: true
+                                },
+                                employmentStatusId: {
+                                    required: true
+                                },
+                                bio: {
+                                    required: true,
+                                    minlength: 10
+                                },
+                                programmingExperience: {
+                                    required: true
+                                },
+                                workExperience: {
+                                    required: true
+                                },
+                                extraCurricularActivities: {
+                                    required: true
+                                },
+                                learningObjective: {
+                                    required: true
+                                },
+                                referredBy: {
+                                    required: true
+                                },
+                                desiredSabioStartDate: {
+                                    required: true
+                                },
+                                targetEmploymentLocation: {
+                                    required: true,
+                                    minlength: 2
+                                },
+
+                            },
+                            messages: {
+                                firstName: {
+                                    required: "First Name is Required",
+                                    minlength: "At least 2 characters required"
+                                },
+                                lastName: {
+                                    required: "Last Name is Required",
+                                    minlength: "At least 2 characters required"
+                                },
+                                gender: {
+                                    required: "Please provide your Gender"
+                                },
+                                ethnicity: {
+                                    required: "Please select an option"
+                                },
+                                dateOfBirth: {
+                                    required: "Please enter your date of birth"
+                                },
+                                phone: {
+                                    required: "Valid Phone Number is Required",
+                                    minlength: "required 10 digits"
+                                },
+                                countryId: {
+                                    required: "Please select your country."
+                                },
+                                streetAddress1: {
+                                    required: "Please Enter your street address.",
+                                    minlength: "Required 5 digits."
+                                },
+                                streetAddress2: {
+                                },
+                                city: {
+                                    required: "Please enter your city.",
+                                    minlength: "Required 3 digits."
+                                },
+                                stateProvinceId: {
+                                    required: "Please select your state or province."
+                                },
+                                ZipCode: {
+                                    required: "Please enter your zip code.",
+                                    minlength: "Required 5 digits."
+                                },
+                                desiredTrack: {
+                                    required: "Please select a track"
+                                },
+                                desiredCampusLocation: {
+                                    required: "Please select a campus"
+                                },
+                                accreditationId: {
+                                    required: "This field is required"
+                                },
+                                employmentStatusId: {
+                                    required: "Please select your employment status"
+                                },
+                                bio: {
+                                    required: "This field is required",
+                                    minlength: "At least 15 Characters"
+                                },
+                                programmingExperience: {
+                                    required: "This field is required"
+                                },
+                                workExperience: {
+                                    required: "This field is required"
+                                },
+                                extraCurricularActivities: {
+                                    required: "This field is required"
+                                },
+                                learningObjective: {
+                                    required: "This field is required"
+                                },
+                                referredBy: {
+                                    required: "This field is required"
+                                },
+                                desiredSabioStartDate: {
+                                    required: "Please select a desired start date"
+                                },
+                                targetEmploymentLocation: {
+                                    required: "This field is required"
+                                },
+                            }
+                        },
+                        inDuration: 0,
+                        outDuration: 0
+                    });
+                }
+            };
+        }();
+
+        sabio.page.getId = function () {
+            if ($("#id").val() != 0) {
+                var id = $("#id").val();
+                sabio.services.userOnboard.get(id, sabio.page.getAjaxSuccess, sabio.page.ajaxError);
+            }
+        }
+
+        sabio.page.insertHiddenId = function (data) {
+            $("#id").val(data.item);
+        }
+
+        sabio.page.ajaxSuccess = function (data) {
+            if (data && data.item) {
+                $("#id").val(data.item);
+            }
+        };
+
+        sabio.page.ajaxError = function (jqXHR) {
+            console.log("Sorry User Delete")
+        };
+
+        sabio.page.getAjaxSuccess = function (data) {
+
+            console.log(data.item);
+            $("#desiredTrack").val(data.item.desiredTrack);
+            $("#desiredTrack").trigger('change');
+            $("#desiredCampusLocation").val(data.item.desiredCampusLocation);
+            $("#desiredCampusLocation").trigger('change');
+            $("#desiredSabioStartDate").val(data.item.desiredSabioStartDate).length;
+            if ($("#desiredSabioStartDate").val().length != 0) {
+                $("#desiredSabioStartDate").val(moment(data.item.desiredSabioStartDate).format('L'));
+            };
+            $("#accreditationId").val(data.item.accreditationId);
+            $("#accreditationId").trigger('change');
+            $("#firstName").val(data.item.firstName);
+            $("#lastName").val(data.item.lastName);
+            $("#gender").val(data.item.gender);
+            $("#gender").trigger('change');
+            $("#ethnicityId").val(data.item.ethnicityId);
+            $("#ethnicityId").trigger('change');
+            $("#dateOfBirth").val(data.item.dateOfBirth).length;
+            if ($("#dateOfBirth").val().length != 0) {
+                $("#dateOfBirth").val(moment(data.item.dateOfBirth).format('L'));
+            };
+            $("#phone").val(data.item.phone);
+            $("#addressId").val(data.item.addressId);
+            sabio.page.stateProvinceId = data.item.stateProvinceId
+            $("#countryId").val(data.item.countryId);
+            $("#countryId").trigger("change");
+            $("#streetAddress1").val(data.item.streetAddress1);
+            $("#streetAddress2").val(data.item.streetAddress2);
+            $("#city").val(data.item.city);
+            $("#zipCode").val(data.item.zipCode);
+            $("#facebook").val(data.item.facebook);
+            $("#linkedIn").val(data.item.linkedIn);
+            $("#twitter").val(data.item.twitter);
+            $("#webpage").val(data.item.webpage);
+            $("#employmentStatusId").val(data.item.employmentStatusId);
+            $("#employmentStatusId").trigger('change');
+            $("#bio").val(data.item.bio);
+            $("#programmingExperience").val(data.item.programmingExperience);
+            $("#workExperience").val(data.item.workExperience);
+            $("#extraCurricularActivities").val(data.item.extraCurricularActivities);
+            $("#learningObjective").val(data.item.learningObjective);
+            $("#referredBy").val(data.item.referredBy);
+            $("#targetEmploymentLocation").val(data.item.targetEmploymentLocation);
+            $("#onboardStatus").val(data.item.onboardstatus);
+        };
+
+        sabio.page.ethnicitiesDropDown = function (data) {
+            for (var index = 0; index < data.items.length; index++) {
+                var html = '<option value="' + data.items[index].id + '">' + data.items[index].ethnicity + '</option>';
+                $('#ethnicityId').append(html);
+            }
+            $("#ethnicityId").val(null);
+        }
+
+        sabio.page.countriesDropDown = function (data) {
+            for (var index = 0; index < data.items.length; index++) {
+                var html = '<option value="' + data.items[index].id + '">' + data.items[index].name + '</option>';
+                $('#countryId').append(html);
+            }
+            $("#countryId").val(null);
+            sabio.page.getId();
+        }
+
+        sabio.page.handlers.onSelectState = function () {
+            var id = $("#countryId").find(":selected").val();
+            $('#stateProvinceId').empty();
+            sabio.services.CountryState.getStateProvince(id, sabio.page.stateProvinceDropDown, sabio.page.ajaxError)
+        }
+
+        sabio.page.stateProvinceDropDown = function (data) {
+            for (var index = 0; index < data.items.length; index++) {
+                var html = '<option value="' + data.items[index].stateProvinceId + '">' + data.items[index].name + '</option>';
+                $('#stateProvinceId').append(html);
+            }
+            $('#stateProvinceId').val(null).trigger('change');
+
+            if (sabio.page.stateProvinceId) {
+
+                $("#stateProvinceId").val(sabio.page.stateProvinceId);
+                $("#stateProvinceId").trigger("change");
+                sabio.page.stateProvinceId = null;
+            }
+        }
+
+        sabio.page.tracksDropDown = function (data) {
+            for (var index = 0; index < data.items.length; index++) {
+                var html = '<option value="' + data.items[index].id + '">' + data.items[index].name + '</option>';
+                $('#desiredTrack').append(html);
+            }
+            $("#desiredTrack").val(null);
+        }
+
+        sabio.page.campusDropDown = function (data) {
+            for (var index = 0; index < data.items.length; index++) {
+                var html = '<option value="' + data.items[index].id + '">' + data.items[index].name + '</option>';
+                $('#desiredCampusLocation').append(html);
+            }
+            $("#desiredCampusLocation").val(null);
+        }
+
+    </script>
+}

@@ -1,0 +1,132 @@
+﻿@model Sabio.Web.Models.ViewModels.SectionViewModel
+
+@{
+    ViewBag.Title = "UserProfile";
+    Layout = "~/Views/Shared/_dashboardLayout.cshtml";
+}
+
+
+<div ng-controller="userDashboardTabsController as dashboard">
+    <div class="content-header content-header-media" data-ng-mouseenter="dashboard.showFileInputButton()" data-ng-mouseleave="dashboard.hideFileInputButton()">
+        <div class="header-section" data-ng-model="dashboard.user">
+            <small>
+                <!-- Avatar Pic here-->
+                <img ng-src="Https://sabio-training.s3-us-west-2.amazonaws.com/C11/{{dashboard.userAvatarPic}}" alt="Avatar" ng-show="dashboard.profileAvatar" class="pull-right img-circle" id="ProfilePic" style="position: absolute; top: 15px; left: 920px; height:100px">
+                <img src="" alt="Avatar" ng-show="dashboard.changeAvatar" class="pull-right img-circle" id="ProfilePic2" style="position: absolute; top: 15px; left: 920px; height:100px">
+
+                <input type="file" name="avatarPicFile" custom-on-change="dashboard.getAvatarPicFromFile" id="avatarPic" data-ng-model="dashboard.avatarPic"
+                       style="top: 200px; left: 50px; position: absolute; display:none">
+                <button type="button" name="triggerAvatarFile" id="triggerAvatarFile" class="btn btn-info"
+                        data-ng-show="dashboard.showChangePicture" style="top: 105px; left: 930px; position: absolute; height:26px; width: 26px; opacity:0.8"
+                        data-ng-click="dashboard.clickAvatarFile()">
+                    <i class="fa fa-plus-square"></i>
+                </button>
+                <button type="button" name="saveAvatarButton" id="saveAvatarPicButton" class="btn btn-info"
+                        data-ng-show="dashboard.showChangePicture"
+                        data-ng-disabled="dashboard.saveAvatarButton" style="top: 105px; left: 960px; position: absolute; height:26px; width: 26px"
+                        data-ng-click="dashboard.saveAvatarPicture()">
+                    <i class="fa fa-check-square"></i>
+                </button>
+                <button type="button" name="cancelAvatarButton" id="cancelSaveAvatarPicButton" class="btn btn-danger"
+                        data-ng-show="dashboard.showChangePicture" style="top: 105px; left: 990px; position: absolute; height:26px; width: 26px; opacity:0.8"
+                        data-ng-disabled="dashboard.cancelMyAvatarPicture"
+                        data-ng-click="dashboard.cancelAvatarPicture()">
+                    <i class="fa fa-minus-square"></i>
+                </button>
+            </small>
+            <h1>{{dashboard.user.firstName}} {{dashboard.user.lastName}}<br><small>{{dashboard.user.bio}}</small></h1>
+        </div>
+        <!-- For best results use an image with a resolution of 2560x248 pixels (You can also use a blurred image with ratio 10:1 - eg: 1000x100 pixels - it will adjust and look great!) -->
+        <!--background pic -->
+        <img ng-src="Https://sabio-training.s3-us-west-2.amazonaws.com/C11/{{dashboard.userBackgroundPic}}" alt="header image" ng-show="dashboard.profileCover" class="animation-pulseSlow" id="landScapePic" style="position: relative">
+        <img src="" ng-show="dashboard.changeCover" alt="header image" class="animation-pulseSlow previewCover" id="landScapePic2" style="position: relative">
+
+
+        <form enctype="multipart/form-data" id="fileForm" name="dashboard.fileForm" novalidate>
+            <input type="file" name="backGroundPicFile" custom-on-change="dashboard.getBackGroundPicFromFile" id="backGroundPic" data-ng-model="dashboard.BackgroundPic"
+                   style="top: 200px; left: 50px; position: absolute; display:none">
+            <input type="button" name="clickFileBtn" id="clickFileBtn" class="btn btn-info" data-ng-show="dashboard.showChangePicture"
+                   value="Upload File" style="top: 200px; left: 50px; position: absolute; opacity:0.8"
+                   data-ng-click="dashboard.clickCoverInputFile()">
+            <input type="button" name="saveCoverButton" id="saveBackGroundPicButton" class="btn btn-info" data-ng-show="dashboard.showChangePicture" data-ng-disabled="userProfile.saveCoverButton"
+                   value="Save" style="top: 200px; left: 155px; position: absolute"
+                   data-ng-click="dashboard.saveBackGroundPicture()" />
+            <input type="button" name="cancelButton" id="cancelSaveBackGroundPicButton" class="btn btn-danger" data-ng-show="dashboard.showChangePicture"
+                   data-ng-disabled="dashboard.cancelMyBgPicture"
+                   value="Cancel" style="top: 200px; left: 217px; position: absolute; opacity:0.8"
+                   data-ng-click="dashboard.cancelBackGroundPicture()" />
+
+        </form>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="block full">
+
+                <div class="block-title">
+                    <div class="block-options pull-right">
+                        <div class="btn-group">
+                            <a href="javascript:void(0)" data-toggle="dropdown" class="btn btn-alt btn-sm btn-default dropdown-toggle" aria-expanded="false"><i class="fa fa-angle-down"></i></a>
+                            <ul class="dropdown-menu dropdown-custom dropdown-menu-right">
+                                <li>
+                                    <a href="javascript:void(0)">Action</a>
+                                    <a href="javascript:void(0)">Action 2</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li><a href="javascript:void(0)">Another Action</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <ul data-toggle="tabs" class="nav nav-tabs">
+                        <li ng-class=" {'active': tab.id == dashboard.currentTab.id }" ng-repeat="tab in dashboard.tabs">
+                            <a href="{{tab.link}}" ng-click="dashboard.selectTab(tab)">{{tab.label}}</a>
+                        </li>
+                    </ul>
+
+                </div>
+
+                <div ng-view></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="application/json" id="courseFormats">
+
+    @Html.RawJson(Model.CourseFormat.ToDictionaryByValue())
+</script>
+
+<script type="application/json" id="timezones">
+    @Html.RawJson(Model.TimeZones)
+</script>
+
+
+
+@section pageInitScripts
+{
+    <script src="~/Scripts/ui-bootstrap-tpls-0.14.2.min.js"></script>
+    <script src="~/Scripts/ng/angular-enum-flag-directive.js"></script>
+    <script type="text/javascript">
+        sabio.extraNgDependencies = ['enumFlag', 'ui.bootstrap']
+    </script>
+}
+
+@section scripts
+{
+    <script src="/Scripts/sabio.profiles.services.js"></script>
+    <script src="~/Scripts/sabio.services.officeHours.js"></script>
+
+    <script src="~/Scripts/app/services/userdashboardservice.js"></script>
+    <script src="~/Scripts/app/services/officeHoursService.js"></script>
+    <script src="~/Scripts/app/users/dashboard/dashboard.config.js"></script>
+
+
+    <script src="~/Scripts/app/users/dashboard/controller/userdashboardtabs.js"></script>
+    <script src="~/Scripts/app/users/dashboard/controller/tabs/OfficeHours.js"></script>
+    <script src="~/Scripts/app/users/questions/controller/questions.js"></script>
+    <script src="~/Scripts/app/users/dashboard/controller/tabs/sectiondetails.js"></script>
+    <script src="~/Scripts/app/users/dashboard/controller/tabs/userinfo.js"></script>
+
+}

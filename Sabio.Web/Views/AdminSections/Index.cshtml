@@ -1,0 +1,105 @@
+﻿@model Sabio.Web.Models.ViewModels.SectionViewModel
+
+@{
+    Layout = "~/Views/Shared/_dashboardLayout.cshtml";
+}
+
+@section styles{
+    <link href="~/Sabio.CSS/DnD-List/DnD-List.css" rel="stylesheet" />
+    <link href="~/content/angular-ui-tree.css" rel="stylesheet" />
+    <link href="~/Sabio.CSS/simple.css" rel="stylesheet" />
+}
+
+@Html.Partial("Partials/_NgHeader")
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="block full">
+            <div class="block-title" ng-controller="adminSectionsTabsController as tabs">
+                <div class="block-options pull-right">
+                    <div class="btn-group">
+                        <a href="javascript:void(0)" data-toggle="dropdown" class="btn btn-alt btn-sm btn-default dropdown-toggle" aria-expanded="false"><i class="fa fa-angle-down"></i></a>
+                        <ul class="dropdown-menu dropdown-custom dropdown-menu-right">
+                            <li>
+                                <a href="javascript:void(0)">Action</a>
+                                <a href="javascript:void(0)">Action 2</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li><a href="javascript:void(0)">Another Action</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <ul data-toggle="tabs" class="nav nav-tabs">
+                    <li ng-class=" {'active': tab.id == tabs.currentTab.id }" ng-repeat="tab in tabs.tabs">
+                        <a href="{{tab.link}}" ng-click="tabs.selectTab(tab)">{{tab.label}}</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div ng-view></div>
+        </div>
+    </div>
+</div>
+
+<script type="application/json" id="wikiContentTypes">
+    @Html.RawJson(Model.WikiPageContentType.ToDictionaryByValue())
+</script>
+
+<script type="application/json" id="courseFormats">
+    @Html.RawJson(Model.CourseFormat.ToDictionaryByValue())
+</script>
+
+<script type="application/json" id="enrollmentStatus">
+    @Html.RawJson(Model.EnrollmentStatus.ToDictionaryByValue())
+</script>
+
+<script type="application/json" id="timezones">
+    @Html.RawJson(Model.TimeZones)
+</script>
+
+@section pageInitScripts
+{
+    <script src="~/Scripts/ng/angular-enum-flag-directive.js"></script>
+    <script src="~/Scripts/ng/angular-timepicker.js"></script>
+    <script src="/js/helpers/ckeditor/ckeditor.js"></script>
+    <script src="~/Scripts/ng/angular-ckeditor.js"></script>
+    <script src="~/Scripts/ng/angular-ckeditor-placeholder.js"></script>
+    <script src="~/Scripts/ng/angular-drag-and-drop-lists.min.js"></script>
+    <script src="~/Scripts/ng/angular-ui-tree.js"></script>
+    <script src="~/Scripts/dropzone.js"></script>
+    <script src="~/Scripts/app/directives/angular-dropzone.js"></script>
+    <script src="~/Scripts/ui-bootstrap-tpls-0.14.2.min.js"></script>
+
+    <script type="text/javascript">
+        sabio.extraNgDependencies = ["enumFlag", "ckeditor", "dndLists", "ui.tree", "ngDropzone", "ui.bootstrap"];
+    </script>
+}
+
+@section Scripts
+{
+    <script src="~/Scripts/app/services/userDataService.js"></script>
+    <script src="~/Scripts/Sabio.Services.Users.js"></script>
+    <script src="~/Scripts/sabio.services.sections.js"></script>
+    <script src="~/Scripts/sabio.services.modules.js"></script>
+    <script src="~/Scripts/sabio.services.wiki.js"></script>
+    <script src="~/Scripts/sabio.services.wikiContent.js"></script>
+    <script src="~/Scripts/sabio.services.wikiTree.js"></script>
+    <script src="~/Scripts/app/services/wikiService.js"></script>
+    <script src="~/Scripts/app/services/wikiContentService.js"></script>
+    <script src="~/Scripts/app/services/wikiTreeService.js"></script>
+    <script src="~/Scripts/app/services/sectionsService.js"></script>
+    <script src="~/Scripts/app/services/modulesService.js"></script>
+
+    <script src="~/Scripts/app/admin/sections/controllers/tabs.js"></script>
+    <script src="~/Scripts/app/admin/sections/controllers/index.js"></script>
+    <script src="~/Scripts/app/admin/sections/controllers/tabs/manage.js"></script>
+    <script src="~/Scripts/app/admin/sections/controllers/tabs/description.js"></script>
+    <script src="~/Scripts/app/admin/sections/controllers/tabs/enrollment.js"></script>
+    <script src="~/Scripts/app/admin/sections/controllers/tabs/instructors.js"></script>
+    <script src="~/Scripts/app/admin/sections/controllers/tabs/location.js"></script>
+    <script src="~/Scripts/app/admin/sections/controllers/tabs/modules.js"></script>
+    <script src="~/Scripts/app/admin/wiki/controllers/content.js"></script>
+    <script src="~/Scripts/app/admin/wiki/controllers/manage.js"></script>
+
+    <script src="~/Scripts/app/admin/sections/sections.config.js"></script>
+}

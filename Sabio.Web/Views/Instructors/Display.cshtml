@@ -1,0 +1,186 @@
+﻿
+@{
+    ViewBag.Title = "Display";
+    //Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@*<div id="page-content" style="min-height: 515px;">*@
+
+<div class="content-header">
+    <div class="header-section">
+        <h1>
+            <i class="gi gi-show_big_thumbnails"></i><strong>Instructors</strong><br><small>We make developers!</small>
+        </h1>
+    </div>
+</div>
+<div class="block full block-alt-noborder">
+   
+    <div class="row">
+        <div class="target"></div>     
+    </div>
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+
+        sabio.page.startUp = function () {
+
+            sabio.page.loadDisplay();
+            sabio.objects = [];
+            sabio.page.wireUpAnchor(document);
+            sabio.page.shortenBioString();
+
+        }
+      
+        sabio.page.loadDisplay = function () {
+
+            var url = "/api/instructors/list";
+            var settings = {
+                cache: false
+                , contentType: "application/x-www-form-urlencoded; charset=UTF-8"
+                , dataType: "json"
+                , success: sabio.page.ajaxSuccess
+                , error: sabio.page.ajaxError
+                , type: "GET"
+            };
+
+            $.ajax(url, settings);
+
+        }
+
+        sabio.page.ajaxSuccess = function (data) {
+            $(".msgWindow").hide();
+
+            if (!data) {
+
+                return;
+            }
+
+            for (var i = 0; i < data.items.length; i++) {
+
+                var instructorsData = data.items[i];
+
+                console.log(data.items[i]);
+             
+                sabio.page.addBioToDom(instructorsData);
+
+            }
+
+        }
+
+        sabio.page.ajaxError = function (jqXHR, textStatus, errorThrown) {
+
+            sabio.page.logToBottom(jqXHR.responseJSON);
+            $("msgWindow").show();
+            $("#msgWindow").addClass("alert-danger");
+            $("#msgWindow").removeClass("alert-info");
+        }
+
+        sabio.page.shortenBioString = function (string) {
+
+            var bio;
+
+            if (string.length > 50) {
+                string = string.substring(0, 99) + "...";
+            }
+
+            var bio = string;
+            console.log("shortened" + bio);
+            return bio;
+
+        }
+
+        sabio.page.addBioToDom = function (populate) {
+            console.log(populate);
+            var newBio = sabio.page.getClone();
+
+            var bio = sabio.page.shortenBioString(populate.bio);
+
+            newBio.find(".id").html(populate.id);
+            newBio.find(".name").text(populate.name);
+            newBio.find(".email").text(populate.email);
+            newBio.find("#bio").html(bio);
+            newBio.find(".LinkedIn").text(populate.linkedIn);
+            newBio.find(".viewLink").attr('href', 'http://lms.dev/Instructor/' + populate.id );
+            newBio.find(".editLink").attr('href', 'http://lms.dev/Instructors/' + populate.id + '/edit');
+
+
+
+            var bioTarget = $(".target");
+
+            newBio.attr("data-bioId", populate.id)
+
+            bioTarget.append(newBio);
+
+            //sabio.page.wireUpWidgets(newWiki, populate);
+
+            return newBio;
+
+        }
+
+        sabio.page.getClone = function () {
+            var html = $("#instructorsDisplayTemplate").html();
+            var clone = $(html).clone();
+
+            return clone
+
+        }
+
+    </script>
+
+}
+
+
+
+
+
+
+
+<script type="text/template" id="instructorsDisplayTemplate">
+
+    <div class="col-md-6">
+        <div class="block">
+            <div class="block-title">
+                <div class="block-options pull-right">
+                    <a href="http://lms.dev/Instructors/Biodisplay" class="pull-left">
+                        <img src="https://sabiola.atlassian.net/wiki/download/attachments/524289/atl.site.logo?version=1&modificationDate=1380176126130&api=v2">
+                    </a>
+                </div>
+
+                <h1>
+                    <strong class="name"></strong>  <small><a href="http://lms.dev/Instructors/Biodisplay" class="email"></a></small>
+
+                </h1>
+            </div>
+            <div class="">
+                <div class="Body">
+                    <div class="Row">
+                        <div class="Cell"><a class="viewLink" href="javascript:void(0)">Read More</a></div>
+                        <div class="Cell"><a class="editLink" href="http://lms.dev/Instructors/Biodisplay">Edit</a></div>
+                    </div>
+                    <div class="Row">
+                        <div class="Cell"><a class="LinkedIn"></a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

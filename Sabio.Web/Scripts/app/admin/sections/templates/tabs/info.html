@@ -1,0 +1,263 @@
+﻿
+
+<h3>Basic Information</h3>
+
+
+<form ng-submit="admin.submitBasic()" class="form-horizontal form-bordered" name="admin.sectionForm" novalidate>
+    <div class="row">
+        <div class="col-md-6">
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="name">Section Name</label>
+                <div class="col-md-8">
+                    <input id="name"
+                            name="name"
+                            required
+                            ng-required="true"
+                            class="form-control ng-class:{'error': admin.showSectionFormErrors && !admin.sectionForm.name.$valid}"
+                            size="1"
+                            ng-model="admin.section.name" />
+                    <div role="alert" class="help-inline error">
+                        <span class="error has-error" ng-show="admin.showSectionFormErrors && admin.sectionForm.name.$error.required">Please enter a section name. If in doubt, use Course Name: Start Date - Campus Name.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="timeZone">Time Zone</label>
+                <div class="col-md-8">
+                    <select id="timeZone"
+                            name="timeZone"
+                            chosen
+                            required
+                            ng-required="true"
+                            class="form-control ng-class:{'error': admin.showSectionFormErrors && !admin.sectionForm.timeZone.$valid}"
+                            size="1"
+                            ng-options="tz.value for tz in admin.timezones track by tz.id"
+                            ng-model="admin.section.timeZone"></select>
+                    <div role="alert" class="help-inline error">
+                        <span class="error has-error" ng-show="admin.showSectionFormErrors && admin.sectionForm.timeZone.$error.required">Select the Time Zone please</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label daysOfTheWeek">Class Days</label>
+
+                <div class="col-md-8">
+                    <div ng-repeat="(key, value) in admin.$daysEnum" ng-enum-model="admin.section.daysOfWeek">
+                        <label>
+                            <input type="checkbox"
+                                   class="ng-class:{'error': admin.showSectionFormErrors && !admin.sectionForm.daysOfWeek.$valid}"
+                                   name="daysOfWeek"
+                                   ng-enum-flag="value"
+                                   ng-enum-model="admin.section.daysOfWeek"
+                                   required
+                                   ng-required="true" /> {{key}}
+                        </label>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="courseId">Course</label>
+                <div class="col-md-8">
+                    <select required
+                            name="courseId"
+                            id="courseId"
+                            ng-options="course.courseName for course in admin.courses track by course.id"
+                            ng-model="admin.section.courseId"
+                            class="form-control"
+                            size="1"></select>
+
+                    <div role="alert" class="help-inline error">
+                        <span class="error has-error" ng-show="admin.showSectionFormErrors && admin.sectionForm.courseId.$error.required">Course is required</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="format">Format</label>
+
+                <div class="col-md-8">
+                    <select id="format"
+                            name="format"
+                            chosen
+                            required
+                            ng-required="true"
+                            ng-model="admin.section.format"
+                            class="form-control ng-class:{'error': admin.showSectionFormErrors && !admin.sectionForm.format.$valid}"
+                            size="1"
+                            ng-options="format.value for format in admin.courseFormats track by format.id"></select>
+                    <div role="alert" class="help-inline error">
+                        <span class="error has-error" ng-show="admin.showSectionFormErrors && admin.sectionForm.format.$error.required">Select the Time Zone please</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="capacity">Class Capacity</label>
+                <div class="container col-md-8">
+                    <input class="form-control"
+                           name="capacity"
+                           ng-model="admin.section.capacity"
+                           type="number" />
+
+                    <div role="alert" class="help-inline error">
+                        <span class="error has-error" ng-show="admin.showSectionFormErrors && admin.sectionForm.capacity.$error.required">Capacity is required.</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="startDate">Start Date</label>
+                <div class=" col-md-8">
+
+                    <p class="input-group sabio-gi">
+                        <input type="text" class="form-control ng-class:{'error': admin.showSectionFormErrors && !admin.sectionForm.startDate.$valid}"
+                               name="startDate"
+                               id="startDate"
+                               uib-datepicker-popup="{{admin.datepicker.format}}"
+                               ng-model="admin.section.startDate"
+                               is-open="admin.datepicker.status.start"
+                               min-date="admin.datepicker.defaults.start.min"
+                               max-date="admin.datepicker.defaults.start.max"
+                               datepicker-options="admin.datepicker.options"
+                               date-disabled="admin.datepickerDisabled(date, mode)"
+                               ng-required="true"
+                               close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="admin.openDatepicker($event, 'start')">
+                                <i class="gi gi-calendar"></i>
+                            </button>
+                        </span>
+                        <div role="alert" class="help-inline error">
+                            <span class="error has-error" ng-show="admin.showSectionFormErrors && admin.sectionForm.startDate.$error.required">Please Select the Start Date for this Section</span>
+                        </div>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="endOfClass">End Date</label>
+                <div class=" col-md-8">
+                    <p class="input-group sabio-gi">
+                        <input type="text" class="form-control ng-class:{'error': admin.showSectionFormErrors && !admin.sectionForm.endDate.$valid}"
+                               name="endDate"
+                               id="endDate"
+                               uib-datepicker-popup="{{admin.datepicker.format}}"
+                               ng-model="admin.section.endDate"
+                               is-open="admin.datepicker.status.end"
+                               min-date="admin.datepicker.defaults.end.min"
+                               max-date="admin.datepicker.defaults.end.max"
+                               datepicker-options="admin.datepicker.options"
+                               date-disabled="admin.datepickerDisabled(date, mode)"
+                               ng-required="true"
+                               close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="admin.openDatepicker($event, 'end')">
+                                <i class="gi gi-calendar"></i>
+                            </button>
+                        </span>
+                        <div role="alert" class="help-inline error">
+                            <span class="error has-error" ng-show="admin.showSectionFormErrors && admin.sectionForm.endDate.$error.required">Please Select the End Date for this Section</span>
+                        </div>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="form-group">
+
+                <label class="col-md-4 control-label" for="startTime">Start Time</label>
+                <div class="col-md-8 sabio-gi">
+
+                    <uib-timepicker ng-model="admin.section.startTime"
+                                    name="startTime"
+                                    hour-step="1"
+                                    minute-step="15"
+                                    show-meridian="false"></uib-timepicker>
+                </div>
+
+            </div>
+
+
+        </div>
+        <div class="col-md-6">
+
+            <div class="form-group">
+
+                <label class="col-md-4 control-label" for="endClassTime">End Time</label>
+                <div class="col-md-8 sabio-gi">
+                    <uib-timepicker ng-model="admin.section.endTime"
+                                    name="startTime"
+                                    hour-step="1"
+                                    minute-step="15"
+                                    show-meridian="false"></uib-timepicker>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="regDeadline">Registration Deadline</label>
+                <div class=" col-md-8">
+
+                    <p class="input-group sabio-gi">
+                        <input type="text" class="form-control ng-class:{'error': admin.showSectionFormErrors && !admin.sectionForm.registrationDeadline.$valid}"
+                               name="registrationDeadline"
+                               id="registrationDeadline"
+                               uib-datepicker-popup="{{admin.datepicker.format}}"
+                               ng-model="admin.section.registrationDeadline"
+                               is-open="admin.datepicker.status.reg"
+                               min-date="admin.datepicker.defaults.reg.min"
+                               max-date="admin.datepicker.defaults.reg.max"
+                               datepicker-options="admin.datepicker.options"
+                               date-disabled="admin.datepickerDisabled(date, mode)"
+                               ng-required="true"
+                               close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="admin.openDatepicker($event, 'reg')">
+                                <i class="gi gi-calendar"></i>
+                            </button>
+                        </span>
+                        <div role="alert" class="help-inline error">
+                            <span class="error has-error" ng-show="admin.showSectionFormErrors && admin.sectionForm.registrationDeadline.$error.required">Please Select the Registration Deadline for this Section</span>
+                        </div>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <div class="col-md-6 col-md-offset-1">
+                <button type="submit"
+                        class="btn btn-sm btn-primary"
+                        ng-submit="admin.submitBasic()">
+                    <i class="fa fa-download"></i> Save Section Info
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+

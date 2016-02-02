@@ -1,0 +1,22 @@
+﻿<div class="block">
+    <uib-accordion close-others="true">       
+        <uib-accordion-group ng-repeat="space in wiki.wikiSpaces track by space.id" panel-class="panel-default">
+            <uib-accordion-heading>
+                <h4 ng-click="wiki.loadSpace(space)">{{space.title}} </h4>                
+            </uib-accordion-heading>
+
+            <div class="col-sm-6">
+
+                <p ng-if="!wiki.wikiTree">Loading tree...</p>
+
+                <div ui-tree="wiki.wikiTree" id="tree-root">
+                    <ol ui-tree-nodes ng-model="wiki.wikiTree">
+                        <li ng-repeat="node in wiki.wikiTree" ui-tree-node ng-include="'/scripts/app/admin/wiki/templates/leaf.html'">
+                            {{node.nodes}}
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </uib-accordion-group>
+    </uib-accordion>
+</div>

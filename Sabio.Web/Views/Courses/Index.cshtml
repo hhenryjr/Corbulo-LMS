@@ -1,0 +1,452 @@
+﻿@model Sabio.Web.Models.ViewModels.ItemViewModel<int>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+
+<div class="content-header">
+    <div class="header-section">
+        <h1>
+            <i class="gi gi-show_big_thumbnails"></i>Courses<br>
+        </h1>
+    </div>
+</div>
+
+<ul class="breadcrumb breadcrumb-top">
+    <li>Page Layouts</li>
+    <li><a href="">Fixed Top Header</a></li>
+</ul>
+<!-- END Fixed Top Header Header -->
+<!-- Dummy Content -->
+@*<div class="widget-main">
+        <a href="javascript:void(0)" class="widget-image-container animation-fadeIn">
+            <span class="widget-icon themed-background"><i class="fa fa-globe"></i></span>
+        </a>
+        <a href="javascript:void(0)" class="btn btn-sm btn-default pull-right" data-toggle="tooltip" title="New Elements in HTML5">Lesson 2.3 <i class="fa fa-chevron-right"></i></a>
+        <a href="javascript:void(0)" class="btn btn-sm btn-default" data-toggle="tooltip" title="HTML Structure"><i class="fa fa-chevron-left"></i> Lesson 2.1</a>
+        <hr>
+        <h3 class="sub-header course-name">2.2 HTML Basic Elements</h3>
+        <h4 class="course-heading">Course Description</h4>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ultrices, justo vel imperdiet gravida, urna ligula hendrerit nibh, ac cursus nibh sapien in purus. Mauris tincidunt tincidunt turpis in porta. Integer fermentum tincidunt auctor. Vestibulum ullamcorper, odio sed rhoncus imperdiet, enim elit sollicitudin orci, eget dictum leo mi nec lectus. Nam commodo turpis id lectus scelerisque vulputate. Integer sed dolor erat. Fusce erat ipsum, varius vel euismod sed, tristique et lectus? Etiam egestas fringilla enim, id convallis lectus laoreet at. Fusce purus nisi, gravida sed consectetur ut, interdum quis nisi. Quisque egestas nisl id lectus facilisis scelerisque? Proin rhoncus dui at ligula vestibulum ut facilisis ante sodales! Suspendisse potenti. Aliquam tincidunt sollicitudin sem nec ultrices. Sed at mi velit. Ut egestas tempor est, in cursus enim venenatis eget! Nulla quis ligula ipsum. Donec vitae ultrices dolor?</p>
+        <div class="alert alert-warning">
+                <h4><i class="fa fa-exclamation-triangle"></i> Attention</h4> This is your message!
+            </div>
+        <pre class="line-numbers"><code class="language-markup">&lt;span&gt;
+            HTML code..
+            &lt;/span&gt;</code></pre>
+        <h4 class="schedule">Schedule</h4>
+        <p>Donec lacinia venenatis metus at bibendum? In hac habitasse platea dictumst. Proin ac nibh rutrum lectus rhoncus eleifend. Sed porttitor pretium venenatis. Suspendisse potenti. Aliquam quis ligula elit. Aliquam at orci ac neque semper dictum. Sed tincidunt scelerisque ligula, et facilisis nulla hendrerit non. Suspendisse potenti. Pellentesque non accumsan orci. Praesent at lacinia dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <h4 class="prereqs">Prerequisites</h4>
+        <p>Donec lacinia venenatis metus at bibendum? In hac habitasse platea dictumst. Proin ac nibh rutrum lectus rhoncus eleifend. Sed porttitor pretium venenatis. Suspendisse potenti. Aliquam quis ligula elit. Aliquam at orci ac neque semper dictum. Sed tincidunt scelerisque ligula, et facilisis nulla hendrerit non. Suspendisse potenti. Pellentesque non accumsan orci. Praesent at lacinia dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <ul class="fa-ul">
+            <li>
+                <i class="fa fa-li fa-check text-success"></i> Make sure you have closed the tag.
+            </li>
+            <li>
+                <i class="fa fa-li fa-check text-success"></i> Keep writing markup.
+            </li>
+            <li>
+                <i class="fa fa-li fa-check text-success"></i> Don't worry if you make mistakes.
+            </li>
+        </ul>
+        <h4 class="course-type">Course Type</h4>
+        <p>Donec lacinia venenatis metus at bibendum? In hac habitasse platea dictumst. Proin ac nibh rutrum lectus rhoncus eleifend. Sed porttitor pretium venenatis. Suspendisse potenti. Aliquam quis ligula elit. Aliquam at orci ac neque semper dictum. Sed tincidunt scelerisque ligula, et facilisis nulla hendrerit non. Suspendisse potenti. Pellentesque non accumsan orci. Praesent at lacinia dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <pre class="line-numbers"><code class="language-markup">&lt;div&gt;
+            HTML code..
+            &lt;/div&gt;</code></pre>
+        <h4 class="course-tags">Tags</h4>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ultrices, justo vel imperdiet gravida, urna ligula hendrerit nibh, ac cursus nibh sapien in purus. Mauris tincidunt tincidunt turpis in porta. Integer fermentum tincidunt auctor. Vestibulum ullamcorper, odio sed rhoncus imperdiet, enim elit sollicitudin orci, eget dictum leo mi nec lectus. Nam commodo turpis id lectus scelerisque vulputate. Integer sed dolor erat. Fusce erat ipsum, varius vel euismod sed, tristique et lectus? Etiam egestas fringilla enim, id convallis lectus laoreet at. Fusce purus nisi, gravida sed consectetur ut, interdum quis nisi. Quisque egestas nisl id lectus facilisis scelerisque? Proin rhoncus dui at ligula vestibulum ut facilisis ante sodales! Suspendisse potenti. Aliquam tincidunt sollicitudin sem nec ultrices. Sed at mi velit. Ut egestas tempor est, in cursus enim venenatis eget! Nulla quis ligula ipsum. Donec vitae ultrices dolor?</p>
+        <div class="alert alert-success">
+                <h4><i class="fa fa-thumbs-o-up"></i> Finishing Up</h4> This is your message!
+            </div>
+    </div>*@
+<div class="block">
+    <div class="block-title">
+        <div class="block-options pull-right">
+        </div>
+        <h2><strong>Course Entry</strong></h2>
+    </div>
+    <form action="page_forms_general.php" method="post" class="form-bordered" id="courses-input-form" onsubmit="return false;">
+        <div class="form-group">
+            <label for="courseName">Course Name</label>
+            <div class="form-group courseName">
+                <input type="text" id="courseName" name="courseName" class="form-control" placeholder="Course Name" maxlength="50">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Length">Course Length</label>
+            <div class="form-group Length">
+                <textarea id="Length" rows="2" name="Length" placeholder="Enter the Course Length please..."></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="format">Course Format</label>
+            <div class="form-group">
+                <select id="format" name="format" class="form-control" size="1">
+                    <option value="">Please select a course format</option>
+                    <option value="1">In-Person</option>
+                    <option value="2">Online</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Course Description</label>
+            <div class="form-group description">
+                <textarea id="description" rows="5" name="description" class="ckeditor" placeholder="Enter Description.."></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="learningObjectives">Learning Objectives</label>
+            <div class="form-group learningObjectives">
+                <textarea id="learningObjectives" rows="5" name="learningObjectives" class="ckeditor" placeholder="Enter learning Objectives.."></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="expectedOutcome">Expected Outcome</label>
+            <div class="form-group expectedOutcome">
+                <textarea id="expectedOutcome" rows="5" name="expectedOutcome" class="ckeditor" placeholder="Enter expected outcome..."></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="evaluationCriteria">Evaluation Criteria</label>
+            <div class="form-group evaluationCriteria">
+                <textarea id="evaluationCriteria" rows="5" name="evaluationCriteria" class="ckeditor" placeholder="Enter evaluation criteria..."></textarea>
+            </div>
+        </div>
+
+        <div class="form-group col-md-6">
+            <label for="start">Course Start Date</label>
+            <div class="form-group start">
+                <input type="date" id="start" name="start" class="form-control" placeholder="Start Date" />
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="end">Course End Date</label>
+            <div class="form-group end">
+                <input type="date" id="end" name="end" class="form-control" placeholder="End Date" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="prereqs">Prerequisites</label>
+            <div class="form-group prereqs">
+                <select id="prereqs" name="prereqs" multiple class="select-chosen" data-placeholder="Choose a Prerequisite" style="width: 250px;"></select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="tags">Enter Tags</label>
+            <div class="form-group tags">
+                <select id="tags" name="tags" multiple class="select-chosen" data-placeholder="Choose a tag" style="width: 250px;"></select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="instructors">Instructor(s)</label>
+            <div class="form-group tags">
+                <select id="instructors" name="instructors" multiple class="select-chosen" data-placeholder="Select instructor(s)" style="width: 250px;"></select>
+            </div>
+        </div>
+
+        <div>
+            <input type="text" id="id" name="id" class="form-control hidden" placeholder="" value="@Model.Item">
+        </div>
+        <div>
+            <div class="form-group form-actions">
+                <button class="btn btn-success" id="newCourse"><i class="fa fa-sign-in"></i> Submit</button>
+                <button class="btn btn-danger pull-right" id="deleteCourse"><i class="fa fa-ban"></i> Delete</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+@section scripts
+{
+
+    @*Sabio JS file*@
+    <script type="text/javascript" src="~/Scripts/moment.js"></script>
+    <script type="text/javascript" src="~/Scripts/Sabio.Services.Courses.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/js/helpers/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript" src="/Scripts/Sabio.Services.Tags.js"></script>
+    <script type="text/javascript" src="/Scripts/Sabio.Services.Instructors.js"></script>
+    <script type="text/javascript">
+
+        sabio.page.startUp = function () {
+   
+            sabio.page.validationSetUp();
+            $("#newCourse").on("click", sabio.page.handlers.isValidating);
+            $("#deleteCourse").on("click", sabio.page.handlers.deleteItemById);
+            sabio.services.courses.getAll(sabio.page.prereqsDropDown, sabio.page.ajaxError);
+            sabio.services.tags.getTags(sabio.page.tagsDropdown, sabio.page.ajaxError);
+            sabio.services.instructors.getAll(sabio.page.instructorsDropDown, sabio.page.ajaxError);
+
+        }
+
+        sabio.page.validationSetUp = function () {
+            jQuery.validator.setDefaults({
+                //debug: true
+            });
+
+            //tags and the multiselect box both create elements when the page is loaded, these below select those new hidden elements
+            //and allow for validation to be applied to those elements.
+            $(".chosen-choices").addClass("form-control");
+            $(".tagsinput").addClass("form-control");
+
+         
+            var validator = $("#courses-input-form").validate({
+                errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+                errorElement: 'div',
+                errorPlacement: function (error, e) {
+                    e.parents('.form-group > div').append(error);
+                },
+                highlight: function (e) {
+                    $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                    $(e).closest('.help-block').remove();
+                },
+                success: function (e) {
+                    // You can use the following if you would like to highlight with green color the input after successful validation!
+                    e.closest('.form-group').removeClass('has-success has-error'); // e.closest('.form-group').removeClass('has-success has-error').addClass('has-success');
+                    e.closest('.tagsinput').remove();
+                    e.closest('.tagsinput').removeClass("form-control");
+                },
+
+                rules: {
+                    courseName: {
+                        required: true,
+                        maxlength: 100
+                    },
+                    Length: {
+                        required: true,
+                        maxlength: 50,
+                    },
+
+                    description: {
+                        required: true,
+                        maxlength: 500
+                    },
+
+                    start: {
+                        required: true,
+                        date: true,
+                    },
+
+                    end: {
+                        required: true,
+                        date: true
+                    },
+
+                    prereqs: {
+                        required: true,
+                    },
+
+                    tags: {
+                        required: true
+                    },
+
+                    insructors: {
+                        required: true
+                    },
+
+                    learningObjectives: {
+                        required: true,
+                        maxlength: 4000
+                    },
+
+                    expectedOutcome: {
+                        required: true,
+                        maxlength: 4000
+                    },
+
+                    evaluationCriteria: {
+                        required: true,
+                        maxlength: 4000
+                    },
+
+                    courseFormat: {
+                        required: true,
+                    },
+                },
+                messages: {
+                    courseName: "The name of the course is required.",
+                    Length: "Please Enter Numbers.",
+                    description: "You must enter a course description.",
+                    start: "You must enter a start date.",
+                    end: "You must enter an end date.",
+                    prereqs: "You must enter a prerequisite.",
+                    tags: "You must enter a tag",
+                    instructors: "You must select an Instructor(s)",
+                    learningObjectives: "You must enter a learning objective.",
+                    expectedOutcome: "You must enter the expected outcome.",
+                    evaulationCriteria: "You must enter evaluation criteria",
+                    format: "You must select a course format",
+                },
+                ignore: "hidden:not('#prereqs')"
+            });
+           
+            var checkerrors = function () {
+                validator.form();
+            };
+
+        }
+
+        sabio.page.checkForId = function () {
+            var id = $("#id").val();
+            if (id > 0) {
+                sabio.page.getCourse();
+            }
+        }
+
+        sabio.page.insertHiddenId = function (data) {
+          
+            $("#id").val(data.item);
+        }
+
+        sabio.page.handlers.isValidating = function () {
+            if ($("#courses-input-form").valid()) {
+              
+                sabio.page.postOrPut();
+            }
+            else {
+                console.log("invalid fields on the form");
+            }
+        };
+
+        sabio.page.handlers.deleteItemById = function () {
+            var id = $("#id").val();
+            sabio.services.courses.delete(id, sabio.page.deleteSuccess, sabio.page.ajaxError);
+        }
+
+        sabio.page.postOrPut = function () {
+            var id = $("#id").val();
+            CKEDITOR.instances.description.updateElement();
+            CKEDITOR.instances.learningObjectives.updateElement();
+            CKEDITOR.instances.expectedOutcome.updateElement();
+            CKEDITOR.instances.evaluationCriteria.updateElement();
+            var data = $("#courses-input-form").serialize();
+            if (id === "0") {
+                sabio.services.courses.add(data, sabio.page.addSuccess, sabio.page.ajaxError);
+               
+            }
+            else {
+                sabio.services.courses.update(id, data, sabio.page.updateSuccess, sabio.page.ajaxError);
+             
+            }
+        }
+
+        sabio.page.getCourse = function () {
+            var id = $("#id").val();
+            sabio.services.courses.get(id, sabio.page.getSuccess, sabio.page.ajaxError);
+        }
+
+        sabio.page.addSuccess = function (data, status, xhr) {
+            console.log(JSON.stringify(data));
+            var idCheck = $("#id").val();
+            if (idCheck === "0") {
+                sabio.page.insertHiddenId(data);
+            }
+        }
+
+        sabio.page.updateSuccess = function (data, status, xhr) {
+        
+            sabio.page.logToBottom(data);
+            $("#msgWindow").removeClass("alert-danger");
+            $("#msgWindow").addClass("alert-info");
+            location.href = '/courses';
+        }
+
+        sabio.page.getSuccess = function (data) {
+            var startDate = moment(data.item.start).toDate();
+            var endDate = moment(data.item.end).toDate();
+            var end = moment(endDate).format('YYYY-MM-DD');
+            var start = moment(startDate).format('YYYY-MM-DD');
+            var tags = data.item.tags;
+            var tagArray = [];
+            for (var index = 0; index < tags.length; index++) {
+                tagArray.push(tags[index].tagId);
+            }
+            var prereqs = data.item.prereqs;
+            var prereqArray = [];
+            for (var index = 0; index < prereqs.length; index++) {
+                prereqArray.push(prereqs[index].id);
+            }
+            var courseLength = data.item.courseLength;
+            var instructors = data.item.instructors;
+            var instructorsArray = [];
+            for (var index = 0; index < instructors.length; index++) {
+                instructorsArray.push(instructors[index].instructorId);
+            }
+            //var format = data.item.format();
+          
+            $("#courseName").val(data.item.courseName);
+            $("#Length").val(data.item.length);
+            $("#description").val(data.item.description);
+            $("#start").val(start);
+            $("#end").val(end);
+            $("#tags").val(tagArray);
+            $("#tags").trigger("chosen:updated");
+            $("#prereqs").val(prereqArray);
+            $("#prereqs").trigger("chosen:updated");
+            $("#instructors").val(instructorsArray);
+            $("#instructors").trigger("chosen:updated");
+            $("#learningObjectives").val(data.item.learningObjectives);
+            $("#expectedOutcome").val(data.item.expectedOutcome);
+            $("#evaluationCriteria").val(data.item.evaluationCriteria);
+            $("#format").val(data.item.format);
+
+        }
+
+        sabio.page.deleteSuccess = function () {
+            console.log("Deleting Course #" + " " + id);
+            location.href = '/courses';
+        }
+
+        sabio.page.prereqsDropDown = function (data) {
+         
+            for (var index = 0; index < data.items.length; index++) {
+                var html = '<option value="' + data.items[index].id + '">' + data.items[index].courseName + '</option>';
+                $('#prereqs').append(html);
+            }
+            $("#prereqs").trigger("chosen:updated");
+        }
+
+        sabio.page.tagsDropdown = function (data) {
+        
+            for (var index = 0; index < data.items.length; index++) {
+                var html = '<option value="' + data.items[index].id + '">' + data.items[index].tagName + '</option>';
+                $('#tags').append(html);
+            }
+            $("#tags").trigger("chosen:updated");
+        }
+
+        sabio.page.instructorsDropDown = function (data) {
+          
+            for (var index = 0; index < data.items.length; index++) {
+                var html = '<option value="' + data.items[index].id + '">' + data.items[index].name + '</option>';
+                $("#instructors").append(html);
+            }
+            $("#instructors").trigger("chosen:updated");
+            sabio.page.getCourse();
+        }
+
+        sabio.page.ajaxError = function (jqXHR, textStatus, errorThrown) {
+            sabio.page.logToBottom(jqXHR.responseJSON);
+            alert("Error, Item was not sent to the database.")
+        }
+
+        sabio.page.logToBottom = function (data) {
+            $("#msgWindow").html((JSON.stringify(data)));
+        }
+
+
+
+    </script>
+}
+

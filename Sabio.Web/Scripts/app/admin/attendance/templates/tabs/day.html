@@ -1,0 +1,109 @@
+﻿
+<h1>DAY</h1>
+
+<div class="row">
+    <div class="col-md-5">
+        <!--<form name="admin.attendanceForm" class="form-horizontal form-bordered" ng-submit="admin.update()">-->
+        <form ng-submit="admin.submitBasic()" class="form-horizontal form-bordered" name="admin.attendanceForm" novalidate>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="campusLocation" style="padding-left: 40px">Campus</label>
+                <div class="col-md-8">
+                    <select id="campusLocation"
+                            name="campusLocation"
+                            required
+                            ng-required="true"
+                            class="form-control ng-class:{'error': admin.showAttendanceFormErrors && !admin.campusLocation.$valid}"
+                            size="1"
+                            ng-model="admin.attendance.campusLocation"
+                            ng-options="obj.id as obj.name for obj in admin.campuses"></select>
+                    <div role="alert" class="help-inline error">
+                        <span class="error has-error" ng-show="admin.showAttendanceFormErrors && admin.attendanceForm.campusLocation.$error.required">Select Campus Please</span>
+                    </div>
+                </div>
+            </div>
+            <!--</form>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<form ng-submit="admin.submitBasic()" class="form-horizontal form-bordered" name="admin.attendanceForm" novalidate>-->
+            <!--<div class="row">
+            <div class="col-md-5">-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="checkInDate">CheckIn Date</label>
+                <div class= "col-md-8">
+
+                    <p class="input-group sabio-gi">
+                        <input type="text" class="form-control ng-class:{'error': admin.showAttendanceFormErrors && !admin.attendanceForm.checkInDate.$valid}"
+                               name="checkInDate"
+                               id="checkInDate"
+                               uib-datepicker-popup="{{admin.datepicker.format}}"
+                               ng-model="admin.attendance.checkInDate"
+                               is-open="admin.datepicker.status.checkIn"
+                               min-date="admin.datepicker.defaults.checkIn.min"
+                               max-date="admin.datepicker.defaults.checkIn.max"
+                               datepicker-options="admin.datepicker.options"
+                               date-disabled="admin.datepickerDisabled(date, mode)"
+                               ng-required="true"
+                               close-text="Close" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="admin.openDatepicker($event, 'checkIn')">
+                                <i class="gi gi-calendar"></i>
+                            </button>
+                        </span>
+                        <div role="alert" class="help-inline error">
+                            <span class="error has-error" ng-show="admin.showAttendanceFormErrors && admin.attendanceForm.checkInDate.$error.required">Please Select CheckIn Date.</span>
+                        </div>
+                    </p>
+                </div>
+            </div>
+            <!--</div>
+            </div>-->
+            <div class="row">
+                <div class="form-group">
+                    <div class="col-md-6 col-md-offset-1">
+                        <button type="submit"
+                                class="btn btn-sm btn-primary"
+                                ng-submit="admin.submitBasic()">
+                            <i class="fa fa-download"></i> Submit CheckIn Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<div class="block">
+    <div class="table-responsive">
+        <table class="table table-striped table-vcenter">
+            <thead>
+                <tr>
+                    <th class="text-center">Id</th>
+                    <th class="text-center">Campus</th>
+                    <th class="text-center">CheckInDate</th>
+                    <th class="text-center">&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+
+                <tr class="text-center" ng-repeat="attendance in admin.attendance">
+                    <td>{{attendance.id}}</td>
+                    <td>{{attendance.campusId}}</td>
+                    <td>{{attendance.dateAdded | date:short}}</td>
+                    <td class="text-center">
+                        <div class="btn-group btn-group-xs">
+                            <a title="Attendance Details" class="btn btn-alt btn-sm btn-info" ng-href="#/details/{{attendance.id}}"><i class="fa fa-search"></i></a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+

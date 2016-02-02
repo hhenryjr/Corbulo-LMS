@@ -1,0 +1,35 @@
+@{
+   
+}
+
+@*THIS TEST PAGE IS FOR GETTING THE LAT AND LONG USING GOOGLE MAPS API.*@
+@*THIS TEST PAGE IS FOR GETTING THE LAT AND LONG USING GOOGLE MAPS API.*@
+@*THIS TEST PAGE IS FOR GETTING THE LAT AND LONG USING GOOGLE MAPS API.*@
+@*THIS TEST PAGE IS FOR GETTING THE LAT AND LONG USING GOOGLE MAPS API.*@
+@*THIS TEST PAGE IS FOR GETTING THE LAT AND LONG USING GOOGLE MAPS API.*@
+
+
+@section Scripts {
+    <script src="/Scripts/sabio.services.geo.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKTReNrWACHZ8T7rughmp_4sgYl0AGn1w&signed_in=true&callbackk=&sensor=false" ></script>
+
+    <script>
+        sabio.page.startUp = function () {
+            //var address = "5311 lincoln ave,cypress,ca";
+            //var address = "Flat 23 Berrington House, Hereford Road, London, United Kingdom W2 4NU";
+            var address = "5101 San Antonio St. Makati City, Philippines";
+            sabio.services.geo.geoCode(address, sabio.page.onGeoCodeSuccess, sabio.page.onGeoCodeError);
+        }
+
+
+        sabio.page.onGeoCodeSuccess = function (data) {
+            console.log(data.lat);
+            console.log(data.lng);
+            }
+
+        sabio.page.onGeoCodeError = function (error) {
+            console.log(error);
+        }
+
+    </script>
+}

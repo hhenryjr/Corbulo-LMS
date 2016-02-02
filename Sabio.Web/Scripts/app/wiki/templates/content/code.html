@@ -1,0 +1,8 @@
+﻿<h5 ng-if="content.pageContent && content.contentOptions.syntax">Language: <strong>{{wiki.syntaxes[content.contentOptions.syntax]}}</strong></h5>
+
+<div hljs language="{{content.contentOptions.syntax}}" 
+     no-escape 
+     source="content.pageContent" 
+     ng-if="content.pageContent"></div>
+
+<p ng-if="!content.pageContent">Nothing here yet...</p>

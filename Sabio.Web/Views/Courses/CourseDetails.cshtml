@@ -1,0 +1,241 @@
+﻿@{
+    ViewBag.Title = "CourseDetails";
+    Layout = "~/Views/Shared/_dashboardLayout.cshtml";
+}
+
+
+<div class="row">
+    <div class="col-md-10 col-lg-offset-1" ng-controller="courseDetailsController as details" id="detailsCtrler">
+        <div class="widget">
+            <div class="widget-advanced" id="myCourseDetails">
+                <div class="widget-header text-center themed-background-dark">
+                    <div class="widget-options">
+                        <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Love it!"><i class="fa fa-heart text-danger"></i></button>
+                    </div>
+                    <h1 style="color: white"> <strong>Section Name Goes Here</strong></h1>
+
+                </div>
+                <div class="widget-main">
+                    <a href="javascript:void(0)" class="widget-image-container animation-fadeIn">
+                        <span class="widget-icon themed-background"><i class="fa fa-code"></i></span>
+                    </a>
+
+                    <div class="widget-mainContent animation-fadeIn">
+                        <div class="row" style="padding-top: -20px;margin-top:-20px">
+
+                            <div class="col-lg-6" style="margin-left:20px">
+
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td>Instructor/s:</td>
+                                            <td ng-repeat="detail in details.info.instructors track by detail.instructorId" ng-model="details.instructors">
+                                                <a href="javascript:void(0)" class="label label-info">  {{detail.name}}  </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div style="padding-top: 10px; padding-bottom:10px">
+                                    Format:<strong>  {{details.format}}</strong>
+                                </div>
+
+                                <div style="padding-bottom:10px">
+                                    Course Length:<strong>  {{details.info.length}}</strong>
+                                </div>
+
+                                <div>
+                                    {{details.info.tags.tagName}}
+                                </div>
+
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td ng-repeat="detail in details.info.tags track by detail.tagId" ng-model="details.tags">
+                                                <a href="javascript:void(0)" class="label label-info">  {{detail.tagName}}  </a>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                            <div class="col-lg-5" style="margin-left:10px">
+                                <div>
+                                    Start Date:<strong>  {{details.info.start|date:'MMM d, y'}}</strong>
+                                </div>
+
+                                <div style="padding-top: 10px; padding-bottom:10px">
+                                    End Date:<strong>  {{details.info.end|date:'MMM d, y'}}</strong>
+                                </div>
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td>Prerequisites:   </td>
+                                            <td ng-repeat="detail in details.info.prereqs track by detail.id" ng-model="details.prereqs">
+                                                <a href="javascript:void(0)" class="label label-info">   {{detail.courseName}}  </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="row" ng-cloak>
+                        <div class="col-lg-6">
+
+                            <uib-accordion close-others="false">
+                                <uib-accordion-group is-open="details.accordionOpen" is-disabled="details.accordionDisabled">
+                                    <uib-accordion-heading>
+                                        <strong>Course Description</strong> <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                                    </uib-accordion-heading>
+                                    {{details.info.description|htmlToPlaintext}}
+                                </uib-accordion-group>
+
+                                <uib-accordion-group is-open="details.accordionOpen" is-disabled="details.accordionDisabled">
+                                    <uib-accordion-heading>
+                                        <strong>Expected Outcome</strong>  <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                                    </uib-accordion-heading>
+                                    {{details.info.expectedOutcome|htmlToPlaintext}}
+                                </uib-accordion-group>
+                            </uib-accordion>
+
+                        </div>
+
+                        <div class="col-lg-6" ng-cloak>
+
+                            <uib-accordion close-others="false">
+                                <uib-accordion-group is-open="details.accordionOpen" is-disabled="details.accordionDisabled">
+                                    <uib-accordion-heading>
+                                        <strong>Learning Objectives</strong>  <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                                    </uib-accordion-heading>
+                                    {{details.info.learningObjectives|htmlToPlaintext}}
+                                </uib-accordion-group>
+                                <uib-accordion-group is-open="details.accordionOpen" is-disabled="details.accordionDisabled">
+                                    <uib-accordion-heading>
+                                        <strong>Evaluation Criteria</strong> <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                                    </uib-accordion-heading>
+                                    {{details.info.evaluationCriteria|htmlToPlaintext}}
+                                </uib-accordion-group>
+                            </uib-accordion>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button type="button" style="margin-right: 50px" class="btn btn-success pull-right" id="deleteCourse" ng-click="details.backToCourseList()">Back to Courses</button>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script src="~/Scripts/Sabio.Services.Courses.js"></script>
+    <script type="text/javascript">
+
+        sabio.page.startUp = function () {
+            sabio.page.courseDetailsController = sabio.ng.getControllerInstance($("#detailsCtrler"));
+        }
+
+        sabio.services.courseDetailsFactory = function ($baseService) {
+            var aSabioServiceObject = sabio.services.courses;
+            var newService = $baseService.merge(true, {}, aSabioServiceObject, $baseService);
+            return newService;
+        }
+
+        sabio.page.courseDetailsControllerFactory = function ($scope, $baseController, $courseDetailsService, $timeout) {
+
+            var vm = this;
+
+            $baseController.merge(vm, $baseController);
+            vm.$courseDetailsService = $courseDetailsService;
+            vm.$scope = $scope;
+    
+            vm.onGetDetailsSuccess = _onGetDetailsSuccess;
+            vm.onGetDetailsError = _onGetDetailsError;
+            vm.format = _format;
+            vm.settings = _settings;
+            vm.showDetails = _showDetails;
+            vm.backToCourseList = _backToCourseList;
+
+            vm.notify = vm.$courseDetailsService.getNotifier($scope);
+
+            render();
+
+            function render() {
+                vm.settings();
+                vm.showDetails();
+                $timeout(vm.showDetails(), 1000);
+                var id = @Model.Item;
+                vm.$courseDetailsService.get(id, vm.onGetDetailsSuccess, vm.onGetDetailsError);
+            }
+
+            function _onGetDetailsSuccess(data) {
+                vm.notify(function () {
+                    vm.info = data.item;    
+                    vm.format(vm.info);
+                });
+            }
+
+            function _onGetDetailsError(error) {
+                console.log(error);
+            }
+
+            function _format(data){
+                vm.format = data.format;              
+                switch(vm.format) {
+                    case 1:
+                        vm.format = "In-person Training";
+                        break;
+                    case 2:
+                        vm.format = "Online Training";
+                        break;
+                    default:
+                        vm.format = "Nothing Specified";
+                }              
+                return vm.format;
+            }
+
+            function _showDetails(){
+                angular.element("#myCourseDetails").show();
+                vm.hideDetails = true;
+            }
+
+            function _settings(){
+                vm.hideDetails = false;      
+                vm.accordionOpen = true;
+                vm.accordionDisabled = true;
+            }
+
+            function _backToCourseList(){
+                window.location = "http://lms.dev/courses";
+            }
+        }
+
+
+        sabio.ng.addService(sabio.ng.app.module
+        , "$courseDetailsService"
+        , ["$baseService"]
+        , sabio.services.courseDetailsFactory);
+
+        sabio.ng.addController(sabio.ng.app.module
+           , "courseDetailsController"
+           , ['$scope', '$baseController', '$courseDetailsService', '$timeout']
+           , sabio.page.courseDetailsControllerFactory);
+
+
+    </script>
+
+
+
+
+
+}

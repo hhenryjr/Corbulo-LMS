@@ -1,0 +1,42 @@
+﻿@model Sabio.Web.Models.ViewModels.BaseViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+@section styles{
+
+}
+
+<div class="content-header">
+    <div class="header-section">
+        <h1>
+            <i class="gi gi-cogwheels"></i>Meetings<br><small>Upcoming and past meetings</small>
+        </h1>
+    </div>
+</div>
+
+<div ng-view></div>
+
+
+
+@section pageInitScripts
+{
+
+}
+
+@section Scripts
+{
+    <script src="~/Scripts/sabio.services.meetings.js"></script>
+    <script src="~/Scripts/app/services/meetingsService.js"></script>
+
+    <script src="~/Scripts/app/admin/meetings/controllers/index.js"></script>
+    <script src="~/Scripts/app/admin/meetings/controllers/manage.js"></script>
+    <script src="~/Scripts/app/admin/meetings/meetings.config.js"></script>
+}
+
+
+
+
+
+

@@ -1,0 +1,155 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_dashboardLayout.cshtml";
+}
+
+<h2>Index</h2>
+<div class="row" ng-controller="paymentController as pay" id="payCtrl">
+    {{pay.getName}}
+    <br />
+
+    <form stripe:form="saveCustomer" ng-submit="pay.saveCustomer()" name="myForm" class="form-horizontal form-bordered">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="" class="control-label col-md-2">Name on card </label>
+                <div class="col-md-4">
+                    <input type="text" class="input-block-level" data-stripe="name" data-ng-model="pay.stripe.name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="control-label col-md-2">Card number</label>
+                <input type="text" class="input-block-level" data-stripe="number" data-ng-model="pay.stripe.number"/>
+            </div>
+
+            <div class="form-group">
+                <label for="" class="control-label col-md-2">Expiry</label>
+
+                <div class="col-md-4">
+                    <input type="text" size="2" data-stripe="exp-month" data-ng-model="pay.stripe.exp_month">
+                    <span> / </span>
+                    <input type="text" size="4" data-stripe="exp-year" data-ng-model="pay.stripe.exp_year">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="control-label col-md-2">CVC</label>
+                <div class="col-md-4">
+                    <input type="text" size="4" class="input-block-level" data-stripe="cvc" data-ng-model="pay.stripe.cvc" />
+                </div>
+            </div>
+            @*<div class="form-group">
+                <label for="" class="control-label col-md-2">Amount</label>
+                <div class="col-md-4">
+                    <input type="text" size="5" class="input-block-level" data-stripe="amount" data-ng-model="pay.stripe.amount"/>
+                </div>
+            </div>*@
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-large" ng-disabled="pay.disable">Submit</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+
+@section scripts{
+    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+    <script src="~/Scripts/sabio.services.payments.js"></script>
+    <script type="text/javascript">
+
+        sabio.page.startUp = function () {
+
+            sabio.page.payController = sabio.ng.getControllerInstance($("#payCtrl"));
+        }
+
+        sabio.services.paymentFactory = function ($baseService) {
+            var aSabioServiceObject = sabio.services.payments;
+            var newService = $baseService.merge(true, {}, aSabioServiceObject, $baseService);
+            return newService;
+        }
+
+        sabio.page.paymentControllerFactory = function
+            ($scope, $baseController, $payService) {
+
+            var vm = this;
+
+            $baseController.merge(vm, $baseController);
+
+            vm.$payService = $payService;
+            vm.$scope = $scope;
+            vm.notify = vm.$payService.getNotifier($scope);
+
+            vm.getName = "Hello";
+            vm.stripe = {};
+            vm.saveCustomer = _saveCustomer;
+            vm.onSuccess = _onSuccess;
+            vm.onError = _onError;
+            render();
+
+            function render() {
+                vm.disable = false;
+            }
+
+            function _saveCustomer() {
+               // console.log(vm.stripe);
+                vm.disable = true;
+                Stripe.card.createToken(vm.stripe, stripeResponseHandler);
+                
+            }
+
+            function stripeResponseHandler(status, response) {
+                console.log(response);
+                var token = response;
+                vm.$payService.Add(token, _onSuccess, _onError);
+            }
+
+            function _onError(jqXhr, error) {
+                console.log(error);
+            }
+            function _onSuccess(response) {
+                console.log(response);
+            }
+
+        }
+
+        sabio.ng.addService(sabio.ng.app.module,
+            "$payService",
+            ["$baseService"],
+            sabio.services.paymentFactory
+        );
+
+        sabio.ng.addController(sabio.ng.app.module,
+            "paymentController",
+            ['$scope', '$baseController', '$payService'],
+            sabio.page.paymentControllerFactory);
+
+        sabio.ng.app.module.config(function () {
+            Stripe.setPublishableKey('pk_test_6pRNASCoBOKtIshFeQd4XMUh');
+        })
+
+       // sabio.ng.app.module.directive('stripeForm', ['$window',
+       //function ($window) {
+
+       //    var directive = { restrict: 'A' };
+       //    directive.link = function (scope, element, attributes) {
+       //        var form = angular.element(element);
+       //        form.bind('submit', function () {
+       //            var button = form.find('button');
+       //            button.prop('disabled', true);
+       //            $window.Stripe.createToken(form[0], function () {
+       //                button.prop('disabled', false);
+       //                var args = arguments;
+       //                scope.$apply(function () {
+       //                    scope.$eval(attributes.stripeForm).apply(scope, args);
+       //                });
+       //            });
+       //        });
+       //    };
+       //    return directive;
+
+       //}]);
+
+    </script>
+
+}

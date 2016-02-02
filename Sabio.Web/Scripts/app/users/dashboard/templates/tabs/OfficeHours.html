@@ -1,0 +1,82 @@
+﻿<div class="row">
+    <div class="widget col-md-8 col-md-offset-2" ng-repeat="item in dashboard.OfficeHours">
+        <div class="widget-simple themed-background-dark">
+
+            <h4 class="pull-left" style="color:white">{{item.date|date:'MMM d, y'}}</h4>
+            <h4 class="pull-right"><a ng-href="#/questions/{{item.id}}"><buttton style="color:white">View Questions</buttton></a></h4> 
+            <h3 class="widget-content widget-content-light " style="text-align:center">
+                <a style="color:white"><strong>{{item.topic}}</strong></a>
+            </h3>
+        </div>
+        <div class="widget-content">
+            <div class="row text-center">
+                <div class="col-xs-4">
+                    <h4>Start Time</h4>
+                    <h3 class="widget-content">
+                        {{item.startTime|date:'h:mm a'}}
+                    </h3>
+                </div>
+                <div class="col-xs-4">
+                    <h4>End Time</h4>
+                    <h3 class="widget-content">
+                        {{item.endTime|date:'h:mm a'}}
+                    </h3>
+                </div>
+                <div class="col-xs-4">
+
+                    <h4>Time Zone</h4>
+                    <h3 class="widget-content">
+                        {{item.timeZone.value}}
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <uib-accordion close-others="false">
+            <uib-accordion-group is-open="dashboard.accordionOpen" is-disabled="dashboard.accordionDisabled">
+                <uib-accordion-heading>
+                    <strong>Instructions</strong>
+                </uib-accordion-heading>
+                <button class="btn btn-sm btn-primary pull-right" id="modal-ask-question.html" ng-click="dashboard.open(item.id)">Ask Question</button>
+                {{item.instructions|htmlToPlaintext}}
+                <i class="pull-right glyphicon"
+                   ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+            </uib-accordion-group>
+        </uib-accordion>
+    </div>
+</div>
+
+
+
+<script type="text/ng-template" id="modal-ask-question.html">
+    <div class="modal-dialog" role="document">
+        <div class="modal-body">
+            <form method="post" id="reviewForm" name="modal.reviewForm" novalidate>
+                 <div class="form-group">
+                    <div>
+                        <label for="formBody">Question</label>
+                        <textarea id="formBody" 
+                                  class="form-control ng-class:{'error': modal.showErrors && !modal.reviewForm.question.$valid}"
+                                  ng-model="modal.qa.question" name="question" rows="5"
+                                  ng-minlength="10"
+                                  ng-maxlength="400" 
+                                  required
+                                  ng-required="true"
+                                  placeholder="Enter Your Comment.."></textarea>
+                    </div>
+                    <div role="alert" class="help-inline error">
+                        <span class="error has-error" ng-show="modal.showErrors && modal.reviewForm.question.$error.required">Please enter a Question.</span>
+                        <span class="error has-error" ng-show="modal.showErrors && modal.reviewForm.question.$error.minlength">Minimum Length is 10 character</span>
+                        <span class="error has-error" ng-show="modal.showErrors && modal.reviewForm.question.$error.maxlength">Maximum Length is 400 character</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <div class="pull-right">
+                <button class="btn btn-info" type="submit" ng-click="modal.addQuestion(modal.qa, modal.items[0])">Post</button>
+                <button class="btn btn-default" data-dismiss="modal" type="button" ng-click="modal.cancel()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+</script>

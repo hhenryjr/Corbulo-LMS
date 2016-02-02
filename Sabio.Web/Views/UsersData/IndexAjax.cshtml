@@ -1,0 +1,274 @@
+﻿@using Glimpse.Core.Configuration
+@model Sabio.Web.Models.ViewModels.ItemViewModel<int>
+
+@{
+
+    ViewBag.Title = "IndexAjax";
+    Layout = "~/Views/Shared/_dashboardLayout.cshtml";
+
+}
+
+<h2>User Form</h2>
+
+<div>
+    <form class="form-horizontal form-bordered " id="userForm">
+        <input type="hidden" id="UserInfoId" value="@Model.Item" />
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="text-firstName">Frist Name</label>
+            <div class="col-md-2">
+                <input type="text" id="text-firstName" name="FirstName" class="form-control userFirstName" placeholder="First Name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="text-lastName">Last Name</label>
+            <div class="col-md-2">
+                <input type="text" id="text-lastName" name="LastName" class="form-control userLastName" placeholder="Last Name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="text_userName">Username</label>
+            <div class="col-md-2">
+                <div class="input-group">
+                    <input type="text" id="text_userName" name="UserName" class="form-control userName" placeholder="Your username..">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="email-input">Email Input</label>
+            <div class="col-md-2">
+                <input type="email" id="email-input" name="Email" class="form-control userEmailId" placeholder="Enter Email">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="genderSelect">Select</label>
+            <div class="col-md-2">
+                <select id="genderSelect" name="Gender" class="form-control" size="1">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Not Sure">Not Sure?</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="masked_phone">Phone</label>
+            <div class="col-md-2">
+                <input type="tel" id="masked_phone" name="Phone" class="form-control userPhone" placeholder="(999) 999-9999">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="text-bio">Bio</label>
+            <div class="col-lg-2">
+                <textarea class="form-control userBio" type="text" name="Bio" id="text-bio" rows="6" placeholder="Bio Stuff.."></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-primary" id="submitButton">Submit</button>
+            <button type="button" class="btn btn-danger" id="deleteUser">Delete</button>
+        </div>
+
+    </form>
+
+
+</div>
+
+@section Scripts {
+    <script src="~/Scripts/Sabio.Services.Users.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+
+    <script type="text/javascript">
+
+        sabio.page.startUp = function () {
+
+            sabio.page.handlers.onGetsUser();
+
+            sabio.page.initializeValidation();
+
+            $("#submitButton").on('click', sabio.page.handlers.validateOnSubmit);
+            $("#deleteUser").on('click', sabio.page.handlers.deleteUser);
+
+        }
+
+        sabio.page.initializeValidation = function () {
+
+            jQuery.validator.setDefaults({
+                debug: true
+            });
+
+            $('#userForm').validate({
+                rules: {
+                    FirstName: {
+                        required: true,
+                        minlength: 2
+                    },
+                    LastName: {
+                        required: true,
+                        minlength: 2
+                    },
+                    UserName: {
+                        required: true,
+                        minlength: 5
+
+                    },
+                    Email: {
+                        required: true,
+                        email: true
+                    },
+
+                    Phone: {
+                        required: true,
+                        minlength: 10
+                        //phone: true
+                    },
+                    Bio: {
+                        required: true,
+                        minlength: 15
+                    },
+                    Gender: {
+                        required: true
+                    }
+                },
+                message: {
+                    FirsName: {
+                        required: "First Name is Required",
+                        minlength: "Atleast 2 characters required"
+                    },
+                    LastName: {
+                        required: "Last Name is Required",
+                        minlength: " Atleast 2 characters required"
+                    },
+                    UserName: {
+                        required: "User Name is Required",
+                        minlegth: "User Name should have atleast 5 Characters"
+
+                    },
+                    Email: {
+                        required: " Email is Required",
+                        email: "Your email address must be in the format of name@domain.com "
+                    },
+
+                    Phone: {
+                        required: "Valid Phone Number is Required",
+                        minlength: "requred 10 digits"
+                    },
+                    Bio: {
+                        required: "This field is required",
+                        minlegth: "At least 15 Characters"
+                    },
+                    Gender: {
+                        required: "Please provide your Gender"
+                    }
+                }
+            });
+
+        };
+
+
+        sabio.page.handlers.validateOnSubmit = function () {
+            if ($("#userForm").valid()) {
+
+                var myData = $("#userForm").serialize();
+                var id = $("#UserInfoId").val();
+
+                if (id > 0) {
+                    sabio.services.users.update(id, myData, sabio.page.ajaxSuccess, sabio.page.ajaxError);
+
+                } else {
+                    sabio.services.users.Add(myData, sabio.page.ajaxSuccess, sabio.page.ajaxError);
+                }
+
+            }
+        }
+
+        sabio.page.ajaxSuccess = function (data) {
+            if (data && data.item) {
+                $("#UserInfoId").val(data.item);
+            }
+
+            sabio.page.logToBottom(data);
+
+        };
+
+        sabio.page.ajaxError = function (jqXHR) {
+
+            console.log("Sorry User Delete");
+            sabio.page.logToBottom(jqXHR.responseJSON);
+
+        };
+
+        sabio.page.updateSuccess = function (data) {
+            console.log(JSON.stringify(data));
+            sabio.page.logToBottom(data);
+        };
+
+
+        sabio.page.logToBottom = function (data) {
+            //$("#userId").val((JSON.stringify(data.item)));
+
+        };
+
+        sabio.page.handlers.onGetsUser = function () {
+            if ($("#UserInfoId").val() != 0) {
+                var id = $("#UserInfoId").val();
+
+                sabio.services.users.get(id, sabio.page.getAjaxSuccess, sabio.page.ajaxError);
+            }
+        }
+
+
+        sabio.page.grapUserData = function () {
+
+            var userData = {};
+
+            userData.FirstName = $(".userFirstName").val();
+            userData.LastName = $(".userLastName").val();
+            userData.UserName = $(".userName").val();
+            userData.Email = $(".userEmailId").val();
+            userData.Phone = $(".userPhone").val();
+            userData.Bio = $(".userBio").val();
+            userData.Gender = $("#genderSelect :selected").text();
+            // userData.ID = $("#userId").text();
+
+            console.log("userDataCaptured");
+            return userData;
+        };
+
+        sabio.page.getAjaxSuccess = function (data) {
+
+            console.log(data.item);
+            $(".userFirstName").val(data.item.firstName);
+            $(".userLastName").val(data.item.lastName);
+            $(".userName").val(data.item.userName);
+            $(".userEmailId").val(data.item.email);
+            $(".userPhone").val(data.item.phone);
+            $("#genderSelect").val(data.item.gender);
+            $(".userBio").val(data.item.bio);
+            sabio.page.userId = 0;
+        };
+
+        sabio.page.handlers.deleteUser = function () {
+
+            sabio.services.users.delete(sabio.page.ajaxSuccess, sabio.page.ajaxError);
+        }
+
+
+        sabio.page.handlers.onFormReset = function () {
+
+            sabio.page.userFormReset();
+
+        };
+
+        sabio.page.userFormReset = function () {
+
+            $(".userFirstName").val("");
+            $(".userFirstName").val("");
+            $(".userLastName").val("");
+            $(".userLastName").val("");
+            $(".userName").val("");
+            $(".userEmailId").val("");
+            $(".userPhone").val("");
+            $(".userBio").val("");
+            $("#genderSelect :selected").val("");
+
+        };
+    </script>
+}

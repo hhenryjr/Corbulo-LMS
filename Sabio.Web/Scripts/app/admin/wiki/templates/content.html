@@ -1,0 +1,124 @@
+﻿<div class="row" ng-cloak="">
+    <div class="col-md-12">
+        <div class="widget clearfix">
+            <div class="widget-advanced">
+                <div class="widget-header text-center themed-background-dark">
+                    <div class="widget-options">
+                        <!--<button title="" data-toggle="tooltip" class="btn btn-xs btn-default" data-original-title="Love it!"><i class="fa fa-heart text-danger"></i></button>-->
+                    </div>
+                    <h3 class="widget-content-light">
+                        <a ng-click="">{{wiki.wikiPage.title}}</a><br>
+                        <small>{{wiki.wikiPage.url}}</small>
+                    </h3>
+                </div>
+                <div class="widget-main">
+
+                    <div class="col-md-12"
+                         ng-if="!wiki.wikiContent || (wiki.wikiContent && wiki.wikiContent.length < 1)"
+                         ng-include="'/scripts/app/admin/wiki/templates/addContent.html'">
+                    </div>
+
+                    <a class="widget-image-container animation-fadeIn" href="javascript:void(0)">
+                        <span class="widget-icon themed-background"><i class="fa fa-globe"></i></span>
+                    </a>
+
+                    <div class="btn-toolbar" ng-if="wiki.wikiContent && wiki.wikiContent.length > 0">
+                        <div class="btn-group">
+                            <button class="btn btn-primary" ng-class="{'btn-alt': !wiki.draggable}" ng-click="wiki.setDraggable(true)" uib-tooltip="Order"><i class="fa fa-bars"></i></button>
+                            <button class="btn btn-primary" ng-class="{'btn-alt': wiki.draggable}" ng-click="wiki.setDraggable(false)" uib-tooltip="View"><i class="fa fa-code"></i></button>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="dragger">
+                        <ul dnd-list="wiki.wikiContent">
+                            <li ng-repeat="content in wiki.wikiContent"
+                                dnd-draggable="content"
+                                dnd-effect-allowed="move"
+                                dnd-moved="wiki.onDropMoved(event, $index)"
+                                dnd-disable-if="!wiki.draggable"                                
+                                class="clearfix">
+
+                                <div class="row text-center" ng-if="!wiki.addingContent.above && !wiki.draggable"> 
+                                    <a class="btn btn-alt btn-sm btn-success" style="margin-bottom:20px;" ng-click="wiki.addContentAbove(content)" uib-tooltip="Add Content Above"><i class="fa fa-plus"></i></a>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"
+                                         ng-if="wiki.addingContent.above && wiki.addingContent.above.id == content.id"
+                                         ng-include="'/scripts/app/admin/wiki/templates/addContent.html'">
+                                    </div>
+                                    
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="block">
+                                            <div class="block-title ui-sortable-handle">
+                                                <div class="block-options pull-right">
+                                                    <a class="btn btn-alt btn-sm btn-primary" ng-click="wiki.selectContent(content)" tooltip-placement="top" uib-tooltip="Edit"><i class="fa fa-pencil"></i></a>
+                                                    <a class="btn btn-alt btn-sm btn-danger" ng-click="wiki.deleteContent(content.id)" tooltip-placement="top" uib-tooltip="Delete"><i class="fa fa-trash"></i></a>
+                                                </div>
+                                                <h3 ng-if="!content.title">{{wiki.contentTypes[content.contentTypeId]}} Block ({{content.sortOrder}})</h3>
+                                                <h3 ng-if="content.title">{{content.title}} ({{content.sortOrder}})</h3>
+                                            </div>
+
+                                            <div class="animate-if"
+                                                 data-ng-if="wiki.selectedContent.id == content.id"
+                                                 data-ng-include="'/Scripts/app/admin/wiki/templates/contentForm.html'"></div>
+                                            <div class="animate-if"
+                                                 data-ng-if="'Text' == wiki.contentTypes[content.contentTypeId] && wiki.selectedContent.id != content.id && !wiki.draggable"
+                                                 data-ng-include="'/Scripts/app/wiki/templates/content/text.html'"></div>
+                                            <div class="animate-if"
+                                                 data-ng-if="'Code' == wiki.contentTypes[content.contentTypeId] && wiki.selectedContent.id != content.id && !wiki.draggable"
+                                                 data-ng-include="'/Scripts/app/wiki/templates/content/code.html'"></div>
+                                            <div class="animate-if"
+                                                 data-ng-if="'Highlight' == wiki.contentTypes[content.contentTypeId] && wiki.selectedContent.id != content.id && !wiki.draggable"
+                                                 data-ng-include="'/Scripts/app/wiki/templates/content/highlight.html'"></div>
+                                            <div class="animate-if"
+                                                 data-ng-if="'Image' == wiki.contentTypes[content.contentTypeId] && wiki.selectedContent.id != content.id && !wiki.draggable"
+                                                 data-ng-include="'/Scripts/app/wiki/templates/content/image.html'"></div>
+                                            <div class="animate-if"
+                                                 data-ng-if="'List' == wiki.contentTypes[content.contentTypeId] && wiki.selectedContent.id != content.id && !wiki.draggable"
+                                                 data-ng-include="'/Scripts/app/wiki/templates/content/list.html'"></div>
+                                            <div class="animate-if"
+                                                 data-ng-if="'Wiki' == wiki.contentTypes[content.contentTypeId] && wiki.selectedContent.id != content.id && !wiki.draggable"
+                                                 data-ng-include="'/Scripts/app/wiki/templates/content/wiki.html'"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row text-center" ng-if="!wiki.addingContent.below && $index == (wiki.wikiContent.length - 1) && !wiki.draggable">                                    
+                                    <a class="btn btn-alt btn-sm btn-success" ng-click="wiki.addContentBelow(content)" uib-tooltip="Add Content Below"><i class="fa fa-plus"></i></a>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-12"
+                                         ng-if="wiki.addingContent.below && wiki.addingContent.below.id == content.id"
+                                         ng-include="'/scripts/app/admin/wiki/templates/addContent.html'">
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Delete Confirmation Modal-->
+<script type="text/ng-template" id="modal-messaging-cmdDelete.html">
+    <div class="modal-header text-center">
+        <h2 class="modal-title"><i class="fa fa-paper-plane"></i> Delete Content?</h2>
+    </div>
+    <div class="modal-dialog" role="document">
+        <div class="modal-header">
+            <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+            <h4 class="modal-title" id="contactUs">Are you sure you want to delete this content?</h4>
+        </div>
+        <div class="modal-body">
+            <div class="modal-footer">
+                <label class="successDelete" type="text" id="deleteContent"></label>
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="delete.cancel('cancel')">Cancel</button>
+                <button type="button" class="btn btn-primary" ng-click="delete.ok('close')">Yes, delete!</button>
+            </div>
+        </div>
+    </div>
+</script>

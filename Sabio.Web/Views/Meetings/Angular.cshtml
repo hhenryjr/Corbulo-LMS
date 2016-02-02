@@ -1,0 +1,531 @@
+﻿@model Sabio.Web.Models.ViewModels.BaseViewModel
+
+@{
+    ViewBag.Title = "Angular";
+}
+<div class="content-header">
+    <div class="header-section">
+        <h1>
+            <i class="gi gi-cogwheels"></i>Meetings<br><small>Upcoming and past meetings</small>
+        </h1>
+    </div>
+</div>
+<div data-ng-controller="$meetingController as dashboard" id="meetingController">
+    <div class="panel-body" data-ng-controller="$meetingController as dashboard" id="meetingCtrler">
+
+        <div class="panel-heading">Meetings</div>
+        <div class="panel-body admin-body">
+
+            <div class="row">
+
+                <div class="col-sm-6">
+                    <!--
+                        the ng-repeat is creating a for loop to iterate through the dashboard.items array.
+                        dashboard.items is an array of users which is pulled from the API as JSON data and attached to the controller
+                        in the ajax call's success handler.
+                        see https://docs.angularjs.org/api/ng/directive/ngRepeat
+                    -->
+                    <div class="row animate-repeat" data-ng-repeat="item in dashboard.items track by item.id">
+                        <div class="col-sm-4">
+                            <a data-ng-click="dashboard.selectItem(item)" href="">
+                                <!--
+                                    on click of this anchor tag, a function within the controller will be fired.
+                                    that function is called selectItem and it accepts an item object.
+                                    "item" is a member of the array and we call that object item because
+                                    that is the name we gave it in the ng-repeat attribute.
+                                    see https://docs.angularjs.org/api/ng/directive/ngClick
+                                -->
+                                <i class="fa fa-user"></i> {{item.name}}
+                                <!--
+                                    the double "{" is called an "expression" and is Angular template syntax for where to output data.
+                                    see https://docs.angularjs.org/guide/expression
+                                -->
+                            </a>
+
+                        </div>
+                        <div class="col-sm-2">
+                            <!--
+                                here we use a date filter to format the date so it's readable.
+                                'shortDate' is a pre-defined format but there are many other formats which can be used.
+                                see https://docs.angularjs.org/api/ng/filter/date
+                            -->
+                            <span class="pull-right">{{item.date  | date:'EEE M/d/yy'}}</span>
+                        </div>
+                        <div class="col-sm-6">{{item.startTime | date:'h:mma Z' }}</div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+
+                    <!-- ng-if statement will remove the element from the DOM if it evaluates to true
+                    here we hide this element when there is no selectedUser
+
+                    -->
+                    <div data-ng-if="!dashboard.selectedItem" class="">
+                        <p class="text-info center text-center"><strong class="center ">Select a Meeting</strong></p>
+
+                    </div>
+                    <!-- here we show this dom element when there is a selected user-->
+                    <div class="row animate-if" data-ng-if="dashboard.selectedItem"
+                         data-ng-include="'/scripts/app/selectedMeeting.html'">
+                        <!-- this special ng-include attribute tells angular
+                        to grab the content for the child elments from an
+                        HTML snippet that is either embedded on the page or
+                        located at the url specified by the url (see below for template)
+                        -->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/ng-template" id="/scripts/app/selectedMeeting.html">
+
+    <div class="col-sm-12">
+        <div class="text-center">
+            <h3>
+                {{dashboard.selectedItem.name}}
+            </h3>
+            <p>
+                {{dashboard.selectedItem.description}}
+            </p>
+        </div>
+        <form id="entryForm" action="page_forms_general.html" method="post" enctype="multipart/form-data" class="form-horizontal">
+            <input type="text" id="id" name="id" class="form-control hidden" placeholder="Id" data-ng-model="dashboard.selectedItem.id">
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="name">Meeting Name</label>
+                <div class="col-md-9 errorContainer">
+                    <input type="text" id="name" name="name" class="form-control"
+                           placeholder="Meeting Name" data-ng-model="dashboard.selectedItem.name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="date">Date</label>
+                <div class="col-md-9 errorContainer">
+                    <input type="text" id="date" name="date" class="form-control input-datepicker"
+                           data-date-format="mm/dd/yy" placeholder="mm/dd/yy"
+                           data-ng-model="dashboard.selectedItem.date">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="startTime">Start Time</label>
+                <div class="col-md-9 errorContainer">
+                    <div class="input-group bootstrap-timepicker timepicker">
+                        <input type="text" id="startTime" name="startTime" value="7:00 PM"
+                               class="form-control input-timepicker" data-ng-model="dashboard.selectedItem.startTime">
+                        <span class="input-group-btn">
+                            <a href="javascript:void(0)" class="btn btn-primary"><i class="fa fa-clock-o"></i></a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="endTime">End Time</label>
+                <div class="col-md-9 errorContainer">
+                    <div class="input-group bootstrap-timepicker timepicker">
+                        <input type="text" id="endTime" name="endTime" value="9:30 PM"
+                               class="form-control  input-timepicker" data-ng-model="dashboard.selectedItem.endTime">
+                        <span class="input-group-btn">
+                            <a href="javascript:void(0)" class="btn btn-primary"><i class="fa fa-clock-o"></i></a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="description">Description</label>
+                <div class="col-md-9 errorContainer">
+                    <textarea id="description" name="description" rows="9" class="form-control"
+                              placeholder="Description" data-ng-model="dashboard.selectedItem.description"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="meetingTypeId">Type</label>
+                <div class="col-md-9 errorContainer">
+                    <select id="meetingTypeId" name="meetingTypeId" class="form-control" size="1"
+                            data-ng-model="dashboard.selectedItem.meetingTypeId">
+                        <option value="0">(Select a meeting type)</option>
+                        <option value="1">Lesson</option>
+                        <option value="2">Meet Up</option>
+                        <option value="3">Hackathon</option>
+                        <option value="4">Appointment</option>
+                        <option value="5">Celebration</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="meetingLeaderPersonIds">Leader(s)</label>
+                <div class="col-md-9 errorContainer">
+                    <select id="meetingLeaderPersonIds" name="meetingLeaderPersonIds" class="form-control" size="5" multiple>
+                        <option value="1">Liliana</option>
+                        <option value="2">Gregorio</option>
+                        <option value="3">Aaron</option>
+                        <option value="4">Gus</option>
+                        <option value="5">John</option>
+                        <option value="6">Jimmy</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">Format</label>
+                <div class="col-md-9 errorContainer">
+                    <select id="meetingFormat" name="meedingFormat" class="form-control" data-ng-model="dashboard.selectedItem.meetingFormatId">
+                        <option value="">(Select a meeting format)</option>
+                        <option value="1">On-Line</option>
+                        <option value="2">In-Person</option>
+                        <option value="3">Virtual</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">Inline Checkboxes</label>
+                <div class="col-md-9">
+                    <label class="checkbox-inline" for="tentative">
+                        <input type="checkbox" id="tentative" name="tentative" value="true"
+                               data-ng-model="dashboard.selectedItem.isTentative"> Tentative
+                    </label>
+                    <label class="checkbox-inline" for="public">
+                        <input type="checkbox" id="public" name="public" value="true"
+                               data-ng-model="dashboard.selectedItem.isPublic"> Public
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <!-- the button click here will call a saveStatus function that accepts
+                    a user object, specifically the selectedUser object
+                    -->
+                    <button type="button" data-ng-click="dashboard.saveChanges(dashboard.selectedItem)"
+                            class="btn-outlined btn-sm btn-success">
+                        Save
+                    </button>
+
+                    <button type="button" data-ng-click="dashboard.selectItem()"
+                            class="btn-outlined btn-sm btn-warning">
+                        Cancel
+                    </button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</script>
+
+
+@*<script type="text/ng-template" id="/scripts/app/selectedMeeting.html">
+
+        <div class="col-sm-12">
+            <div class="text-center">
+                <h3>
+                    {{dashboard.selectedItem.name}}
+                </h3>
+                <p>
+                    {{dashboard.selectedItem.description}}
+                </p>
+            </div>
+            <div class="row form-group ">
+                <div class="col-sm-3">Meeting Type</div>
+                <div class="col-sm-3">
+                    <!--
+                        This is all Angular specific syntax for populating the
+                        options of the drop down.
+
+                        the options for the drop down are dropped o the page
+                        from the server side. it is a list of UserStatus enum values
+
+                        the ng-model attribute signals that the model should bound, two way to the selected value
+                        of the select
+                        -->
+                    <select id="meetingTypeId" name="meetingTypeId"
+                            data-ng-init="dashboard.selectedItem.meetingTypeId"
+                            data-ng-model="dashboard.selectedItem.meetingTypeId"
+                            data-ng-options="key for (key, value) in dashboard.$sabio.meetingTypes track by value"></select>
+                    @*<select data-ng-init="dashboard.selectedItem.status"
+                        data-ng-model="dashboard.selectedItem.status"
+                        name="employeeStatus"
+                        data-ng-options="key for (key , value) in dashboard.$sabio.employeeStatuses track by value"></select>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-sm-3">Meeting Name</div>
+                <div class="col-sm-3">
+                    <!--
+                    This is all Angular specific syntax for populating the
+                    options of the drop down.
+
+                    the options for the drop down are dropped on the page
+                    from the server side. it is a list of UserStatus enum values
+
+                    the ng-model attribute signals that the model should bound, two way to the selected value
+                    of the select
+                    -->
+
+                    <input type="text" data-ng-model="dashboard.selectedItem.name" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <!-- the button click here will call a saveStatus function that accepts
+                        a user object, specifically the selectedUser object
+                        -->
+                    <button type="button" data-ng-click="dashboard.saveStatus(dashboard.selectedItem)"
+                            class="btn-outlined btn-sm btn-success">
+                        Save
+                    </button>
+
+                    <button type="button" data-ng-click="dashboard.selectItem()"
+                            class="btn-outlined btn-sm btn-warning">
+                        Cancel
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </script>*@
+
+<script type="text/ng-template" id="/scripts/app/admin/newItem.html">
+    <form id="itemForm" name="dashboard.itemForm" ng-submit="dashboard.addItem()" novalidate>
+        <div class="form-group">
+            <input type="text" class="form-control ng-class:{'error': dashboard.showNewItemErrors && !dashboard.itemForm.name.$valid}"
+                   placeholder="Meeting Name"
+                   name="nameame"
+                   id="nameame"
+                   ng-model="dashboard.newItem.name"
+                   ng-minlength="2"
+                   ng-maxlength="50"
+                   required>
+            <div role="alert" class="help-inline error">
+                <span class="error" ng-show="dashboard.showNewItemErrors && dashboard.itemForm.name.$error.required">Name is required</span>
+                <span class="error" ng-show="dashboard.showNewItemErrors && dashboard.itemForm.name.$error.minlength">Too short! Name must be at least 2 characters</span>
+                <span class="error" ng-show="dashboard.showNewItemErrors && dashboard.itemForm.name.$error.maxlength">Too long! Name must be 50 characters or less</span>
+            </div>
+        </div>
+        @*<div class="form-group">
+                <input type="text"
+                       class="form-control ng-class:{'error': dashboard.showNewEmployeeErrors && !dashboard.employeeForm.lastName.$valid}"
+                       placeholder="Last Name"
+                       name="lastName"
+                       id="lastName"
+                       ng-model="dashboard.newEmployee.lastName"
+                       ng-minlength="2"
+                       ng-maxlength="50"
+                       required>
+                <div role="alert" class="help-inline error">
+                    <span class="error" ng-show="dashboard.showNewEmployeeErrors && dashboard.employeeForm.lastName.$error.required">Last Name is required</span>
+                    <span class="error" ng-show="dashboard.showNewEmployeeErrors && dashboard.employeeForm.lastName.$error.minlength">Too short! Last name must be at least 2 characters</span>
+                    <span class="error" ng-show="dashboard.showNewEmployeeErrors && dashboard.employeeForm.lastName.$error.maxlength">Too long! Last name must be 50 characters or less</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="email"
+                       class="form-control ng-class:{'error': dashboard.showNewEmployeeErrors && !dashboard.employeeForm.email.$valid}"
+                       placeholder="Email"
+                       name="email"
+                       id="email"
+                       ng-model="dashboard.newEmployee.email"
+                       required>
+                <div role="alert" class="help-inline error">
+                    <span class="error" ng-show="dashboard.showNewEmployeeErrors && dashboard.employeeForm.email.$error.required">Email is required</span>
+                    <span class="error" ng-show="dashboard.showNewEmployeeErrors && dashboard.employeeForm.email.$error.email">Must be a valid email address</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="number"
+                       class="form-control ng-class:{'error': dashboard.showNewEmployeeErrors && !dashboard.employeeForm.age.$valid}"
+                       placeholder="Age"
+                       name="age"
+                       id="age"
+                       min="18"
+                       ng-model="dashboard.newEmployee.age"
+                       required>
+                <div role="alert" class="help-inline error">
+                    <span class="error" ng-show="dashboard.showNewEmployeeErrors && dashboard.employeeForm.age.$error.required">Age is required</span>
+                    <span class="error" ng-show="dashboard.showNewEmployeeErrors && dashboard.employeeForm.age.$error.number">Must be a number</span>
+                    <span class="error" ng-show="dashboard.showNewEmployeeErrors && dashboard.employeeForm.age.$error.min">Employees must be at least 18 years old</span>
+                </div>
+            </div>*@
+        <button type="submit" id="cmdAddItem" class="btn btn-success">Add Meeting</button>
+        <button type="button" id="cmdResetItem" class="btn btn-warning" ng-click="dashboard.resetItemForm()">Cancel</button>
+        <button type="button" id="cmdEchoItem" class="btn btn-info" ng-click="dashboard.echoItem()">Echo Meeting</button>
+    </form>
+</script>
+
+@section scripts
+{
+    <script src="~/Scripts/sabio.services.meetings.js"></script>
+    <script src="~/Scripts/app/services/meetingsService.js"></script>
+
+    <script type="text/javascript">
+
+        sabio.page.meetingTypes = {
+            "(Select a meeting type)": 0,
+            "Lesson": 1,
+            "Meet Up": 2,
+            "Hackathon": 3,
+            "Appointment": 4,
+            "Celebration": 5
+        };
+
+        sabio.page.startup = function () {
+            // instantiate ng controller
+            sabio.page.meetingController = sabio.ng.getControllerInstance($("#meetingsController"));
+        }
+
+        sabio.page.meetingControllerFactory = function (
+            $scope  //  these three arguments are dependencies which are specified below and passed into the controller by ng
+            , $baseController
+            , $meetingService) {
+
+            //  this variable represents the actual controller. this is just a shortcut that allows us to attach properties to it easily
+            var vm = this;
+
+
+            //  this line to simulate inheritance
+            $baseController.merge(vm, $baseController);
+
+            //  Controller-exposed properties for data binding
+            vm.pageHeading = "Meetings";
+
+            vm.items = null;
+            vm.selectedItem = null;
+            vm.newItem = null;
+            vm.itemForm = null;
+            vm.itemFormVisible = false;
+            vm.showNewItemErrors = false;
+
+            //  save a reference to our service class so we can call it later on
+            vm.$meetingService = $meetingService;
+
+            //  these are all event handlers for click or ajax events
+            vm.receiveItems = _receiveItems; // ajax get all success handler
+            vm.onItemError = _onItemError;  // ajax getAll failure handler
+
+            vm.selectItem = _selectItem; // handler that sets selected item
+
+            vm.showItemForm = _showItemForm; // display item form
+            vm.resetItemForm = _resetItemForm; // reset item form
+
+            vm.saveChanges = _saveChanges;
+
+            vm.addItem = _addItem;
+            vm.echoItem = _echoItem;
+
+
+            //  this is a wrapper for our small dependency on $scope
+            vm.notify = vm.$meetingService.getNotifier($scope);
+
+            //  invoke the render() function on startup
+            render();
+
+            function render() {
+                vm.$meetingService.getAll(vm.receiveItems, vm.onItemError);
+            }
+
+            // event handlers
+            function _receiveItems(data) {
+                //this receives the data and calls the special
+                //notify method that will trigger ng to refresh UI
+                vm.notify(function () {
+                    vm.items = data.items;
+                });
+            }
+
+            function _onItemError(jqXhr, error) {
+                console.log(error);
+            }
+
+            function _selectItem(anItem) {
+                console.log(anItem);
+                vm.selectedItem = anItem;
+            }
+
+            function _showItemForm() {
+                console.log("show form!");
+                vm.itemFormVisible = !vm.itemFormVisible;
+            }
+
+            function _resetItemForm() {
+                vm.notify(function () {
+                    console.log("reset form");
+                    vm.itemFormVisible = false;
+                    vm.showNewItemErrors = false;
+                    vm.newItem = null;
+                    vm.itemForm.$setPristine();
+                    vm.itemForm.$setUntouched()
+                });
+            }
+
+            function _addItem() {
+                vm.showNewItemErrors = true;
+
+                if (vm.itemForm.$valid) {
+                    console.log("data is valid! go save this object -> ", vm.newItem);
+                }
+                else {
+                    console.log("form submitted with invalid data :(")
+                }
+            }
+
+            function _echoItem() {
+                console.log("ECHO Item -> ", vm.newItem);
+            }
+
+            function _saveChanges(anItem) {
+                if (anItem.id > 0) {
+                    $meetingService.update(anItem, _onUpdateSuccess, _onUpdateError);
+                    console.log("Updating meeting...");
+                }
+                else {
+                    $meetingService.add(anItem, _onInsertSuccess, _onInsertError);
+                    console.log("Inserting meeting...");
+                }
+                console.log(anItem);
+            }
+
+            function _onInsertSuccess(data, status, xhr) {
+                vm.notify(function () {
+                    vm.selectedItem = null;
+                    vm.showItemForm = false;
+                    vm.showNewItemErrors = false;
+                });
+            }
+
+            function _onUpdateSuccess(data, status, xhr) {
+                vm.notify(function () {
+                    vm.selectedItem = null;
+                    vm.showItemForm = false;
+                    vm.showNewItemErrors = false;
+                });
+            };
+
+            function _onUpdateError(jqXHR, textStatus, errorThrown) {
+                window.alert(JSON.stringify(jqXHR.responseJSON));
+            };
+
+            function _onInsertError(jqXHR, textStatus, errorThrown) {
+                window.alert(JSON.stringify(jqXHR.responseJSON));
+            };
+        }
+
+        //// We have created a service but we also need to tell Angular about it.
+        //// without these lines it will not work
+        //sabio.ng.addService(sabio.ng.app.module //  this is the global Sabio application which exists on every page
+        //    , "$meetingService"  //  this simply tells ng what the service should be called. Angular naming convention is that service objects all start with "$"
+        //    , ["$baseService"]    //  a list of dependencies needed for the service - for right now there is only one
+        //    , sabio.services.meetings.meetingFactory);    //  this is a reference to the factory function above
+
+
+        // Create a controller with dependency on $scope, $baseController and $meetingsService
+        // plus the factory method (constructor) for the meetingsController.
+        sabio.ng.addController(sabio.ng.app.module
+            , "$meetingController"
+            , ['$scope', '$baseController', "$meetingsService"]   //  here we pass in $meetingsService which was created in the previous step
+            , sabio.page.meetingControllerFactory)
+    </script>
+
+}
+

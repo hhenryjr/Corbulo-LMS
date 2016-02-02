@@ -1,0 +1,174 @@
+﻿@{
+    ViewBag.Title = "ListCourses";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml"; //Using the view layout 
+}
+
+<div class="content-header">
+    <div class="header-section">
+        <h1>
+
+            <i class="gi gi-book_open"></i><strong>Courses</strong>
+        </h1>
+    </div>
+</div>
+
+
+<div class="row  theWidget">
+    <div class="col-md-8">
+        <div class="row">
+            @*<div class="col-sm-6">
+                    <div class="widget">
+                        <div class="widget-advanced">
+                            <div class="widget-header text-center themed-background-dark-default">
+                                <div class="widget-options">
+                                    <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Love it!"><i class="fa fa-heart text-danger"></i></button>
+                                </div>
+                                <h3 class="widget-content-light">
+                                    <a href="page_ready_elearning_course_lessons.php" class="themed-color-default">Intro to HTML5</a><br>
+                                    <small>Web Design</small>
+                                </h3>
+                            </div>
+                            <div class="widget-main">
+                                <a href="page_ready_elearning_course_lessons.php" class="widget-image-container animation-fadeIn">
+                                    <span class="widget-icon themed-background-default"><i class="fa fa-globe"></i></span>
+                                </a>
+                                <a href="page_ready_elearning_course_lessons.php" class="btn btn-sm btn-default pull-right">
+                                    15 lessons,
+                                    <i class="fa fa-clock-o"></i> 8 hours
+                                </a>
+                                <a href="page_ready_elearning_course_lessons.php" class="btn btn-sm btn-success">$9</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @*<script type="text/javascript" src="~/Scripts/sabio.js"></script>*@
+    <script type="text/javascript" src="~/Scripts/Sabio.Services.Courses.js"></script>
+    <script type="text/javascript">
+
+        sabio.page.startUp = function ()
+        {
+            console.log("startUp is firing");
+
+            sabio.services.courses.getAll(sabio.page.ajaxSuccess, sabio.page.ajaxError);
+
+        }
+
+        sabio.page.ajaxSuccess = function (data, status, xhr) 
+        {
+            if (!data) 
+            {
+                return;
+            }
+            
+            for (var i = 0; i < data.items.length; i++) {
+
+                var courseData = {}
+
+                courseData.courseName = data.items[i].courseName;
+                courseData.description = data.items[i].description;
+                courseData.id = data.items[i].id;
+                courseData.start = data.items[i].start;
+                courseData.courseLength = data.items[i].courseLength;
+                courseData.length = data.items[i].length;
+                sabio.page.addCourseToDom(courseData);
+
+            }
+
+        }
+
+        sabio.page.addCourseToDom = function (courseData) 
+        {
+            
+            var newCourse = $($("#courseTemplate").html()).clone();
+
+            var newTime = moment(courseData.start).toDate();
+            var start = moment(newTime).format('DD-MMM-YYYY');
+            var edit = "/courses/" + courseData.id + "/edit";
+            var cDetails = "/courses/" + courseData.id + "/details";
+
+            //var course = sabio.page.getCourse(data);
+            newCourse.find('#courseName').html(courseData.courseName);
+            newCourse.find('#courseDescription').html(courseData.description);
+            newCourse.find('#courseStart').html(start);
+            newCourse.find('#edit-button a').attr('href', edit);
+            newCourse.find('#courseLength').html(courseData.length);
+            newCourse.find('#courseDetails').attr('href', cDetails);
+
+
+
+            var targetLoc = $('.theWidget');
+
+            targetLoc.attr("data-target", "true");
+
+            targetLoc.append(newCourse);
+
+        }
+
+        sabio.page.ajaxError = function (jqXHR, textStatus, errorThrown)
+        {
+            
+            $("#msgWindow").addClass("alert-danger");
+            $("#msgWindow").removeClass("alert-info");
+
+        }
+
+        sabio.page.getClone = function () 
+        {
+
+            return $($("#courseTemplate").html()).clone();
+
+        }
+
+
+    </script>
+
+    <script type="text/template" id="courseTemplate">
+        <div class="col-sm-6">
+            <div class="widget">
+                <div class="widget-advanced">
+                    <div class="widget-header text-center themed-background-dark-flatie">
+                        <div class="widget-options-left" id="edit-button">
+                            @*<button class="btn btn-xs btn-default pull-left" data-toggle="tooltip" title="Edit"><i class="fa fa-edit text-danger"></i></button>*@
+                            <a href="#" class="btn btn-xs btn-default" title="Admin Edit"><i class="fa fa-edit text-danger"></i></a>
+                        </div>
+                        <div class="widget-options">
+                            @*<button class="btn btn-xs btn-default pull-left" data-toggle="tooltip" title="Edit"><i class="fa fa-edit text-danger"></i></button>*@
+                            <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Favorite this course!"><i class="fa fa-star text-warning"></i></button>
+                        </div>
+                        <h3 class="widget-content-light">
+                            <a href="page_ready_elearning_course_lessons.php" class="themed-color-default" id="courseName"></a><br>
+                            <small id="courseDescription"></small>
+                        </h3>
+                    </div>
+                    <div class="widget-main" style="padding-bottom: 20px">
+                        <a href="page_ready_elearning_course_lessons.php" class="widget-image-container animation-fadeIn">
+                            <span class="widget-icon themed-background-flatie"><i class="fa fa-code"></i></span>
+                        </a>
+                        <a href="page_ready_elearning_course_lessons.php" class="btn btn-sm btn-default pull-right">
+                            Starts    <i class="fa fa-calendar-o" id="courseStart"></i>
+                        </a>
+                        <a href="page_ready_elearning_course_lessons.php" class="btn btn-sm btn-success"><i class="fa fa-dollar"></i>100</a>
+                        <div style="display:inline">
+                            <center>
+                                <div>
+                                    <text><strong id="courseLength"></strong></text>
+                                </div>
+                            </center>
+
+                            <a style="margin-top: -10px" href="#" class="btn btn-xs btn-default pull-right" id="courseDetails" title="Course Details"><i class="fa text-danger"></i>Course Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    
+    </script>
+    
+    }
+

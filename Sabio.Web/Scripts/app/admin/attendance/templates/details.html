@@ -1,0 +1,23 @@
+﻿<h1>DETAILS</h1>
+
+
+
+
+<div class="block">
+
+   
+ 
+    <div>
+        <ul class="text" ng-repeat = "attendance in admin.attendance">
+
+            <li><img ng-src="Https://sabio-training.s3-us-west-2.amazonaws.com/C11/{{attendance.avatarPhotoPath}}" alt="Avatar" ng-show="attendance.avatarPhotoPath" class="center img-circle" id="ProfilePic" /><!--style="position: absolute; top: 15px; left: 920px; height:100px"--></li>
+            <li>ID: <strong>{{attendance.id}}</strong></li>
+            <li>First:  <strong>{{attendance.firstName}}</strong></li>
+            <li>Last:   <strong>{{attendance.lastName }}</strong></li>
+            <li>Email:  <strong>{{attendance.email }}</strong></li>
+            <li>Campus: <strong>{{attendance.campusName}}</strong></li>
+            <li>Enrolled:   <strong>{{attendance.enrollmentStatusID}}</strong></li>
+            <li>CheckedIn:  <strong>{{attendance.dateAdded |  date:'MM/dd/yyyy @ h:mma'}}</strong></li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,84 @@
+﻿<div class="block">
+
+    <form method="post" name="wikiForm" class="form-horizontal form-bordered" novalidate="novalidate" ng-submit="wiki.submit()">
+        <fieldset>
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="name">Title<span class="text-danger">*</span></label>
+                <div class="col-md-6 name">
+                    <input type="text"
+                           id="name"
+                           name="name"
+                           class="form-control" placeholder="Wiki Page Title"
+                           ng-model="wiki.wikiPage.title"
+                           required
+                           data-ng-blur="wiki.createSlug(wiki.wikiPage.title)" 
+                           />
+                </div>
+            </div>
+
+            <div class="form-group ">
+                <label class="col-md-4 control-label" for="slug">Slug: <span class="text-danger">*</span></label>
+                <div class="col-md-6 slug">
+                    
+                        <input type="text" id="slug"
+                               name="slug"
+                               class="form-control"
+                               placeholder="Slug Here"
+                               ng-model="wiki.wikiPage.url" />
+                    
+                </div>
+                <div role="alert" class="help-inline error">
+                    <span class="error has-error" ng-show="wiki.showErrors && !wiki.wikiForm.url.$error.required">Please Enter a valid URL</span>
+                </div>
+            </div>
+        
+            <div class="form-group">
+
+                <label class="col-md-4 control-label" for="wikiTags">Wiki Tags</label>
+                <div class="col-md-6">
+                    <tags-input ng-model="wiki.wikiPage.wikiTags"
+                                display-property="tagName"
+                                on-tag-added="wiki.tagAdded($tag)"
+                                on-tag-removed="wiki.tagRemoved($tag)">
+                        <auto-complete source="wiki.tagList"
+                                       min-length="0"
+                                       load-on-focus="true"
+                                       load-on-empty="true"
+                                       max-results-to-show="32">
+                        </auto-complete>
+                    </tags-input>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4 control-label" id="wikiSpaces" for="wikiSpaces">Wiki Spaces </label>
+                <div class="col-md-6">
+                    <ul class="list-group">
+                        <li class="list-group-item" ng-repeat="space in wiki.spaceList">
+                          {{space.title}}                        
+                            <input type="checkbox" class="pull-right"
+                                   name="{{space.id}}"
+                                   ng-checked="wiki.chosenWikiSpaces.indexOf(space.id) > -1" 
+                                   ng-click="wiki.checkboxClicked($event, space.id)">                            
+                        </li>
+
+                    </ul>
+                    <span ng-repeat="id in spaceList"></span>
+                </div>
+                <!--<div role="alert" class="help-inline error">
+                    <span class="error has-error" ng-show="wiki.showErrors && wiki.wikiForm.wikiSpaces.$error.required">Select a Wiki Space</span>
+                </div>-->
+            </div>
+
+            <div>
+                <input type="hidden" value="{{wiki.wikiPage.parentId}}" />
+            </div>
+
+            <div class="form-functions btn-group col-md-6">
+                <div class="form-group col-md-6">
+                    <button type="submit" class="btn btn-success"> <i class="fa fa-send-o"></i> Save Wiki Page</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>

@@ -1,0 +1,306 @@
+﻿@model Sabio.Web.Models.ViewModels.ItemViewModel<int>
+
+@{
+    ViewBag.Title = "Bio";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+
+
+}
+
+    <div class="content-header">
+        <div class="header-section">
+            <h1>
+                <i class="gi gi-show_big_thumbnails"></i><strong>Instructors Admin Page</strong><br><small>We make developers!</small>
+            </h1>
+        </div>
+    </div>
+
+    
+    <div class="block full block-alt-noborder">
+       
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+                <article>
+                    <form id="bio-form" method="post" class="form-horizontal form-bordered" novalidate="novalidate">
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="name">Name<span class="text-danger">*</span></label>
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <input type="text" id="name" name="name" class="form-control" placeholder="Your Name">
+                                    <span class="input-group-addon"><i class="fa fa-bullseye"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" id="em">Email <span class="text-danger">*</span></label>
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <input type="text" for="val_email" id="email" name="email" class="form-control" placeholder="Your Email">
+                                    <span class="input-group-addon"><i class="fa fa-bullseye"></i></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">Bio<span class="text-danger">*</span></label>
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <textarea id="bio" rows="5" name="bio" class="ckeditor" placeholder="Enter Bio Here"></textarea>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label" for="val_linkedin">LinkedIn<span class="text-danger">*</span></label>
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <input type="text" id="linkedIn" name="linkedIn" class="form-control" placeholder="http://linkedin.com/johndoe">
+                                    <span class="input-group-addon"><i class="fa fa-bullseye"></i></span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" name="coursesTaught" for="" example-chosen-multiple"">Courses Taught<span class="text-danger">*</span></label>
+                                <div class="col-md-8" name="coursesTaught">
+                                    <select id="coursesTaught" name="coursesTaught" class="select-chosen" data-placeholder="Click Here To Add Courses" style="width: 250px; display: none;" multiple="">
+                                        <option value="JavaScript">JavaScript</option>
+                                        <option value="jQuery">jQuery</option>
+                                        <option value="Angular.js">Angular.js</option>
+                                        <option value="MVC">MVC</option>
+                                        <option value="SQL Server">SQL Server</option>
+                                        <option value="HTML">HTML</option>
+                                        <option value="CSS">CSS</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </fieldset>
+                      
+                        <div class="form-group remove-margin-bottom">
+                            <div class="col-md-10 text-right">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default" data-toggle="tooltip" title="" data-original-title="Add Instructor Image"><i class="fa fa-picture-o"></i></button>
+                                    <button type="submit" Id="submitBio" class="btn btn-default">Submit</button>
+                                    <button type="button" Id="deleteBio" class="btn btn-md btn-danger" data-toggle="tooltip" title="" data-original-title="Delete"><i class="fa fa-times"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="hidden" class="id" id="bioId" Name="Id" value="@Model.Item" />
+                    </form>
+                </article>
+            </div>
+        </div>
+    </div>
+
+
+@section Scripts {
+    <script src="~/Scripts/Sabio.Services.Instructors.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/js/helpers/ckeditor/ckeditor.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script type="text/javascript">
+
+
+        sabio.page.startUp = function () {
+            sabio.page.initializeValidation();
+           
+            //  attach a click handler to the form's submit button
+            $("#submitBio").on("click", sabio.page.handlers.serializeFormAndAjaxCall);
+            $("#deleteBio").on("click", sabio.page.handlers.deleteItemById);
+
+            sabio.page.getDataAjaxCall();
+        }
+
+        sabio.page.initializeValidation = function () {
+            //  set defaults for the entire plugin
+            jQuery.validator.setDefaults({
+                debug: true
+            });
+
+            //  set rules and error messages
+            $('#bio-form').validate({
+                errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+                errorElement: 'div',
+                errorPlacement: function (error, e) {
+                    e.parents('.form-group > div').append(error);
+                },
+                highlight: function (e) {
+                    $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                    $(e).closest('.help-block').remove();
+                },
+                success: function (e) {
+                    // You can use the following if you would like to highlight with green color the input after successful validation!
+                    e.closest('.form-group').removeClass('has-success has-error'); // e.closest('.form-group').removeClass('has-success has-error').addClass('has-success');
+                    e.closest('.help-block').remove();
+                },
+                rules: {
+                    "name": {
+                        required: true,
+                        minlength: 2
+
+                    },
+                    "email": {
+                        required: true,
+                        email: true
+                    },
+                    "bio": {
+                        required: true,
+                        minlength: 5
+
+                    },
+                    "linkedIn": {
+                        required: true,
+                        minlength: 10
+                    },
+                    "coursesTaught": {
+                        required: true
+                    }
+                },
+                //  here you can provide custom error messages if you want to - this part is optional
+                messages: {
+                    "name": {
+                        required: "Name is required.",
+                    },
+                    "email": {
+                        required: "Email is required.",
+
+                    },
+                    "bio": {
+                        required: "Bio is required.",
+                    },
+                    "linkedIn": {
+                        required: "LinkedIn is required.",
+                    },
+                    "coursesTaught": {
+                        required: "Courses Taught is required."
+                    }
+                }
+            });
+        };
+
+        sabio.page.handlers.serializeFormAndAjaxCall = function (evt) {
+            evt.preventDefault();
+            
+
+            if ($('#bio-form').valid()) {
+                //CKEDITOR.instances.bio.setData
+                CKEDITOR.instances.bio.updateElement();
+               
+                var id = $("#bioId").val();
+
+                if (id > 0) {
+                    console.log("updating");
+                    sabio.page.updateAjaxCall();
+                }
+                else {
+                    console.log("posting");
+                    sabio.page.addAjaxCall();
+                }
+            }
+        }
+
+        //POST
+        sabio.page.addAjaxCall = function () {
+            var url = "/api/Instructors";
+            var myData = $("#bio-form").serialize();
+            sabio.services.instructors.addAjaxCall(myData, sabio.page.AjaxSuccess, sabio.page.ajaxError);
+            console.log(myData);
+        }
+
+        //UPDATE
+        sabio.page.updateAjaxCall = function () {
+            var url = "/api/Instructors/" + $("bioId").val();
+            var myData = $('#bio-form').serialize();
+            var myData2 = "id=" + id + "&" + myData
+            var id = $("#bioId").val();
+            //console.log(myData2);
+            sabio.services.instructors.updateAjaxCall(id, myData, sabio.page.updateSuccess, sabio.page.ajaxError);
+        }
+
+        //GET
+        sabio.page.getDataAjaxCall = function () {
+            var id = $("#bioId").val();
+            var url = "/api/Instructors/" + id;
+            sabio.services.instructors.getDataAjaxCall(id, sabio.page.getAjaxSuccess, sabio.page.ajaxError);
+        }
+
+        sabio.page.populateFormWithDataFromAjax = function () {
+            if ($("#bioId").val()) {
+                sabio.page.getDataAjaxCall();
+                $("#submitBio").html("Update");
+            }
+        }
+        // DELETE METHOD
+        sabio.page.handlers.deleteItemById = function () {
+            var id = $("#bioId").val();
+            sabio.services.instructors.delete(id, sabio.page.deleteSuccess, sabio.page.ajaxError);
+        }
+
+        //DELETE SUCCESS
+        sabio.page.deleteSuccess = function () {
+            console.log("redirected to add new item")
+            $(location).attr('href', '/instructors/bio')
+        }
+
+        //POST SUCCESS
+        //the value of ID is taken from this function
+        sabio.page.AjaxSuccess = function (data) {
+            console.log(JSON.stringify(data));
+            if (data && data.item) {
+                $("#bioId").val(data.item);
+            }           
+        }
+
+        //UPDATE SUCCESS METHOD
+        sabio.page.updateSuccess = function (data, status, xhr) {
+            console.log(JSON.stringify(data));                     
+        }
+        //GET SUCCESS METHOD
+        //loads the data from database to your forms upon page load
+        sabio.page.getAjaxSuccess = function (data, status, xhr) {
+            console.log(data);
+
+            var bioItem = data.item;
+            console.log(bioItem);           
+            var coursesTaught = data.item.coursesTaught;
+            var coursesTaughtArray = coursesTaught.split("|");
+
+            $("#bioId").val(bioItem.id);
+            $("#name").val(bioItem.name);
+            $("#email").val(bioItem.email);           
+            $("#bio").html(bioItem.bio);
+            $("#linkedIn").val(bioItem.linkedIn);            
+            $("#coursesTaught").val(coursesTaughtArray).trigger('chosen:updated'); 
+        }
+
+        sabio.page.ajaxError = function (jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR.responseJSON);       
+        }
+       
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

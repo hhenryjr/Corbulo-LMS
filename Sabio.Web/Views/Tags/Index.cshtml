@@ -1,0 +1,284 @@
+﻿@model Sabio.Web.Models.ViewModels.ItemViewModel<int>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+<link src="~/Scripts/bootstrap-editable/css/bootstrap-editable.css" rel="stylesheet">
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"> @*Needed for xEditable*@
+<div id="page-content" style="min-height:1000px">
+    <div class="content-header">
+        <div class="header-section">
+            <h1>
+                <i class="gi gi-tag"></i>Tags
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 pull-left">
+            <div class="block">
+                <div class="block-title">
+                    <h2><strong>Existing</strong> Tags</h2>
+                </div>
+                <table class="table table-borderless table-vcenter table-bordered target">
+                    <tbody class="target"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="block full col-sm-4" style="position:fixed; top: 31%; left:58%;">
+            <div class="block-title">
+                <h2>Enter a new <strong>Tag</strong> here</h2>
+            </div>
+            <form method="post" id="tag-input-form" class="form form-inline" onsubmit="return false;">
+                <div class="form-group col-md-8">
+                    <label class="control-label" for="tagName">Tag Name</label>
+                    <div>
+                        <input type="text" id="tagName" name="tagName" class="form-control" placeholder="Enter your tag name here">
+                    </div>
+                </div>
+                <input class="hidden" id="id" value="@Model.Item" />
+                <div class="form-actions col-sm-4" style="margin-top:23px;">
+                    <button type="submit" class="btn btn-sm btn-success" id="submitTag"><i class="fa fa-tags"></i> Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section scripts
+{
+    <script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+    <script type="text/javascript" src="~/Scripts/Sabio.Services.Tags.js"></script>
+    <script src="~/Scripts/bootstrap3-editable/js/bootstrap-editable.js"></script>
+
+    <script type="text/javascript">
+
+        sabio.page.startUp = function () {
+
+            console.log("Startup is firing");
+            sabio.page.validationSetUp();
+            $("#submitTag").on("click", sabio.page.handlers.isValidatingAndPost);
+            sabio.page.getTags();
+            $.fn.editable.defaults.ajaxOptions = { type: "PUT" };
+        }
+
+        sabio.page.validationSetUp = function () {
+            jQuery.validator.setDefaults({
+                debug: true
+            });
+
+            var validator = $("#tag-input-form").validate({
+                errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+                errorElement: 'div',
+                errorPlacement: function (error, e) {
+                    e.parents('.form-group > div').append(error);
+                },
+                highlight: function (e) {
+                    $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                    $(e).closest('.help-block').remove();
+                },
+                success: function (e) {
+                    // You can use the following if you would like to highlight with green color the input after successful validation!
+                    e.closest('.form-group').removeClass('has-success has-error'); // e.closest('.form-group').removeClass('has-success has-error').addClass('has-success');
+                    e.closest('.help-block').remove();
+
+                },
+
+                rules: {
+                    tagName: {
+                        required: true,
+                        maxlength: 100,
+                        minlength: 1
+                    }
+
+                },
+                messages: {
+                    tagName: "A tag name is required."
+                }
+            });
+
+            var checkErrors = function () {
+                validator.form();
+            };
+
+        }
+
+        //Start Post Functions
+        sabio.page.handlers.isValidatingAndPost = function () {
+
+            if ($("#tag-input-form").valid()) {
+                var data = $("#tag-input-form").serialize();
+                sabio.services.tags.add(data, sabio.page.addSuccess, sabio.page.ajaxError);
+
+            }
+        }
+
+        sabio.page.addNewItemToPage = function (tagData) {
+            //this is used to dynamically add the newest tag to the page without having to refresh.
+            var tagName = $("#tagName").val();
+            var id = tagData.item;
+            var approved = "false";
+
+            sabio.page.cloneAndAppend(id, tagName, approved);
+            sabio.page.scrollToNewest();
+
+        }
+
+        sabio.page.scrollToNewest = function () {
+
+            $('html, body').animate({
+                scrollTop: $("tr:last-child").offset().top
+            }, 2000);
+
+
+            $('#tag-input-form')[0].reset();
+
+        }
+
+        //Start Put Functions
+        sabio.page.update = function (data) {
+
+            console.log(data);
+            var nameVal = data.value;
+            var id = data.pk;
+            var nameValuePair = "id=" + id + "&tagName=" + nameVal;
+            var newData = nameValuePair.split(" ").join("+");
+
+            sabio.services.tags.update(id, newData, sabio.page.updateSuccess, sabio.page.ajaxError);
+        }
+
+        sabio.page.updateStatus = function () {
+
+
+            var tagData = $(this).closest("tr");
+            var id = $(tagData).find(".id");
+            var idVal = id.text();
+            var approvedText = $(tagData).find(".isActive").text();
+
+            if (approvedText === "true") {
+                approvedText = "false";
+                $(tagData).find(".isActive").html(approvedText);
+            } else {
+                approvedText = "true";
+                $(tagData).find(".isActive").html(approvedText);
+            }
+
+            var serialize = "id=" + idVal + "&approved=" + approvedText;
+            sabio.services.tags.updateActive(idVal, serialize, sabio.page.updateSuccess, sabio.page.ajaxError);
+        }
+
+        //Start Get Functions
+        sabio.page.getTags = function () {
+
+            sabio.services.tags.getTags(sabio.page.getSuccess, sabio.page.ajaxError);
+
+        }
+
+        sabio.page.addTagsToDom = function (tagData) {
+
+            var id = tagData.id;
+            var tagName = tagData.tagName;
+            var approved = tagData.approved;
+
+            sabio.page.cloneAndAppend(id, tagName, approved);
+            
+        }
+
+        //Ajax Success functions are below
+        sabio.page.addSuccess = function (data, status, xhr) {
+            console.log(JSON.stringify(data));
+            sabio.page.addNewItemToPage(data);
+
+        }
+
+        sabio.page.updateSuccess = function (data, status, xhr) {
+            console.log(JSON.stringify(data));
+
+        }
+
+        sabio.page.getSuccess = function (data, status, xhr) {
+
+            if (!data) {
+                return;
+            }
+
+            for (var i = 0; i < data.items.length; i++) {
+
+                var tagData = data.items[i];
+
+                sabio.page.addTagsToDom(tagData);
+            }
+        }
+
+        /*This function will be called by $ when the ajax
+            request's response is NOT received as succesful.
+           This has a HTTP_STATUS Code of something OTHER than 200
+        */
+        sabio.page.ajaxError = function (jqXHR, textStatus, errorThrown) {
+
+            alert("Error, Item was not sent to the database.")
+            console.log(JSON.stringify(jqXHR));
+        }
+
+        //X-Editable and Clone template functions
+
+        sabio.page.applyXeditable = function (tagData, newTag) {
+
+            var id = tagData
+
+            $('.tagName a', newTag).editable({
+                type: 'text',
+                pk: id,
+                url: sabio.page.update,
+                success: sabio.page.updateSuccess,
+                error: sabio.page.ajaxError,
+                title: 'Edit this tag',
+                name: 'id'
+            });
+        }
+
+        sabio.page.cloneAndAppend = function (id, name, approved) {
+
+            var template = $($("#tagTemplate").html()).clone();
+            
+
+            template.find(".tagName a").html(name);
+            template.find(".id").html(id);
+            template.find(".tagName a").attr("data-pk", id);
+
+            if (approved === true) {
+                template.find(".approved").prop("checked", "true");
+                template.find(".isActive").html("true");
+
+            } else {
+                template.find(".isActive").html("false");
+            }
+
+
+            var targetLocation = $(".table tbody");
+            targetLocation.attr("data-target", "true");
+            targetLocation.append(template);
+
+            $(".approved", template).on("click", sabio.page.updateStatus);
+            sabio.page.applyXeditable(id, template);
+        }
+
+    </script>
+
+    <script type="text/template" id="tagTemplate">
+        <tr>
+            <td class="text-center tagName" style="width: 100px;"><a href="#" name="tagName"><strong></strong></a></td>
+            <td class="" id="approvedSwitch">
+                <label class="switch switch-success pull-right">
+                    <input type="checkbox" id="approved" class="approved" name="approved"
+                           value="true" unchecked><span><input class="isActive hidden" /></span>
+                </label>
+                <input id="individualId" class="id hidden" name="id" />
+            </td>
+        </tr>
+    </script>
+}
+

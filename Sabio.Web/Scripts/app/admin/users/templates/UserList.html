@@ -1,0 +1,39 @@
+﻿<div class="content-header">
+    <div class="header-section">
+        <h1>
+            <strong>Candidates</strong>
+        </h1>
+        <h4>Section Request</h4>
+    </div>
+</div>
+
+<div class="block">
+    <div class="table-responsive">
+        <table class="table table-striped table-vcenter">
+            <thead>
+                <tr>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Desired Track</th>
+                    <th class="text-center">Desired Campus</th>
+                    <th class="text-center">&nbsp;</th>
+                </tr>
+            </thead>
+
+            <tbody id="tableBody">
+                <tr class="text-center" ng-repeat="user in users.userList track by user.id">
+
+                    <td>{{user.firstName}} {{user.lastName}}</td>
+                    <td>{{user.userTracks.name}}</td>
+                    <td>{{user.campuses.name}}</td>
+                  
+                    <td class="text-center">
+                        <div class="btn-group btn-group-xs">
+                            <a title="Assign a section to this candidate" class="btn btn-xs btn-alt btn-success" ng-href="#/sections/{{user.id}}"><i class="fa fa-pencil"></i></a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    
+    </div>
+</div>

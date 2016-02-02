@@ -1,0 +1,8 @@
+﻿<div ng-if="content.contentData" ng-repeat="listItem in content.contentData">
+    <ul class="fa-ul" >
+        <li ng-model="listItem.value" type="text">
+            <i class="fa fa-li fa-check text-success"></i> {{listItem.value}}
+        </li>
+    </ul>
+</div>
+<p ng-if="!content.contentData">Nothing here yet...</p>

@@ -1,0 +1,135 @@
+﻿@model Sabio.Web.Models.ViewModels.ItemViewModel<int>
+@section styles{<link href="http://lms.dev/Sabio.CSS/InstructorProfile.css" rel="stylesheet" /> }
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div id="page-content" data-ng-controller="mainController as main">
+    <div class="content-header content-header-media">
+        <div class="header-section">
+            <input class="hidden" id="id" value="@Model.Item" />
+            <img src="~/img/placeholders/avatars/avatar2.jpg" alt="Avatar" class="pull-right img-circle">
+            <h1>{{main.item.name}}</h1>
+        </div>
+        <img src="~/img/InstructorProfileHeader.jpeg" alt="header image" class="animation-pulseSlow instHeader">
+    </div>
+    <div class="row">
+        <div class="col-md-5 col-lg-6 pull-right">
+            <div class="block">
+                <div class="block-title">
+                    <h2><strong>Contact</strong> {{main.item.name}}</h2>
+                </div>
+                <form action="page_ready_user_profile.php" method="post" class="block-content-full block-content-mini-padding" onsubmit="return false;">
+                    <textarea id="default-textarea" name="default-textarea" rows="2" class="form-control push-bit" placeholder="What are you thinking?"></textarea>
+                    <div class="clearfix">
+                        <button type="submit" class="btn btn-sm btn-primary pull-right"><i class="fa fa-pencil"></i> Post</button>
+                        <a href="javascript:void(0)" class="btn btn-link btn-icon" data-toggle="tooltip" data-placement="bottom" title="Add Location"><i class="fa fa-location-arrow"></i></a>
+                        <a href="javascript:void(0)" class="btn btn-link btn-icon" data-toggle="tooltip" data-placement="bottom" title="Add Voice"><i class="fa fa-microphone"></i></a>
+                        <a href="javascript:void(0)" class="btn btn-link btn-icon" data-toggle="tooltip" data-placement="bottom" title="Add Photo"><i class="fa fa-camera"></i></a>
+                        <a href="javascript:void(0)" class="btn btn-link btn-icon" data-toggle="tooltip" data-placement="bottom" title="Add File"><i class="fa fa-file"></i></a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-7 col-lg-6 block">
+            <div>
+                <div class="block-title">
+                    <h2>About <strong class="instName">{{main.item.name}}</strong> <small>&bull; <i class="fa fa-file-text text-primary"></i> <a href="javascript:void(0)" data-toggle="tooltip" title="Download Bio in PDF">Bio</a></small></h2>
+                </div>
+                <div>
+                    <div class="block-alt-noborder">
+                        <div class="block-content-full">
+                            <div class="col-md-4"><h4><strong>Bio:</strong></h4></div>
+                            <div class="col-md-12" data-ng-bind-html="main.item.bio">{{main.item.bio}}</div>
+                        </div>
+                        <div class="block-content-full">
+                            <div class="col-md-7 linkdin"><a href="{{main.item.linkedIn}}" target="_blank"><i class="fa fa-linkedin-square instLink"></i><strong> View Profile</strong></a></div>
+                        </div>
+                        <div class="block-content-full" style="padding-top: 13px;">
+                            <div class="col-md-6"><a href="mailto:{{main.item.email}}"><h5><i class="fa fa-envelope instEmail"></i><strong> {{main.item.email}}</strong></h5></a></div>
+                        </div>
+                        <div class="block-content-full">
+                            <div class="col-md-12"><h5><strong>Courses Taught:</strong></h5></div>
+                            <div class="col-md-12 courses">
+                                <a class="label label-info animate-repeat courseBtns" data-ng-repeat="(key, value) in main.item.courses">{{value.courseName}}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<a href="#" id="to-top"><i class="fa fa-angle-double-up"></i></a>
+@section scripts
+{
+    <script src="~/Scripts/sabio.services.instructorprofile.js"></script>
+    <script type="text/javascript">
+
+        sabio.page.startUp = function () {
+            sabio.page.instructorController = sabio.ng.getControllerInstance($("#page-content"));
+        }
+
+        sabio.services.instructorFactory = function ($baseService) {
+
+            var aSabioServiceObject = sabio.services.instructor;
+            var newService = $baseService.merge(true, {}, aSabioServiceObject, $baseService);
+            return newService;
+
+        }
+
+        sabio.page.instructorControllerFactory = function ($scope, $baseController, $instructorService){
+
+            var vm = this; // new instance of controller
+
+            $baseController.merge(vm, $baseController);
+
+            vm.$scope = $scope;
+
+            // properties;
+            vm.$instructorService = $instructorService;
+            vm.recieveItems = _recieveItems;
+            vm.onError = _onError;
+            vm.instructorInfo = _instructorInfo;
+            vm.id = @Model.Item;
+
+            vm.notify = vm.$instructorService.getNotifier($scope);
+
+            render();
+
+            function render() {
+                vm.$instructorService.getInstructor(vm.id, vm.recieveItems, vm.onError)
+            }
+
+            function _recieveItems(data) {
+                vm.notify(function () {
+                    vm.item = data.item;
+                });
+            }
+
+            function _onError(jqXhr, error) {
+                console.error(error);
+            }
+
+            function _instructorInfo(anInst) {
+                vm.instructorInfo = anInst;
+
+            }
+
+        }
+
+        sabio.ng.addService(sabio.ng.app.module
+            , "$instructorService"
+            , ["$baseService"]
+            ,sabio.services.instructorFactory)
+
+        sabio.ng.addController(sabio.ng.app.module
+            , "mainController"
+            , ['$scope', '$baseController', '$instructorService']
+            , sabio.page.instructorControllerFactory);
+
+    </script>
+
+
+}

@@ -1,0 +1,49 @@
+﻿<ul class="sidebar-nav">
+
+    <li ng-show="sidebar.access.students">
+        <a href="#" class="sidebar-nav-menu">
+            <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+            <i class="gi gi-show_big_thumbnails sidebar-nav-icon"></i>
+            <span class="sidebar-nav-mini-hide">@Model.BrandName Wiki</span>
+        </a>
+        <ul>
+            <li ng-model="sidebar.wikiSpaces" ng-repeat="wiki in sidebar.spaces track by wiki.id">
+                <a href="/wiki#/space/{{wiki.id}}">
+                    {{wiki.title}}
+                </a>
+            </li>
+        </ul>
+    </li>
+
+  
+    <li ng-show="sidebar.access.students">
+        <a href="#" class="sidebar-nav-menu">
+            <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+            <i class="gi gi-show_big_thumbnails sidebar-nav-icon"></i>
+            <span class="sidebar-nav-mini-hide">Students</span>
+        </a>
+        <ul>
+            <li><a href="/blogs">Blog</a></li>
+            <li><a href="/faq">FAQs</a></li>
+        </ul>
+    </li>
+
+ 
+    <li ng-show="sidebar.access.instructors">
+        <a href="#" class="sidebar-nav-menu">
+            <i class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i>
+            <i class="gi gi-show_big_thumbnails sidebar-nav-icon"></i>
+            <span class="sidebar-nav-mini-hide">Admin</span>
+        </a>
+        <ul>
+            <li ng-show="sidebar.access.admins"><a href="/admin/track">Tracks</a></li>
+            <li ng-show="sidebar.access.admins"><a href="/admin/sections">Sections</a></li>
+            <li ng-show="sidebar.access.instructors"><a href="/admin/officeHours">Office Hours</a></li>
+            <li ng-show="sidebar.access.admins"><a href="/admin/users">Enrollment</a></li>
+            <li ng-show="sidebar.access.admins"><a href="/admin/wiki">Wiki</a></li>
+            <li ng-show="sidebar.access.admins"><a href="/instructors/display">Instructors</a></li>
+            <li ng-show="sidebar.access.admins"><a href="/tags">Tags</a></li>
+            <li ng-show="sidebar.access.SuperAdmin"><a href="/admin/roles">User Roles</a></li>
+        </ul>
+    </li>
+</ul>

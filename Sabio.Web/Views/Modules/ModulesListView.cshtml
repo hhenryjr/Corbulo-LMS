@@ -1,0 +1,150 @@
+﻿@{
+    ViewBag.Title = "ModulesListView";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<!-- Table Styles Block -->
+<div class="block">
+
+    <div class="block-title">
+        <h2 class="text-center"><strong>Modules</strong> Listervrvearvaervaervaervaerv</h2>
+    </div>
+
+    <div id="modulesTable" class="table-responsive">
+
+        <table id="modulesList" class="table table-striped table-vcenter">
+
+            <thead>
+                <tr>
+                    <th class="text-center">CourseId</th>
+                    <th class="text-center">Length</th>
+                    <th class="text-center">Labs</th>
+                    <th class="text-center">Required Reading</th>
+                    <th class="text-center">Homework</th>
+                    <th class="text-center">Description</th>
+                    <th class="text-center">Edit</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+               
+            <tr class="text-center">
+                    <td id="course"><a href="javascript:void(0)" class="label label-warning">Tag1</a></td>
+                    <td id="Length">11</td>
+                    <td id="lab">LabTest1</td>
+                    <td id="reading">ReadingTest1</td>
+                    <td id="homework">HomeworkTest1</td>
+                    <td id="description">DescriptionTest1</td>
+                    <td class="text-center">
+                        <div class="btn-group btn-group-xs">
+                            <a href="javascript:void(0)" id="edit" data-toggle="tooltip" title="Edit" class="btn btn-default"><i class="fa fa-pencil"></i></a>
+                            <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" class="btn btn-danger"><i class="fa fa-times"></i></a>
+                        </div>
+                    </td>
+                </tr>
+
+            </tbody>
+            <tfoot>
+
+                <tr>
+                    <td colspan="9">
+                        <div class="form-group form-actions">
+                            <div class="col-md-9">
+                                <button id="addNew" class="btn btn-sm btn-primary"><i class="fa"></i><strong>Add New Module</strong></button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+@section scripts
+{
+<script type="text/javascript" src="~/Scripts/Sabio.Services.Modules.js"></script>
+    <script type="text/javascript">
+
+        sabio.page.startUp = function () {           
+            sabio.services.modules.getList(sabio.page.ajaxGetListSuccess, sabio.page.ajaxError);
+            $("#addNew").on('click', sabio.page.handlers.addNew);
+        }
+        sabio.page.handlers.addNew = function () {
+        window.open('http://lms.dev/modulesview/add');
+        };
+        
+        sabio.page.ajaxGetListSuccess = function (data) {
+            if (!data) {
+
+                return;
+            }
+            for (var i = 0; i < data.items.length; i++) {
+
+                var listData = {}
+                listData.courseId = data.items[i].courseId;
+                listData.length = data.items[i].length;
+                listData.labs = data.items[i].labs;
+                listData.requiredReading = data.items[i].requiredReading;
+                listData.homework = data.items[i].homework;
+                listData.description = data.items[i].description;
+                listData.id = data.items[i].id;
+
+                sabio.page.ajaxAddListData(listData);
+            }
+        }
+
+        sabio.page.ajaxAddListData = function (ModulesData) {
+            var newModule = $($('#moduleListTemplate').html()).clone();
+            var edit = "/modulesview/" + ModulesData.id + "/edit"
+
+            newModule.find('#courseId').html(ModulesData.courseId);
+            newModule.find('#Length').html(ModulesData.length);
+            newModule.find('#labs').html(ModulesData.labs);
+            newModule.find('#reading').html(ModulesData.requiredReading);
+            newModule.find('#homework').html(ModulesData.homework);
+            newModule.find('#description').html(ModulesData.description);
+            newModule.find('#edit').attr('href', edit);
+
+            var targetLoc = $("#tableBody");
+            //targetLoc.attr("data-target", "true");
+            targetLoc.append(newModule);
+        }
+
+        sabio.page.ajaxError = function (jqXHR, textStatus, errorThrown) {
+
+            $("#msgWindow").addClass("alert-danger");
+            $("#msgWindow").removeClass("alert-info");
+
+        }
+
+        sabio.page.getClone = function () {
+
+            return $($("#moduleListTemplate").html()).clone();
+
+        }
+
+
+
+
+    </script>
+
+
+    <script type="text/template" id="moduleListTemplate">        
+            <tr class="text-center">
+                <td id="courseId">Tag1</td>
+                <td id="Length">11</td>
+                <td id="labs">LabTest1</td>
+                <td id="reading">ReadingTest1</td>
+                <td id="homework">HomeworkTest1</td>
+                <td id="description">DescriptionTest1</td>
+                <td class="text-center">
+                    <div class="btn-group btn-group-xs">
+                        <a href="#" id="edit" data-toggle="tooltip" title="Edit" class="btn btn-default"><i class="fa fa-pencil"></i></a>
+                        @*<a href="#" id="delete" data-toggle="tooltip" title="Delete" class="btn btn-danger"><i class="fa fa-times"></i></a>*@
+                    </div>
+                </td>
+            </tr>
+  
+    </script>
+
+}

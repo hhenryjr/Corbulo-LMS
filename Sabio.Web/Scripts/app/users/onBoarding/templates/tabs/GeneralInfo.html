@@ -1,0 +1,62 @@
+﻿<div class="row">
+<div class="form-group">
+    <label class="col-md-4 control-label" for="firstName">First Name<span class="text-danger">*</span></label>
+    <div class="col-md-6">
+        <div class="input-group">
+            <input type="text" id="firstName" name="firstName" class="form-control" placeholder="Your first name.." required>
+            <span class="input-group-addon"><i class="gi gi-user"></i></span>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-4 control-label" for="lastName">Last Name<span class="text-danger">*</span></label>
+    <div class="col-md-6">
+        <div class="input-group">
+            <input type="text" id="lastName" name="lastName" class="form-control" placeholder="Your last name.." required>
+            <span class="input-group-addon"><i class="gi gi-user"></i></span>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-4 control-label" for="gender">Gender<span class="text-danger">*</span></label>
+    <div class="col-md-6">
+        <select type="button" id="gender" name="Gender" class="select-select2 form-control" data-placeholder="please make a selection" size="1" required>
+            <option value="">Please make a selection</option>
+            @foreach (var gender in Model.Genders)
+            {
+            <option value="@gender.Key">@gender.Value</option>
+            }
+        </select>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-4 control-label" for="ethnicityId">Ethnicity<span class="text-danger">*</span></label>
+    <div class="col-md-6">
+        <select type="button" id="ethnicityId" name="ethnicityId" class="select-select2 form-control" data-placeholder="please make a selection" size="1" required></select>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-4 control-label" for="dateOfBirth">Date Of Birth<span class="text-danger">*</span></label>
+    <div class="col-md-6">
+        <div class="input-group">
+            <input type="text" id="dateOfBirth" name="dateOfBirth" class="form-control input-datepicker" data-date-format="mm/dd/yyyy">
+            <span class="input-group-addon"><i class="gi gi-gift"></i></span>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-4 control-label" for="phone">Telephone<span class="text-danger">*</span></label>
+    <div class="col-md-6">
+        <div class="input-group">
+            <input type="tel" id="phone" name="phone" class="form-control" placeholder="(999)999-9999" required>
+            <span class="input-group-addon"><i class="gi gi-earphone"></i></span>
+        </div>
+    </div>
+</div>
+<div class="form-group form-actions">
+    <div class="col-md-8 col-md-offset-4">
+        <input type="reset" class="btn btn-sm btn-warning" id="back2" value="Back">
+        <input type="submit" class="btn btn-sm btn-primary" id="next1" value="Next">
+    </div>
+</div>
+    </div> 

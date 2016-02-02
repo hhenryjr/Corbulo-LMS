@@ -1,0 +1,14 @@
+﻿
+<div class="content-header" ng-controller="layoutHeaderController as header" ng-cloak="">
+    <div class="header-section">
+        <h1 ng-bind-html="header.content.title"></h1>
+        <h4>{{header.content.subtitle}}</h4>
+        <p ng-if="header.content.buttons" class="header-content-buttons">
+            <a ng-repeat="button in header.content.buttons" 
+               ng-href="{{button.link}}" 
+               class="btn btn-alt btn-xs btn-primary">
+                <i class="fa {{button.icon}}"></i> {{button.text}}
+            </a>             
+        </p>
+    </div>
+</div>

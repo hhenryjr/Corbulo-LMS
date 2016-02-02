@@ -1,0 +1,106 @@
+﻿
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_dashboardLayout.cshtml";
+}
+
+<div class="content-header">
+    <div class="header-section">
+        <h1>
+            <i class="fa fa-info"></i>Frequently Asked Questions<br>
+        </h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="left-nav" ng-controller="faqController as faqs" id="faqCtrler">
+            <script type="text/ng-template" id="group-template.html">
+                <div class="panel {{panelClass || 'panel-default'}}">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a href tabindex="0" class="accordion-toggle" ng-click="toggleOpen()" uib-accordion-transclude="heading">
+                                <span ng-class="{'text-muted': isDisabled}">{{heading}}</span>
+                            </a>
+                        </h4>
+                    </div>
+                    <div class="panel-collapse collapse" uib-collapse="!isOpen">
+                        <div class="panel-body" style="text-align: right" ng-transclude></div>
+                    </div>
+                </div>
+            </script>
+
+            <uib-accordion ng-model="oneAtATime" >
+                <uib-accordion-group heading="{{qa.question}}" ng-repeat="qa in faqs.items">
+                    {{qa.answer}}
+                </uib-accordion-group>
+            </uib-accordion>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script src="~/Scripts/ui-bootstrap-tpls-0.14.2.min.js"></script>
+    <script src="~/Scripts/sabio.services.FAQ.js"></script>
+    <script type="text/javascript">
+
+        sabio.page.startUp = function () {
+
+            sabio.page.faqController = sabio.ng.getControllerInstance($("#faqCtrler"));
+        }
+
+        sabio.services.faqListFactory = function ($baseService) {
+            var aSabioServiceObject = sabio.faq.services.FAQ;
+            var newService = $baseService.merge(true, {}, aSabioServiceObject, $baseService);
+            return newService;
+        }
+
+        sabio.page.faqControllerFactory = function
+            ($scope, $baseController, $faqService) {
+
+            var vm = this;
+
+            $baseController.merge(vm, $baseController);
+
+            vm.$faqService = $faqService;
+
+            vm.$scope = $scope;
+
+            vm.getName = "Angular is good to go";
+            vm.receiveItems = _receiveItems;
+            vm.onFAQError = _onFAQError;
+
+            vm.notify = vm.$faqService.getNotifier($scope);
+
+            render();
+
+            function render() {
+                vm.$faqService.get(vm.receiveItems, vm.onFAQError);
+            }
+
+            function _receiveItems(data) {
+                console.log(data);
+                vm.notify(function () {
+                    vm.items = data.items;
+                });
+            }
+
+            function _onFAQError(jqXhr, error) {
+                console.log(error);
+            }
+        }
+
+        sabio.ng.addService(sabio.ng.app.module,
+            "$faqService",
+            ["$baseService"],
+            sabio.services.faqListFactory
+        );
+
+        sabio.ng.addController(sabio.ng.app.module,
+            "faqController",
+            ['$scope', '$baseController', '$faqService'],
+            sabio.page.faqControllerFactory);
+
+    </script>
+}

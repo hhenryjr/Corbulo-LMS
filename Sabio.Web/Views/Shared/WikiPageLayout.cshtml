@@ -1,0 +1,585 @@
+﻿@model Sabio.Web.Models.ViewModels.BaseViewModel
+
+<!DOCTYPE html>
+<html class="no-js">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+
+    <title>@Model.BrandName - @Model.BrandTagline</title>
+
+    <meta name="description" content="@Model.BrandDescription">
+    <meta name="author" content="@Model.BrandName">
+    <meta name="robots" content="noindex, nofollow">
+
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0">
+
+    <!-- Icons -->
+    <!-- The following icons can be replaced with your own, they are used by desktop and mobile browsers -->
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <link rel="apple-touch-icon" href="/img/icon57.png" sizes="57x57">
+    <link rel="apple-touch-icon" href="/img/icon72.png" sizes="72x72">
+    <link rel="apple-touch-icon" href="/img/icon76.png" sizes="76x76">
+    <link rel="apple-touch-icon" href="/img/icon114.png" sizes="114x114">
+    <link rel="apple-touch-icon" href="/img/icon120.png" sizes="120x120">
+    <link rel="apple-touch-icon" href="/img/icon144.png" sizes="144x144">
+    <link rel="apple-touch-icon" href="/img/icon152.png" sizes="152x152">
+    <link rel="apple-touch-icon" href="/img/icon180.png" sizes="180x180">
+    <!-- END Icons -->
+    <!-- Stylesheets -->
+    <!-- Bootstrap is included in its original form, unaltered -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Related styles of various icon packs and plugins -->
+    <link rel="stylesheet" href="/css/plugins.css">
+
+    <!-- The main stylesheet of this template. All Bootstrap overwrites are defined in here -->
+    <link rel="stylesheet" href="/css/main.css">
+
+    <!-- Include a specific file here from css/themes/ folder to alter the default theme of the template -->
+    <!-- The themes stylesheet of this template (for using specific theme color in individual elements - must included last) -->
+    <link rel="stylesheet" href="/css/themes.css">
+
+    <link rel="stylesheet" href="/content/lms.css">
+    <link href="~/Content/toastr.css" rel="stylesheet" />
+    <!-- END Stylesheets -->
+    <!-- Modernizr (browser feature detection library) & Respond.js (enables responsive CSS code on browsers that don't support it, eg IE8) -->
+    <script src="/js/vendor/modernizr-respond.min.js"></script>
+
+
+    @RenderSection("styles", required: false)
+</head>
+<body data-ng-app="sabioApp">
+    
+    <div id="page-wrapper">
+        <!-- Preloader -->
+        <!-- Preloader functionality (initialized in js/app.js) - pageLoading() -->
+        <!-- Used only if page preloader is enabled from inc/config (PHP version) or the class 'page-loading' is added in #page-wrapper element (HTML version) -->
+        <div class="preloader themed-background">
+            <h1 class="push-top-bottom text-light text-center"><strong>Pro</strong>UI</h1>
+            <div class="inner">
+                <h3 class="text-light visible-lt-ie9 visible-lt-ie10"><strong>Loading..</strong></h3>
+                <div class="preloader-spinner hidden-lt-ie9 hidden-lt-ie10"></div>
+            </div>
+        </div>
+       
+        <div id="page-container" class="header-fixed-top" data-ng-controller="$dashboardController as dashboard">
+        
+            <div id="main_container">
+              
+                <header class="navbar-wiki navbar-default navbar-fixed-top">
+                    <!-- Left Header Navigation -->
+                    <ul class="nav navbar-nav-custom">
+                        <!-- Main Sidebar Toggle Button -->
+                  
+                        <li class="btn-toolbar">
+                     
+                            <a href="javascript:void(0)" class="enable-tooltip" data-placement="bottom" title="Settings" data-ng-click="dashboard.open()" ;>
+                                <i class="gi gi-cogwheels"></i>
+                            </a>
+                        </li>
+                        <li class="btn-toolbar">
+                            <a href="javascript:void(0)" data-toggle="tooltip" data-placement="bottom" title="Check In" data-ng-click="dashboard.onAttendance()">
+                                <i class="gi gi-check"></i>
+                            </a>
+                        </li>
+                        <!-- END Template Options -->
+                    </ul>
+               
+                    <ul class="nav navbar-nav-custom pull-right">
+                        @****contactUs****@
+                        <li>
+                            <a href="javascript:void(0)" class="enable-tooltip" data-placement="bottom" id="modal-messaging-contactMessage.html" title="Contact Us" data-ng-click="dashboard.openContact()" ;>
+                                <i class="fa fa-comments"></i>
+                                <span><small>Contact US</small></span>
+                            </a>
+                        </li>
+                        <!-- Alternative Sidebar Toggle Button -->
+                        <!-- END Alternative Sidebar Toggle Button -->
+                        <!-- User Dropdown -->
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                @if (Model.UserProfile != null && Model.UserProfile.AvatarPhotoPath != null)
+                                {
+                                    <img ng-src="Https://sabio-training.s3-us-west-2.amazonaws.com/C11/@Model.UserProfile.AvatarPhotoPath" alt="avatar">
+                                    <i class="fa fa-angle-down"></i>
+                                }
+                                else
+                                {
+                                    <img src="/img/placeholders/avatars/avatar2.jpg" alt="avatar">
+                                    <i class="fa fa-angle-down"></i>
+                                }
+                            </a>
+                            <ul class="dropdown-menu dropdown-custom dropdown-menu-right">
+                                <li class="dropdown-header text-center">Account</li>
+                                <li>
+                                    @*<a href="page_ready_timeline.html">
+                                            <i class="fa fa-clock-o fa-fw pull-right"></i>
+                                            <span class="badge pull-right">10</span>
+                                            Updates
+                                        </a>*@
+                                    <a href="/FAQ">
+                                        <i class="fa fa-question fa-fw pull-right"></i>
+                                        FAQ
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="/profiles">
+                                        <i class="fa fa-user fa-fw pull-right"></i>
+                                        Profile
+                                    </a>
+                                    <!-- Opens the user settings modal that can be found at the bottom of each page (page_footer.html in PHP version) -->
+                                    <a href="#" data-ng-click="dashboard.open()" data-toggle="modal">
+                                        <i class="fa fa-cog fa-fw pull-right"></i>
+                                        Settings
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="page_ready_lock_screen.html"><i class="fa fa-lock fa-fw pull-right"></i> Lock Account</a>
+                                    <a href="/logout"><i class="fa fa-ban fa-fw pull-right"></i> Logout</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- END User Dropdown -->
+                    </ul>
+                    <!-- END Right Header Navigation -->
+                </header>
+                <!-- END Header -->
+                <!-- Page content -->
+                <div id="page-content">
+                    <!-- Fixed Top Header Header -->
+                    @RenderBody()
+                    <!-- END Dummy Content -->
+                </div>
+                <!-- END Page Content -->
+                <!-- Footer -->
+                <footer class="clearfix">
+                    <div class="pull-left">
+                        <span id="year-copy"></span> &copy; <a href="#" target="_blank">@Model.BrandName</a> @Model.BrandTagline
+                    </div>
+                </footer>
+                <!-- END Footer -->
+            </div>
+            <!-- END Main Container -->
+        </div>
+        <!-- END Page Container -->
+    </div>
+    <!-- END Page Wrapper -->
+    <!-- Scroll to top link, initialized in js/app.js - scrollToTop() -->
+    <a href="#" id="to-top"><i class="fa fa-angle-double-up"></i></a>
+    <!-- jQuery, Bootstrap.js, jQuery plugins and Custom JS code -->
+    <script src="/js/vendor/jquery-1.11.3.min.js"></script>
+    <script src="/js/vendor/bootstrap.min.js"></script>
+    <script src="/js/plugins.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="~/Scripts/sabio.js"></script>
+    <script src="~/Scripts/ng/angular.js"></script>
+    @RenderSection("pageInitScripts", required: false)
+    <script src="~/Scripts/ng/angular-animate.js"></script>
+    <script src="~/Scripts/ng/angular-route.js"></script>
+    <script src="~/Scripts/ng/angular-sanitize.js"></script>
+    <script src="~/Scripts/ui-bootstrap-tpls-0.14.2.min.js"></script>
+    <script src="~/Scripts/sabio.services.messaging.js"></script>
+    <script src="~/Scripts/sabio.services.userSettings.js"></script>
+    <script src="~/Scripts/sabio.services.attendance.js"></script>
+    <script src="~/Scripts/sabio.profiles.services.js"></script>
+    <script src="~/Scripts/sabio.ng.app.js"></script>
+    <script src="~/Scripts/app/layout/controllers/header.js"></script>
+    <script src="~/Scripts/app/services/eventHandlerService.js"></script>
+    <script src="~/Scripts/app/services/alertService.js"></script>
+    <script src="~/Scripts/sabio.tests.services.js"></script>
+    <script src="~/Scripts/ng/angular-ui-tree.js"></script>
+    <script src="~/Scripts/sabio.services.dashboardSidebar.js"></script>
+    <script src="~/Scripts/app/services/utilityService.js"></script>
+    <script type="text/javascript">
+        sabio.extraNgDependencies = ['ui.bootstrap'];
+    </script>
+    <script src="~/Scripts/toastr.js"></script>
+    <script type="text/javascript">
+
+        sabio.services.dashboardSidebarFactory = function ($baseService) {
+            var aSabioServiceObject = sabio.services.dashboardSidebar;
+            var newService = $baseService.merge(true, {}, aSabioServiceObject, $baseService);
+            return newService;
+        }
+
+        sabio.services.modalFactory = function ($baseService) {
+            var aSabioServiceObject = sabio.services.userSettings;
+            var newService = $baseService.merge(true, {}, aSabioServiceObject, $baseService);
+            return newService;
+        }
+
+        sabio.services.contactFactory = function ($baseService) {
+            var aSabioServiceObject = sabio.services.messaging;
+            var newService = $baseService.merge(true, {}, aSabioServiceObject, $baseService);
+            return newService;
+        }
+
+        sabio.page.sidebarControllerFactory = function ($scope, $baseController, $sidebarServices) {
+
+            var vm = this;
+
+            $baseController.merge(vm, $baseController);
+
+            vm.$sidebarServices = $sidebarServices;
+
+
+            vm.$scope = $scope;
+
+            vm.receiveItems = _receiveItems;
+            vm.onReceiveError = _onReceiveError;
+            vm.getWikiSpaceById = _getWikiSpaceById;
+
+            vm.notify = vm.$sidebarServices.getNotifier($scope);
+
+            render();
+
+            function render() {
+                vm.$sidebarServices.getAllSpaces(vm.receiveItems, vm.onReceiveError);
+            }
+
+            function _getWikiSpaceById(id) {
+                if (location.href == "http://lms.dev/") {
+                    window.location = "http://lms.dev/Wiki/Navbar/" + id;
+                } else {
+                    window.location = "http://lms.dev/Wiki/Navbar/" + id;
+                }
+            }
+
+            function _receiveItems(data) {
+                vm.notify(function () {
+                    vm.spaces = data.items;
+                });
+            }
+
+            function _onReceiveError(jqXhr, error) {
+                console.log(error);
+            }
+
+            function onSpaceByIdError(jqXhr, error) {
+                console.log(error);
+            }
+
+            function _onSpaceByIdError(jqXhr, error) {
+                console.log(error);
+            }
+        }
+
+        sabio.page.dashboardControllerFactory = function ($scope, $baseController, $uibModal, $userSettingService, $contactService, $dashboardSidebar, $alertService) {
+
+            var vm = this;
+            $baseController.merge(vm, $baseController);
+            vm.$scope = $scope;
+            vm.$scope.animationsEnabled = true;
+            vm.$userSettingService = $userSettingService;
+            vm.$dashboardSidebar = $dashboardSidebar;
+            vm.$alertService = $alertService;
+            vm.notify = vm.$userSettingService.getNotifier($scope);
+            vm.receiveSettings = _receiveSettings;
+            vm.onError = _onError;
+            vm.onAttendance = _onAttendance;
+            vm.onGetLocationSuccess = _onGetLocationSuccess;
+            vm.onGetLocationError = _onGetLocationError;
+            vm.onCheckInSuccess = _onCheckInSuccess;
+            vm.onCheckInError = _onCheckInError;
+
+            render();
+            vm.$contactService = $contactService;
+
+            vm.open = function () {
+                var modalSettings = {
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'modal-user-settings.html',
+                    controller: '$modalController',
+                    controllerAs: 'modal',
+                    resolve: {
+                        items: function () {
+                            return vm.items;
+                        }
+                    }
+                };
+                var modalInstance = $uibModal.open(modalSettings);
+                // modalInstance.result.then(vm.one, vm.two); for future use
+            }
+
+            vm.openContact = function () {
+                var contactModal = {
+                    animation: $scope.animationsEnabled,
+                    templateUrl: 'modal-messaging-contactMessage.html',
+                    controller: '$contactModalController',
+                    controllerAs: 'contact',
+                    resolve: {
+                        items: function () {
+                            return vm.items;
+                        }
+                    }
+                };
+                var contactModalInstance = $uibModal.open(contactModal);
+            }
+
+            function render() {
+                vm.$userSettingService.get(vm.receiveSettings, vm.onError);
+            }
+
+            function _receiveSettings(data) {
+
+                vm.notify(function () {
+                    vm.items = data.items;
+                    //console.log(vm.items)
+                });
+            }
+
+            function _onError(jqXhr, error) {
+                console.error(error);
+            }
+
+            function _modalInfo(mInfo) {
+                vm.modalInfo = mInfo;
+            }
+
+            function _onAttendance() {
+
+                navigator.geolocation.getCurrentPosition(vm.onGetLocationSuccess, vm.onGetLocationError, { enableHighAccuracy: true });
+            }
+
+            function _onGetLocationSuccess(data, status, xhr) {
+                var latLong = 'Latitude=' + data.coords.latitude + '&Longitude=' + data.coords.longitude;
+                vm.$dashboardSidebar.addLocation(latLong, vm.onCheckInSuccess);
+            }
+
+            function _onGetLocationError(jqXHR, textStatus, errorThrown) {
+                vm.error = "Device does not support location! Please enable location service on this device, or check in from a device that does have location enabled.";
+                console.log(vm.error);
+                vm.$alertService.onError(vm.error);
+            }
+
+            function _onCheckInSuccess(data) {
+                if (data.item.distanceInMeters < 100) {
+                    vm.success = "You have successfully checked in the " + data.item.campusName + " campus!";
+                    vm.$alertService.onSuccess(vm.success);
+                } else {
+                    _onCheckInError(data);
+                }
+            }
+
+            function _onCheckInError(data) {
+                vm.error = "Check in failed! You appear to be " + data.item.distanceInMeters + " meters from the " + data.item.campusName + " campus.";
+                vm.$alertService.onError(vm.error);
+            }
+
+            console.log(vm.myMessage);
+        }
+
+        sabio.page.modalControllerFactory = function ($scope, $modalInstance, items, $userSettingService) {
+            var vm = this;
+            vm.$scope = $scope;
+            vm.items = items;
+            vm.settingId = null;
+            vm.settingValue = null;
+            vm.submitData = _submitData;
+            vm.modalInstance = $modalInstance;
+            vm.$userSettingService = $userSettingService;
+            vm.changedSetting = _changedSetting;
+            vm.onSettingError = _onSettingError
+            vm.selected = {
+                item: vm.items[0]
+            }
+
+            vm.cancel = function () {
+                $modalInstance.close();
+            }
+
+            function _submitData(settingId, value) {
+                var settingData = {};
+
+                settingData.settingId = settingId;
+                settingData.settingValue = value;
+
+                vm.$userSettingService.put(settingData, vm.changedSetting, vm.onSettingError);
+            }
+
+            function _changedSetting() {
+                console.log("success");
+            }
+
+            function _onSettingError(jqXhr, error) {
+                console.error(error);
+            }
+        }
+
+        sabio.page.contactFactory = function ($scope, $contactModalInstance, items, $contactService, $alertService) {
+            var vm = this;
+            vm.$scope = $scope;
+            vm.contactModalInstance = $contactModalInstance;
+            vm.items = items;
+            vm.$contactService = $contactService;
+            vm.$alertService = $alertService;
+            vm.contact = null;
+            vm.receiveContactData = _receiveContactData;
+            vm.onContactError = _onContactError;
+            vm.contactUsEmail = null;
+            vm.contactUsSubject = null;
+            vm.contactUsMessage = null;
+
+            function _receiveContactData(contactData) {
+                vm.success = "We received your message.";
+                vm.$alertService.onSuccess(vm.success);
+        }
+
+            function _onContactError(jqXhr, error) {
+                vm.error = "Message not received. Please try again.";
+                vm.$alertService.onError(vm.error);
+            }
+
+            vm.ok = function () {
+                var contactData = { FormEmail: vm.contactUsEmail, FormSubject: vm.contactUsSubject, FormMessage: vm.contactUsMessage }
+                vm.$contactService.contactMessage(contactData, vm.receiveContactData, vm.onContactError);
+                $contactModalInstance.close();
+                };
+
+            vm.cancel = function () {
+                $contactModalInstance.dismiss('cancel');
+            };
+        }
+
+        sabio.ng.addService(sabio.ng.app.module
+             , "$dashboardSidebar"
+             , ["$baseService"]
+             , sabio.services.dashboardSidebarFactory)
+
+        sabio.ng.addService(sabio.ng.app.module
+            , "$sidebarServices"
+            , ["$baseService"]
+            , sabio.services.dashboardSidebarFactory);
+
+        sabio.ng.addService(sabio.ng.app.module
+                    , "$contactService"
+                    , ["$baseService"]
+                    , sabio.services.contactFactory);
+
+        sabio.ng.addService(sabio.ng.app.module
+            , "$userSettingService"
+            , ["$baseService"]
+            , sabio.services.modalFactory);
+
+        sabio.ng.addController(sabio.ng.app.module
+            , "$dashboardController"
+            , ['$scope', '$baseController', '$uibModal', '$userSettingService', '$contactService', '$dashboardSidebar', '$alertService']
+            , sabio.page.dashboardControllerFactory);
+
+        sabio.ng.addController(sabio.ng.app.module
+            , "$contactModalController"
+            , ['$scope', '$modalInstance', 'items', '$contactService', '$alertService']
+            , sabio.page.contactFactory);
+
+        sabio.ng.addController(sabio.ng.app.module
+            , "$modalController"
+            , ['$scope', '$modalInstance', 'items', '$userSettingService']
+            , sabio.page.modalControllerFactory);
+
+        sabio.ng.addController(sabio.ng.app.module
+            , "$sidebarController"
+            , ['$scope', '$baseController', '$sidebarServices']
+            , sabio.page.sidebarControllerFactory);
+
+    </script>
+
+
+    <!--
+        SabioRazor: notice that this script is not required and that it will be
+        rendered at the
+        very bottom of the rendered HTML file
+        -->
+    @RenderSection("scripts", required: false)
+    <!-- User Settings, modal which opens from Settings link (found in top right user menu) and the Cog link (found in sidebar user info) -->
+
+    <script type="text/ng-template" id="modal-user-settings.html">
+        <!-- Modal Header -->
+        <div class="modal-header text-center">
+            <h2 class="modal-title"><i class="fa fa-pencil"></i> Settings</h2>
+        </div>
+        <!-- END Modal Header -->
+        <!-- Modal Body -->
+        <div class="modal-body">
+            <form action="index.html" method="post" enctype="multipart/form-data" class="form-horizontal form-bordered" onsubmit="return false;">
+                <fieldset>
+                    <legend>Basic Settings</legend>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Username</label>
+                        <div class="col-md-8">
+                            <p class="form-control-static">Admin</p>
+                        </div>
+                    </div>
+                    <div class="form-group animate-repeat" data-ng-repeat="items in modal.items track by items.settingId">
+                        <label class="col-md-4 control-label" for="user-settings-value">{{items.name}}</label>
+                        <div class="col-md-8">
+                            <input class="hidden" id="{{items.settingId}}" name="settingId" value="{{items.settingId}}" />
+                            <label class="switch switch-primary">
+                                <input type="checkbox"
+                                       id="user-settings-value{{items.settingId}}"
+                                       name="value"
+                                       data-ng-model="items.value" ng-true-value="'True'" ng-false-value="'False'"
+                                       data-ng-click="modal.submitData(items.settingId, items.value);">
+                                <span></span>
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="form-group form-actions">
+                    <div class="col-xs-12 text-right">
+                        <a href="#" class="pull-left moreSettings"><i class="fa fa-gear"></i><strong> More Settings</strong></a>
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal" data-ng-click="modal.cancel()">Close</button>
+                        @*<button type="submit" class="btn btn-sm btn-primary" data-ng-click="modal.ok();">Save Changes</button>*@
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- END Modal Body -->
+    </script>
+
+    <!--Contact Us Modal-->
+    <script type="text/ng-template" id="modal-messaging-contactMessage.html">
+        <div class="modal-header text-center">
+            <h2 class="modal-title"><i class="fa fa-paper-plane"></i> Contact Us</h2>
+        </div>
+        <div class="modal-dialog" role="document">
+            <div class="modal-header">
+                @*<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>*@
+                <h4 class="modal-title" id="contactUs">Contact Us</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="form-contact">
+                    <div class="form-group">
+                        <div>
+                            <label for="contactUsEmail">Email</label>
+                            <input type="email" class="form-control ng-class:{'error': contact.contactUsEmail.$valid}" id="contactUsEmail" ng-model="contact.contactUsEmail" name="FormEmail" @*class="form-control input-lg"*@ placeholder="Please enter a valid email address..." required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div>
+                            <label for="contactUsSubject">Subject</label>
+                            <input type="text" class="form-control ng-class:{'error': contact.contactUsSubject.$valid}" id="contactUsSubject" ng-model="contact.contactUsSubject" ng-minlength="2" ng-maxlength="150" name="FormSubject" placeholder="Subject Field..." required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div>
+                            <label for="contactUsMessage">Message</label>
+                            <textarea id="contactUsMessage" class="form-control ng-class:{'error': contact.contactUsMessage.$valid}" ng-model="contact.contactUsMessage" name="FormMessage" rows="10" placeholder="Let us know how we can assist.." required></textarea>
+                        </div>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <label class="successMessage" type="text" id="messageResponse"></label>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="contact.cancel('cancel')">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="contact.ok('close')">Send message</button>
+                </div>
+            </div>
+        </div>
+    </script>
+</body>
+
+</html>

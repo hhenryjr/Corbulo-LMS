@@ -1,0 +1,14 @@
+﻿<div class="block clearfix">
+    <div class="row">
+        <div class="col-sm-6">
+            <p ng-if="!wiki.wikiTree">Loading tree...</p>
+            <div ui-tree="wiki.wikiTree" id="tree-root">
+                <ol ui-tree-nodes ng-model="wiki.wikiTree">
+                    <li ng-repeat="node in wiki.wikiTree" ui-tree-node ng-include="'/scripts/app/admin/wiki/templates/leaf.html'">
+                        {{node.nodes}}
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>

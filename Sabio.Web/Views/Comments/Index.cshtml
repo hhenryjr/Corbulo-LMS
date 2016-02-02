@@ -1,0 +1,45 @@
+﻿@model Sabio.Web.Models.ViewModels.CommentViewModel
+@{
+
+    Layout = "~/Views/Shared/_dashboardLayout.cshtml";
+}
+
+
+@section styles{
+    <link href="~/Sabio.CSS/UiTree/angular-ui-tree.css" rel="stylesheet" />
+    <link href="~/Sabio.CSS/UiTree/app.css" rel="stylesheet" />
+
+}
+
+
+
+<div ng-view></div>
+
+
+<script type="application/json" id="commentOwnerType">
+    @Html.RawJson(Model.OwnerType.ToDictionaryByValue())
+
+</script>
+
+@section pageInitScripts
+{
+    <script src="~/Scripts/ng/angular-ui-bootstrap-0.14.2.js"></script>
+    <script type="text/javascript">
+        sabio.extraNgDependencies = ['ui.bootstrap']
+    </script>
+
+}
+
+
+
+
+@section scripts{
+
+    <script src="~/Scripts/sabio.services.comments.js"></script>
+
+    <script src="~/Scripts/app/services/commentService.js"></script>
+
+    <script src="~/Scripts/app/Comments/controller/comments.js"></script>
+
+    <script src="~/Scripts/app/Comments/comments.config.js"></script>
+}

@@ -1,0 +1,135 @@
+﻿@{
+    ViewBag.Title = "FileUpload";
+    //Layout = "~/Views/Shared/_dashboardLayout.cshtml";
+}
+
+<div class="content-header">
+    <div class="header-section">
+        <h1>
+            <i class="gi gi-warning_sign"></i>Dummy Test Page for File Uploads<br><small>Lorem ipsum dolor sit amet, consectetur adipiscing elit</small>
+        </h1>
+    </div>
+</div>
+<ul class="breadcrumb breadcrumb-top">
+    <li></li>
+    <li><a href=""></a></li>
+</ul>
+<div>
+    <div class="col-md-2">
+    </div>
+    <div class="block full col-md-8">
+        <!-- Dropzone Title -->
+        <div class="block-title">
+            <div class="block-options pull-right">
+                <a href="javascript:void(0)" class="btn btn-alt btn-sm btn-default" data-toggle="tooltip" title="Settings"><i class="gi gi-cogwheel"></i></a>
+            </div>
+            <h2><strong></strong> <small>Drag and Drop files</small></h2>
+        </div>
+     
+
+        <form class="dropzone" method="post" enctype="multipart/form-data" id="myAwesomeDropzone">
+            <div class="fallback">
+                <input name="file" type="file" multiple />
+                <input type="submit" value="Upload" />
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<!-- END Dropzone Block -->
+@section Scripts {
+    <script src="~/Scripts/jquery.dropzone.js"></script>
+    <script type="text/javascript">
+
+        sabio.page.startUp = function () {
+            sabio.page.initializeDropzoneOptions();
+            Dropzone.autoDiscover = false;
+        }
+
+        //initialize myAwesomeDropzone form
+        sabio.page.initializeDropzoneOptions = function () {
+
+            new Dropzone("#myAwesomeDropzone", {
+                acceptedFiles: "image/gif,image/jpg,image/jpeg,image/png,text/*",
+                uploadMultiple: true,
+                //just one file upload to server per processing/sending cycle
+                parallelUploads: 1,
+                url: "http://lms.dev/api/files",
+                init: function () {
+                    //processing each file(when user drops multiple files unto the box)
+                    this.on("processing", function (file) {
+
+                        //gets the name of the File to be uploaded
+                        var fName = file.name;
+                        //gets the filename extension
+                        var ext = sabio.page.checkFileValidity(fName);
+                        //determines which file type the file is
+                        var fileType = sabio.page.checkFileType(ext);
+                        //uses the URL below rather the one from above
+
+                        this.options.url = "http://lms.dev/api/files/" + fileType 
+
+                    });
+                    //if the upload is successful, the "event" success will run the function below
+                    this.on("success", function (data, response) {
+                        //console.log(data);
+                        console.log(response);
+                    });
+                }
+            });
+        }
+
+        //checks the extension name of a file
+        sabio.page.checkFileValidity = function Validate(fileName) {
+            //will populate the array with other filename extensions
+            var _validFileExtensions = [".jpg", ".jpeg", ".bmp", ".gif", ".png", ".txt"];
+
+            if (fileName.length > 0) {
+                var blnValid = false;
+                for (var j = 0; j < _validFileExtensions.length; j++) {
+                    var sCurExtension = _validFileExtensions[j];
+                    if (fileName.substr(fileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                        blnValid = true;
+                        var ext = fileName.substr(fileName.length - sCurExtension.length, sCurExtension.length).toLowerCase();
+                        break;
+                    }
+                }
+
+                if (!blnValid) {
+                    alert("Sorry, " + fileName + " is invalid, allowed extensions are: " + _validFileExtensions.join(", "));
+                    return false;
+                }
+            }
+            return ext;
+        }
+
+        //checking fileType version 1.0 NEEDS IMPROVEMENT
+        //future version would or might check file sizes to check if its a cover photo or a profile photo
+        sabio.page.checkFileType = function (ext) {
+
+            var fileType;
+
+            switch (ext) {
+                case ".gif":
+                case ".png":
+                case ".bmp":
+                    fileType = 1; //profile photo
+                    break;
+                case ".jpg":
+                case ".jpeg":
+                case ".bmp":
+                    fileType = 2; //profile cover
+                    break;
+                case ".txt":
+                case ".doc":
+                case ".pdf":
+                    fileType = 3; //course document
+                    break;
+            }
+            return fileType;
+
+        }
+
+    </script>
+}

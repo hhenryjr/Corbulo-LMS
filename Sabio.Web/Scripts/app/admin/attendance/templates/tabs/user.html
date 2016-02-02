@@ -1,0 +1,31 @@
+﻿
+<h1>USER</h1>
+
+<div class="block">
+    <div class="table-responsive">
+        <table class="table table-striped table-vcenter">
+            <thead>
+                <tr>
+                    <th class="text-center">Id</th>
+                    <th class="text-center">Campus</th>
+                    <th class="text-center">CheckInDate</th>
+                    <th class="text-center">&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+
+                <tr class="text-center" ng-repeat="attendance in admin.attendance">
+                    <td>{{attendance.id}}</td>
+                    <td>{{attendance.campusId}}</td>
+                    <td>{{attendance.dateAdded | date:short}}</td>
+                    <td class="text-center">
+                        <div class="btn-group btn-group-xs">
+                            <a title="Attendance Details" class="btn btn-alt btn-sm btn-info" ng-href="#/details/{{attendance.id}}"><i class="fa  fa-search"></i></a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+

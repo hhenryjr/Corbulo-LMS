@@ -1,0 +1,45 @@
+﻿@model Sabio.Web.Models.ViewModels.SectionViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_dashboardLayout.cshtml";
+}
+
+
+@Html.Partial("Partials/_NgHeader")
+
+<div ng-view></div>
+
+
+<script type="application/json" id="timezones">
+    @Html.RawJson(Model.TimeZones)
+</script>
+
+@section pageInitScripts
+{
+    <script src="~/js/helpers/ckeditorstandard/ckeditor.js"></script>
+    <script src="~/Scripts/ng/angular-ckeditor.js"></script>
+
+    <script src="~/Scripts/ui-bootstrap-tpls-0.14.2.min.js"></script>
+
+    <script type="text/javascript">
+        sabio.extraNgDependencies = ["ckeditor"]
+    </script>
+
+}
+
+
+
+
+@section Scripts
+    {
+
+    <script src="~/Scripts/app/admin/officeHours/controllers/details.js"></script>
+    <script src="~/Scripts/sabio.services.officeHours.js"></script>
+    <script src="~/Scripts/app/admin/officeHours/controllers/index.js"></script>
+    <script src="~/Scripts/app/admin/officeHours/controllers/manage.js"></script>
+    <script src="~/Scripts/app/services/officeHoursService.js"></script>
+    <script src="~/Scripts/app/admin/officeHours/officeHours.config.js"></script>
+
+}
+

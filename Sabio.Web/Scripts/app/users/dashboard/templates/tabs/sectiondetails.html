@@ -1,0 +1,114 @@
+﻿
+<div class="row">
+    <div class="col-md-10 col-lg-offset-1">
+        <div class="widget">
+            <div class="widget-advanced" id="myCourseDetails">
+                <div class="widget-header text-center themed-background-dark">
+                    <div class="widget-options">
+                        <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Love it!"><i class="fa fa-heart text-danger"></i></button>
+                    </div>
+                    <h1 style="color: white"> <strong>{{dashboard.section.name}}</strong></h1>
+                </div>
+
+                <div class="widget-main">
+                    <a href="javascript:void(0)" class="widget-image-container animation-fadeIn">
+                        <span class="widget-icon themed-background"><i class="fa fa-code"></i></span>
+                    </a>
+
+                    <div class="widget-mainContent">
+                        <div class="row" style="padding-top: -20px;margin-top:-20px">
+
+                            <div class="col-lg-6" style="margin-left:20px">
+
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td>Instructor/s:</td>
+                                            <td ng-repeat="obj in dashboard.instructors track by obj.instructorId" ng-model="dashboard.instructors">
+                                                <a href="javascript:void(0)" class="label label-info">  {{obj.name}}  </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div style="padding-top: 10px; padding-bottom:10px">
+                                    Format:<strong>  {{dashboard.section.format.value}}</strong>
+                                </div>
+
+                                <div style="padding-bottom:10px">
+                                    Campus Location:<strong>  {{dashboard.section.campus.name}}</strong>
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-5" style="margin-left:10px">
+                                <div>
+                                    Start Date:<strong>  {{dashboard.section.startDate|date:'MMM d, y'}}</strong>
+                                </div>
+
+                                <div style="padding-top: 10px; padding-bottom:10px">
+                                    End Date:<strong>  {{dashboard.section.endDate|date:'MMM d, y'}}</strong>
+                                </div>
+                                <table>
+                                    <tbody style="padding-top: 10px; padding-bottom:10px">
+                                        <tr>
+                                            <td>Start Time: &nbsp; <strong> {{dashboard.section.startTime|date:'h:mm a'}} </strong>&nbsp;&nbsp;&nbsp;</td>
+                                            <td>End Time: &nbsp;<strong>  {{dashboard.section.endTime|date:'h:mm a'}} </strong></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div style="padding-top:10px">
+                                    Time Zone: <strong> {{dashboard.section.timeZone.value}}</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class=" form-group col-lg-10 col-lg-offset-1" style="color:black">
+                                <label style="color:black">Class Days</label>
+
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td ng-repeat="(key, value) in dashboard.daysEnum" ng-model="dashboard.section.chosenDays">
+                                                <input type="checkbox"
+                                                       name="daysOfTheWeek"
+                                                       class="enumDays"
+                                                       id="enumDays"
+                                                       readonly=""
+                                                       ng-enum-flag="value"
+                                                       ng-enum-model="dashboard.section.daysOfWeek" />{{key}}&nbsp;&nbsp;
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="col-lg-10 col-lg-offset-1" ng-cloak>
+
+        <uib-accordion close-others="false">
+            <uib-accordion-group is-open="dashboard.accordionOpen" is-disabled="dashboard.accordionDisabled">
+                <uib-accordion-heading>
+                    <strong>Section Description</strong> <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                </uib-accordion-heading>
+                {{dashboard.section.info | htmlToPlaintext}}
+            </uib-accordion-group>
+
+        </uib-accordion>
+
+    </div>
+
+
+</div>

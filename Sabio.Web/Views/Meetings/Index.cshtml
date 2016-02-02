@@ -1,0 +1,171 @@
+﻿@model Sabio.Web.Models.ViewModels.ItemViewModel<IEnumerable<Sabio.Web.Domain.Meeting>>
+
+@{
+    ViewBag.Title = "";
+}
+
+<div class="content-header">
+    <div class="header-section">
+        <h1>
+            <i class="gi gi-cogwheels"></i>
+            Meetings
+            <br />
+            <small>Upcoming and past meetings</small>
+        </h1>
+    </div>
+</div>
+
+<div class="widget">
+    <div class="widget-extra themed-background-dark">
+        <div class="widget-options">
+            <div class="btn-group btn-group-xs">
+                <a href="javascript:void(0)" class="btn btn-default" data-toggle="tooltip" title="Edit Widget"><i class="fa fa-pencil"></i></a>
+                <a href="javascript:void(0)" class="btn btn-default" data-toggle="tooltip" title="Quick Settings"><i class="fa fa-cog"></i></a>
+            </div>
+        </div>
+        <h3 class="widget-content-light">
+            Sabio <strong>Meetings</strong>
+            <small><a href="page_ready_timeline.html"><strong>View all</strong></a></small>
+        </h3>
+    </div>
+    <div class="widget-extra">
+        <!-- Timeline Content -->
+        <div class="timeline">
+            <ul class="timeline-list">
+                <li typeof="text/template" class="active hidden" id="itemTemplate">
+                    <div class="timeline-icon"><i class="gi"></i></div>
+                    <div class="timeline-time"><small><span class="meetingDate">just now</span></small></div>
+                    <div class="timeline-content">
+                        <p class="push-bit"><a href="page_ready_user_profile.html" class="editUrl"><strong><span class='meetingName'>Jordan Carter</span></strong></a></p>
+                        <p class="push-bit meetingTime"></p>
+                        <p class="push-bit description"></p>
+                        <p class="push-bit"><a href="page_ready_article.html" class="btn btn-xs btn-primary editUrl"><i class="fa fa-file"></i> More Info...</a></p>
+                        <div class="row push gallery">
+                            <div class="col-sm-6 col-md-4 img-thumbnail">
+                                <a href="img/placeholders/photos/photo1.jpg" data-toggle="lightbox-image">
+                                    <img src="img/placeholders/photos/photo1.jpg" alt="image">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+              
+                
+            </ul>
+            <div class="text-center">
+                <a href="javascript:void(0)" class="btn btn-xs btn-default">View more..</a>
+            </div>
+        </div>
+        <!-- END Timeline Content -->
+    </div>
+</div>
+<div class="alert" id="msgWindow"></div>
+<!-- END Timeline Widget -->
+<div id="#msgWindow"></div>
+@section scripts
+{
+    <script src="~/Scripts/sabio.services.meetings.js"></script>
+    <script src="~/Scripts/moment.js"></script>
+    <script type="text/javascript">
+        sabio.page.startUp = function () {
+            sabio.services.meetings.getAll(sabio.page.onGetSuccess, sabio.page.onServiceError)
+        };
+
+        sabio.page.onGetSuccess = function (data, status, xhr) {
+            for (var index = 0; index < data.items.length; index++) {
+                sabio.page.renderItem(data.items[index], $('.timeline-list'));
+            }
+            $("#msgWindow").text('');
+            $("#msgWindow").removeClass("alert-danger");
+            $("#msgWindow").addClass("alert-info hidden");
+        };
+
+        sabio.page.onServiceError = function (jqXHR, textStatus, errorThrown) {
+            $("#msgWindow").text(JSON.stringify(jqXHR.responseJSON));
+            $("#msgWindow").addClass("alert-danger");
+            $("#msgWindow").removeClass("alert-info hidden");
+        };
+
+        sabio.page.cloneItemTemplate = function (itemData) {
+            var newItem = $('#itemTemplate').clone();
+            newItem.removeAttr('id'); // need to remove attribute
+
+            var iconClass = sabio.page.getIconClassForMeetingFormat(itemData);
+            newItem.find('.timeline-icon i').addClass(iconClass);
+            newItem.find('.timeline-time .meetingDate').text(moment(itemData.date).format("MM/DD/YYYY"));
+            var timeRange = moment('2000-01-01 ' + itemData.startTime).format('h:mm a') + '-' + moment('2000-01-01 ' + itemData.endTime).format('h:mm a');
+
+            var editUrl = "/Meetings/" + itemData.id;
+            newItem.find('.timeline-content .editUrl').attr("href", editUrl);
+            newItem.find('.timeline-content .meetingTime').text(timeRange);
+            newItem.find('.timeline-content .meetingName').text(itemData.name);
+            newItem.find('')
+            newItem.find('.timeline-content .description').text(itemData.description);
+
+            var imagePath = sabio.page.getImagePathForMeetingType(itemData);
+            newItem.find('.gallery a').attr("href", imagePath);
+            newItem.find('.gallery img').attr("src", imagePath);
+            return newItem;
+        }
+
+        sabio.page.getImagePathForMeetingType = function (itemData) {
+            var imagePath;
+            switch (itemData.meetingTypeId) {
+                case 1:
+                    imagePath = "/img/placeholders/photos/photo16.jpg";
+                    break;
+                case 2:
+                    imagePath = "/img/placeholders/photos/photo17.jpg";
+                    break;
+                case 3:
+                    imagePath = "/img/placeholders/photos/photo18.jpg";
+                    break;
+                default:
+                    imagePath = "/img/placeholders/photos/photo19.jpg";
+                    break;
+            }
+            return imagePath;
+        }
+
+        sabio.page.getIconClassForMeetingFormat = function (itemData) {
+            var iconClass;
+            switch (itemData.meetingFormatId) {
+                case 1:
+                    {
+                        iconClass = 'gi-cloud'
+                    }
+                case 2:
+                    {
+                        iconClass = 'gi-building';
+                        break;
+                    }
+                case 3:
+                    {
+                        iconClass = 'gi-earphone';
+                        break;
+                    }
+                default:
+                    {
+                        iconClass = 'gi-unchecked';
+                        break;
+                    }
+            }
+            return iconClass;
+        }
+
+        sabio.page.getLinkToEdit = function (itemData) {
+            return "/Meetings/" + itemData.Id + "/Edit";
+        }
+
+        sabio.page.renderItem = function (itemData, appendToElement) {
+            // Clone comment template, fill with commentData and
+            // place in DOM as last child of appendToElement
+            var newItem = sabio.page.cloneItemTemplate(itemData);
+            newItem.appendTo(appendToElement);
+            newItem.removeClass('hidden');
+            return newItem;
+        }
+
+    </script>
+
+}

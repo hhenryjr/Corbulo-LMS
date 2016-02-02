@@ -1,0 +1,65 @@
+﻿
+<div class="row">
+    <div class="col-md-10 col-lg-offset-1">
+
+        <div data-ng-model="about.user">
+            <table class="table table-borderless table-striped">
+                <tbody>
+                    <tr>
+                        <td><strong><i class="fa fa-user text-info "></i></strong></td>
+                        <td id="userName"><i class="text-info">{{dashboard.user.userName}}</i></td>
+                    </tr>
+
+                    <tr>
+                        <td><strong><i class="fa fa-envelope text-info"></i></strong></td>
+                        <td id="email"><a href="mailto:{{dashboard.user.email}}">{{dashboard.user.email}}</a></td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Best Skills</strong></td>
+                        <td>
+                            <a href="javascript:void(0)" class="label label-info">HTML</a>
+                            <a href="javascript:void(0)" class="label label-info">CSS</a>
+                            <a href="javascript:void(0)" class="label label-info">Javascript</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong><i class="fa fa-phone text-info"></i></strong></td>
+                        <td id="phone"><i class="text-info">{{dashboard.user.phone}}</i></td>
+                    </tr>
+                    <tr>
+                        <td><strong><i class="fa fa-home text-info"></i></strong></td>
+                        <td id="line1"><i class="text-info">{{dashboard.userAddress.line1}}</i></td>
+                    </tr>
+                    <tr>
+                        <td><strong><i class="fa fa-home text-info"></i></strong></td>
+                        <td id="line2"><i class="text-info">{{dashboard.userAddress.line2}}</i></td>
+                    </tr>
+                    <tr>
+                        <td><strong><i class="fa fa-home  text-info"></i></strong></td>
+                        <td id="line3"><i class="text-info">{{dashboard.userAddress.zipCode}}&nbsp;{{dashboard.userAddress.stateProvince.name}},&nbsp;{{dashboard.userAddress.stateProvince.countryName}}</i></td>
+                    </tr>
+                    <tr>
+                        <td><strong><i class="fa fa-facebook-official  text-info"></i></strong></td>
+                        <td id="Facebook"><i class="text-info">{{dashboard.user.facebook}}</i></td>
+                    </tr>
+                    <tr>
+                        <td><strong><i class="fa fa-linkedin-square  text-info"></i></strong></td>
+                        <td id="LinkedIn"><i class="text-info">{{dashboard.user.linkedIn}}</i></td>
+                    </tr>
+                    <tr>
+                        <td><strong><i class="fa fa-twitter-square  text-info"></i></strong></td>
+                        <td id="Twitter"><i class="text-info">{{dashboard.user.twitter}}</i></td>
+                    </tr>
+                    <tr>
+                        <td><strong><i class="fa fa-laptop text-info"></i></strong></td>
+                        <td id="Webpage"><i class="text-info">{{dashboard.user.webpage}}</i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+</div>
+

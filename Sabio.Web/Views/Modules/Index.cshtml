@@ -1,0 +1,114 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_dashboardLayout.cshtml";
+}
+
+<div ng-view></div>
+
+
+@section pageInitScripts
+{
+    <script type="text/javascript">
+        sabio.extraNgDependencies = ["checklist-model"]
+    </script>
+}
+
+
+@section Scripts
+    {
+
+    <script src="~/Scripts/ng/checklist-model.js"></script>
+    <script src="~/Scripts/Sabio.Services.Modules.js"></script>
+    <script src="~/Scripts/app/services/modulesService.js"></script>
+
+    <script src="~/Scripts/app/admin/modules/controller/manage.js"></script>
+    <script src="~/Scripts/app/admin/modules/controller/index.js"></script>
+
+    <script src="~/Scripts/app/admin/modules/modules.config.js"></script>
+
+}
+
+
+
+@*@model Sabio.Web.Models.ViewModels.ItemViewModel<int>
+    @{
+        ViewBag.Title = "Index";
+        Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+    }
+
+    <h2>Module For Classes</h2>
+
+    <div ng-controller="moduleController as mod" id="moduleCtrler">
+
+        {{mod.getName}}
+
+    </div>
+
+    @section scripts{
+        <script src="~/Scripts/sabio.mod.services.Modules.js"></script>
+
+        <script type="text/javascript">
+
+            sabio.page.startUp = function () {
+
+                sabio.page.moduleController = sabio.ng.getControllerInstance($("#moduleCtrler"));
+            }
+
+            sabio.mod.services.modulesServiceFactory = function ($baseService) {
+
+                var aSabioServiceObject = sabio.mod.services.modules;
+
+                var newService = $baseService.merge(true, {}, aSabioServiceObject, $baseService);
+
+                return newService;
+            }
+
+            sabio.page.moduleControllerFactory = function (
+                $scope, $baseController, $moduleService) {
+
+                var vm = this;
+
+                $baseController.merge(vm, $baseController);
+
+                vm.$moduleService = $moduleService;
+
+                vm.$scope = $scope;
+
+                vm.getName = "Angular is good to go";
+                vm.receiveItemById = _receiveItemById;
+                vm.onModError = _onModError;
+                vm.id = "@Model.Item";
+                vm.notify = vm.$moduleService.getNotifier($scope);
+
+                render();
+
+                function render() {
+                    vm.$moduleService.getById(vm.id,vm.receiveItemById, vm.onModError);
+                }
+                function _receiveItemById(data) {
+                    vm.notify(function () {
+                        vm.items = data.items;
+                        console.log(vm.items);
+                    });
+                }
+
+                function _onModError(jqXhr, error) {
+                    console.log(error);
+                }
+
+            }
+
+            sabio.ng.addService(sabio.ng.app.module,
+                "$moduleService",
+                ["$baseService"],
+                sabio.mod.services.modulesServiceFactory
+            );
+
+            sabio.ng.addController(sabio.ng.app.module,
+                "moduleController",
+                ['$scope', '$baseController', '$moduleService'],
+                sabio.page.moduleControllerFactory);
+
+
+        </script>
+    }*@

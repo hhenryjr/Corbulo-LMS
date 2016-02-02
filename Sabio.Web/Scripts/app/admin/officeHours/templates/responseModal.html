@@ -1,0 +1,39 @@
+﻿
+<div class="modal-header text-center">
+    <h2 class="modal-title"><i class="fa fa-pencil fa-6"></i> Question Response</h2>
+</div>
+<div class="modal-dialog" role="document" >
+    <div class="modal-header" style="margin-right:5px">
+        <h4 class="modal-title" id="contactUs">Question: &nbsp;<strong>{{officeHour.items[0].question}}</strong></h4>
+    </div>
+
+
+    <div class="modal-body">
+        <form id="officeHourForm" ng-submit="officeHour.add()" class="form-horizontal form-bordered" name="officeHour.officeHourForm" novalidate>
+            <div class="input-group">
+                <textarea id="response"
+                          rows="5"
+                          cols="75"
+                          class="form-control ng-class:{'error': officeHour.showResponseModalErrors && !officeHour.officeHourForm.topic.$Valid}"
+                          name="response"
+                          data-ng-model="officeHour.items[0].response"
+                          required
+                          ng-required="true"
+                          minlength="3"
+                          maxlength="2000"
+                          style="margin-left:15px;color:black"></textarea>
+                <div role="alert" class="help-inline error" style="margin-left:20px">
+                    <span class="error has-error" ng-show="officeHour.showResponseModalErrors && officeHour.officeHourForm.response.$error.required"><strong>Please enter an answer to the question.</strong></span>
+                    <span class="error has-error" ng-show="officeHour.showResponseModalErrors && officeHour.officeHourForm.response.$error.minlength"><strong>The response must be at least 5 characters.</strong></span>
+                    <span class="error has-error" ng-show="officeHour.showResponseModalErrors && officeHour.officeHourForm.response.$error.maxlength"><strong>The response must be less than 2000 character.</strong></span>
+                </div>
+            </div>
+
+            <div class="modal-footer" style="margin-right:5px">
+                <label class="successMessage" type="text" id="messageResponse"></label>
+                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="officeHour.cancel('cancel')">Close</button>
+                <button type="submit" class="btn btn-primary" ng-click="officeHour.ok(officeHour.items[0].officeHourId, officeHour.items[0].id)">Save</button>
+            </div>
+        </form>
+    </div>
+</div>

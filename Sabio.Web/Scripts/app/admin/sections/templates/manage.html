@@ -1,0 +1,48 @@
+﻿<div class="content-header">
+    <div class="header-section">
+        <h1>
+            Section <strong>{{admin.section.id}}</strong>
+        </h1>
+        <h4>{{admin.section.course.courseName}}</h4>
+        <p>
+            <a href="#/" class="btn btn-alt btn-xs btn-primary"><i class="fa fa-arrow-left"></i> List</a>
+            <!--<a href="#/edit/content" class="btn btn-alt btn-xs btn-primary"><i class="fa fa-puzzle-piece"></i> Content</a>-->
+        </p>
+    </div>
+</div>
+
+<div class="block full">
+    <div class="block-title">
+        <h2>Manage Section <small>Course: {{admin.section.course.courseName}}</small></h2>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="block full">
+                <div class="block-title">
+                    <div class="block-options pull-right">
+                        <div class="btn-group">
+                            <a href="javascript:void(0)" data-toggle="dropdown" class="btn btn-alt btn-sm btn-default dropdown-toggle" aria-expanded="false"><i class="fa fa-angle-down"></i></a>
+                            <ul class="dropdown-menu dropdown-custom dropdown-menu-right">
+                                <li>
+                                    <a href="javascript:void(0)">Action</a>
+                                    <a href="javascript:void(0)">Action 2</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li><a href="javascript:void(0)">Another Action</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <ul data-toggle="tabs" class="nav nav-tabs">
+                        <li ng-class="{'active' tab.id= =admin.currentTab.id }" ng-repeat="tab in admin.tabs">
+                            <a href="{{tab.link}}" ng-click="admin.selectTab(tab)">{{tab.label}}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tab-content" ng-if="admin.currentTab" ng-include="admin.currentTab.template">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

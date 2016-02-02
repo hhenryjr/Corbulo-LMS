@@ -1,0 +1,114 @@
+﻿@model Sabio.Web.Models.ViewModels.WikiViewModel
+
+@{
+    ViewBag.Title = "WikiPage";
+    Layout = "~/Views/Shared/WikiPageLayout.cshtml";
+}
+
+@section styles{
+
+    <link href="~/content/angular-ui-tree.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/content/highlightjs-solarized-dark.css">
+}
+
+<div ng-controller="wikiNavController as nav" ng-cloak="">
+    <div class="content-header">
+        <div class="header-section">
+            <h1>
+                @Model.BrandName <strong>Wiki</strong>
+            </h1>
+            <h4></h4>
+            @*<p>
+                    <a href="#/tree" class="btn btn-alt btn-xs btn-primary"><i class="fa fa-tree"></i> Tree View</a>
+                </p>*@
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-md-3 control-label " for="wikiSpaces" style="margin-top:8px">Choose a space</label>
+                        <div class="col-md-9">
+                            <select ng-options="space.title for space in nav.wikiSpaces track by space.id"
+                                    ng-model="nav.currentSpaceId"
+                                    ng-change="nav.selectSpace()"
+                                    class="form-control"
+                                    size="1"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="block">
+        <ul class="breadcrumb breadcrumb-top">
+            <li><a href="http://lms.dev/user/current#/userinfo">Back to Dashboard</a></li>
+        </ul>
+
+        <div class="row" ng-cloak="">
+
+            <div class="col-md-8">
+                <div ng-view></div>
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="block clearfix">
+                    <div class="block-title">
+                        <h2><strong>Space</strong> Pages</h2>
+                    </div>
+                    <div class="block-section">
+                        <p ng-if="!nav.currentSpaceId">Choose a space...</p>
+                        <p ng-if="nav.currentSpaceId && !nav.wikiTree">Loading tree...</p>
+
+                        <div id="tree-root">
+                            <ol>
+                                <li ng-repeat="node in nav.wikiTree" ng-include="'/scripts/app/wiki/templates/leaf.html'">
+                                    {{node.nodes}}
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script type="application/json" id="wikiSpacesData">
+    @Html.RawJson(Model.Spaces)
+</script>
+
+<script type="application/json" id="wikiContentTypes">
+    @Html.RawJson(Model.ContentTypesEnum.ToDictionaryByValue())
+</script>
+
+@section pageInitScripts
+{
+    <script src="~/scripts/highlight.min.js"></script>
+    <script src="~/scripts/ng/angular-highlightjs.min.js"></script>
+
+    <script type="text/javascript">
+        sabio.extraNgDependencies = ["hljs"]
+    </script>
+}
+
+@section scripts{
+
+    <script src="~/Scripts/sabio.services.wiki.js"></script>
+    <script src="~/Scripts/sabio.services.wikiContent.js"></script>
+    <script src="~/Scripts/sabio.services.wikiTree.js"></script>
+    <script src="~/Scripts/app/services/wikiService.js"></script>
+    <script src="~/Scripts/app/services/wikiContentService.js"></script>
+    <script src="~/Scripts/app/services/wikiTreeService.js"></script>
+    <script src="~/Scripts/app/services/eventHandlerService.js"></script>
+
+    <script src="~/Scripts/app/wiki/controllers/index.js"></script>
+    <script src="~/Scripts/app/wiki/controllers/navigation.js"></script>
+    <script src="~/Scripts/app/wiki/controllers/space.js"></script>
+    <script src="~/Scripts/app/wiki/controllers/page.js"></script>
+
+    <script src="~/Scripts/app/wiki/wiki.config.js"></script>
+}

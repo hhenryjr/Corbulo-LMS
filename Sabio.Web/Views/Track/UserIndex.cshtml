@@ -1,0 +1,315 @@
+﻿@{
+    ViewBag.Title = "UserIndex";
+    Layout = "~/Views/Shared/_dashboardLayout.cshtml";
+}
+
+
+
+<div id="userTrackIndexController" data-ng-controller="userTrackIndexController as track">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="block">
+                <div class="block-title">
+                    <h2><strong>Tracks</strong></h2>
+                </div>
+                <div class="row">
+                    <uib-accordion close-others="true">
+                        <uib-accordion-group class="animate-repeat"
+                                             data-ng-repeat="tracks in track.tracks track by tracks.id">
+                            <uib-accordion-heading data-ng-cloak>
+                                {{tracks.name}}
+                            </uib-accordion-heading>
+                            <div>
+
+                            </div>
+                            <div data-ng-bind-html="tracks.description" data-ng-cloak>
+                                {{tracks.description}}
+                            </div>
+                            <uib-accordion close-others="true">
+                                <uib-accordion-group class="animate-repeat"
+                                                     data-ng-repeat="tracksCourses in tracks.tracksCourses track by tracksCourses.courseId"
+                                                     data-ng-click="track.getCourse(tracksCourses.courseId)">
+                                    <uib-accordion-heading data-ng-cloak>
+                                        {{tracksCourses.courseName}}
+                                    </uib-accordion-heading>
+                                    <div data-ng-bind-html="track.course.description" data-ng-cloak>
+                                        {{track.course.description}}
+                                    </div>
+                                    <div data-ng-if="track.sections">
+                                        <uib-accordion close-others="true">
+                                            <uib-accordion-group data-ng-repeat="mySection in track.sections track by mySection.id">
+                                                <uib-accordion-heading data-ng-cloak>
+                                                    {{mySection.id}} {{mySection.campus.name}} {{mySection.startDate|date: 'M/d/yy'}}
+                                                </uib-accordion-heading>
+                                               
+                                                <ul>
+                                                    <li>Campus Location: <strong data-ng-cloak>{{mySection.campus.name}}</strong></li>
+                                                    <li>Enrolled: <strong data-ng-cloak>{{mySection.currentEnrollment}}</strong></li>
+                                                    <li>Capacity: <strong data-ng-cloak>{{mySection.capacity}}</strong></li>
+                                                    <li>Start Date: <strong data-ng-cloak>{{mySection.startDate|date: 'M/d/yy'}}</strong></li>
+                                                    <li>Registration Deadline: <strong data-ng-cloak>{{mySection.registrationDeadline|date: 'M/d/yy'}}</strong></li>
+                                                    <li>Start Time: <strong data-ng-cloak>{{mySection.startTime|date: 'hh:mm a'}}</strong></li>
+                                                    <li>End Time: <strong data-ng-cloak>{{mySection.endTime|date: 'hh:mm a'}}</strong></li>
+                                                </ul>
+                                                <div>
+                                                    <div class="col-md-8">
+                                                        <div data-ng-if="(track.userSectionId).indexOf(mySection.id) == -1">
+                                                            <input type="submit"
+                                                                   data-ng-click="track.sendRequestEnrollment(mySection.id)"
+                                                                   id="requestEnrollment"
+                                                                   class="btn btn-sm btn-primary"
+                                                                   value="Request Enrollment"
+                                                                   data-ng-disabled="track.mySection"
+                                                                   data-ng-show="track.requestEnrollment"/>
+                                                        </div>
+                                                            <div>
+                                                                <input type="submit"
+                                                                       data-ng-click="dashboard.openContact()"
+                                                                       id="sendContactInfo"
+                                                                       class="btn btn-sm btn-warning"
+                                                                       value="Contact Sabio"
+                                                                       data-ng-show="track.contactSabio" />
+                                                            </div>
+                                                       
+                                                    </div>
+                                                </div>
+                                            </uib-accordion-group>
+                                        </uib-accordion>
+                                    </div>
+
+                                </uib-accordion-group>
+                            </uib-accordion>
+                        </uib-accordion-group>
+                    </uib-accordion>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section pageInitScripts
+{
+
+    <script src="~/js/helpers/ckeditorstandard/ckeditor.js"></script>
+    <script src="~/Scripts/ng/angular-ckeditor.js"></script>
+    <script src="~/Scripts/ng/angular-ckeditor-placeholder.js"></script>
+    <script src="~/Scripts/ng/angular-ui-bootstrap-0.14.2.js"></script>
+
+
+    <script type="text/javascript">
+        sabio.extraNgDependencies = ["ckeditor", "ui.bootstrap"]
+    </script>
+}
+
+
+
+@section Scripts
+    {
+
+    <script src="~/Scripts/app/services/utilityService.js"></script>
+    <script src="~/Scripts/app/admin/track/track.config.js"></script>
+    <script src="~/Scripts/Sabio.Services.Tracks.js"></script>
+    <script src="~/Scripts/Sabio.Services.Courses.js"></script>
+    <script src="~/Scripts/app/services/trackService.js"></script>
+    @*<script src="~/Scripts/app/services/trackContentService.js"></script>*@
+    <script src="~/Scripts/ng/isteven-multi-select.js"></script>
+    <script src="~/Scripts/ng/ng-tags-input.min.js"></script>
+
+
+    <script type="text/javascript">
+
+        sabio.page.startup = function () {
+
+            sabio.page.userController = sabio.ng.getControllerInstance($("#userTrackIndexController"));
+
+        }
+
+        sabio.services.userTracksfactory = function ($baseService) {
+            var aSabioServiceObject = sabio.services.tracks;
+            var newService = $baseService.merge(true, {}, aSabioServiceObject, $baseService);
+            return newService;
+        }
+
+        sabio.page.userTrackIndexControllerFactory = function (
+        $scope
+        , $baseController
+        , $trackService
+        , $utilityService
+        ) {
+
+            var vm = this;
+
+            $baseController.merge(vm, $baseController);
+
+            vm.$scope = $scope;
+            vm.$trackService = $trackService;
+            vm.$utilityService = $utilityService;
+
+            vm.notify = vm.$trackService.getNotifier($scope);
+
+            vm.delete = _delete;
+            vm.getCourse = _getCourse;
+            vm.getSectionInfo = _getSectionInfo;
+
+            vm.sendRequestEnrollment = _sendRequestEnrollment;
+
+
+            vm.onGetUserSectionInfoByUserIdSuccess = _onGetUserSectionInfoByUserIdSuccess;
+            vm.onGetUserSectionInfoByUserIdError = _onGetUserSectionInfoByUserIdError;
+
+            vm.onRequestEnrollmentForThisSectionSuccess = _onRequestEnrollmentForThisSectionSuccess;
+            vm.onRequestEnrollmentForThisSectionError = _onRequestEnrollmentForThisSectionError;
+
+            vm.settings = _settings;
+
+
+            vm.tracks = null;
+            vm.trackType = 1;
+            vm.totalCourses = [];
+            vm.courses = null;
+            
+            vm.ckeditorOptions = {
+                language: 'en',
+                allowedContent: true,
+                entities: false
+            };
+
+            _init();
+
+            function _init() {
+                vm.$trackService.getTracks(_onGetTracksSuccess, _onGetTracksError);
+                vm.settings();
+            }
+
+            function _settings(){
+                vm.mySection = false;
+            }
+
+            function _delete(pageId) {
+                alert("TODO: go delete page #" + pageId);
+            }
+
+            function _onGetTracksSuccess(response) {
+                vm.notify(function () {
+                    vm.tracks = response.items;
+                });
+                console.log("tracks from server", vm.tracks);
+
+            }
+
+            function _onGetTracksError(jqXhr, error) {
+
+            }
+
+            function _getCourse(id) {
+
+                vm.$trackService.getCourseById(id, _getCourseSuccess, _getCourseError);
+
+            }
+
+            function _getCourseSuccess(response) {
+                vm.notify(function () {
+                    vm.course = response.item;
+                });
+                console.log(vm.course);
+                vm.$trackService.getAllSectionsByCourseId(vm.course.id, _getSectionSuccess, _getSectionError);
+
+            }
+
+            function _getCourseError(jqXhr, error) {
+                console.error(error);
+            }
+
+
+            function _getSectionSuccess(response) {
+                vm.notify(function () {
+                    vm.sections = response.items;
+
+                    for (i = 0; i < vm.sections.length; i++) {
+                        vm.section = vm.sections[i];
+
+                        vm.section.startTime = vm.$utilityService.dateFromMilitaryTime(vm.section.startTime);
+                        vm.section.endTime = vm.$utilityService.dateFromMilitaryTime(vm.section.endTime);
+
+                        if (vm.section.startDate)
+                            vm.section.startDate = new Date(vm.section.startDate);
+
+                        if (vm.section.registrationDeadline)
+                            vm.section.registrationDeadline = new Date(vm.section.registrationDeadline);
+
+                    }
+
+                    vm.$trackService.getUserSectionInfoByUserId(_onGetUserSectionInfoByUserIdSuccess, _onGetUserSectionInfoByUserIdError);
+                })
+            }
+
+
+            function _sendRequestEnrollment(sectionId){
+                var myData = "sectionId=" + sectionId + "&EnrollmentStatusId=1";
+                vm.$trackService.requestEnrollmentForThisSection(myData, _onRequestEnrollmentForThisSectionSuccess, _onRequestEnrollmentForThisSectionError);
+            }
+
+
+            function _onGetUserSectionInfoByUserIdSuccess(data) {
+                var userSections = data.items;
+                vm.userSectionId = [];
+
+                if (userSections) {
+                    for (i = 0; i < userSections.length; i++) {
+                        var user = userSections[i];
+                        vm.userSectionId.push(user.sectionId);
+                    }
+                }
+            
+                vm.contactSabio = false;
+                vm.requestEnrollment = true;
+            }
+
+            function _onGetUserSectionInfoByUserIdError(jqXhr, error) {
+                console.log(error);
+                vm.contactSabio = true;
+                vm.requestEnrollment = false;
+            }
+
+
+            function _getSectionError(jqXhr, error) {
+                console.error(error);
+            }
+
+            function _getSectionInfo(id) {
+                console.log("awesome");
+            }
+
+            function _onRequestEnrollmentForThisSectionSuccess(data) {
+                console.log(data);
+                vm.mySection = true;
+            }
+
+            function _onRequestEnrollmentForThisSectionError(jqXhr, error) {
+                console.log(error);
+            }
+
+        }
+
+        sabio.ng.addService(sabio.ng.app.module
+        , "$trackService"
+        , ["$baseService"]
+        , sabio.services.userTracksfactory);
+
+        sabio.ng.addController(sabio.ng.app.module
+        , "userTrackIndexController"
+        , ['$scope', '$baseController', '$trackService', '$utilityService']
+        , sabio.page.userTrackIndexControllerFactory);
+
+
+
+
+    </script>
+}
+
+
+
+
+

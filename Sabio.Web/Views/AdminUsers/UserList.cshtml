@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "UserList";
+    Layout = "~/Views/Shared/_dashboardLayout.cshtml";
+}
+
+<div ng-view></div>
+
+
+@section pageInitScripts
+{  
+
+
+
+    <script type="text/javascript">
+        sabio.extraNgDependencies = ['enumFlag']
+    </script>
+}
+
+@section scripts{
+    
+<script src="~/Scripts/sabio.services.userSections.js"></script>
+<script src="~/Scripts/app/services/userService.js"></script>
+<script src="~/Scripts/ng/angular-enum-flag-directive.js"></script>
+
+<script src="~/Scripts/app/admin/users/controllers/AssignSections.js"></script>
+<script src="~/Scripts/app/admin/users/controllers/UserList.js"></script>
+
+
+<script src="~/Scripts/app/admin/users/users.config.js"></script>
+
+}

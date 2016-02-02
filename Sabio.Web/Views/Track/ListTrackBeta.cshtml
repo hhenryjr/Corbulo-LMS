@@ -1,0 +1,250 @@
+﻿
+@using Sabio.Web;
+@model Sabio.Web.Models.ViewModels.TrackViewModel
+
+@{
+    ViewBag.Title = "ListTrackBeta";
+    Layout = "~/Views/Shared/_dashboardLayout.cshtml";
+}
+
+<div class="content-header">
+    <div class="header-section">
+        <h1>
+            <i class="gi gi-share_alt"></i>Tracks<br><small>Tracks Offered at Sabio</small>
+        </h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-8" ng-controller="trackController as tracks" id="trackCtrler">
+        <div class="widget" data-ng-repeat="data in tracks.items track by data.id">
+            <div class="widget-advanced">
+                <div class="widget-header text-center themed-background-dark" style="cursor: pointer;" ng-click="data.isShowing = !data.isShowing">
+                    <div class="widget-options">
+                        <button class="btn btn-xs btn-default" data-toggle="tooltip" title="Love it!"><i class="fa fa-heart text-danger"></i></button>
+                    </div>
+                    <h2 style="color: white"> {{data.name}} </h2>
+
+                </div>
+                <div class="widget-main">
+                    <a href="javascript:void(0)" class="widget-image-container animation-fadeIn">
+                        <span class="widget-icon themed-background"><i class="fa fa-code"></i></span>
+                    </a>
+                    <div ng-slide-down="data.isShowing" lazy-render duration="1">
+                        <div class="widget-mainContent animation-fadeIn">
+                            <h4 class="text-center" data-ng-bind="tracks.getFormat({{data.format}})"></h4>
+                            <a href="javascript:void(0)" class="btn btn-sm btn-default pull-right">
+                                <i title="Cost"> {{data.cost | currency}}</i>
+                            </a>
+
+                            <div>
+                                <h4 class="sub-header">Description</h4>
+                                <p data-ng-bind-html="data.description"> </p>
+                            </div>
+                            <hr/>
+                            <div>
+                                <h4 class="sub-header ">Expected Outcome</h4>
+                                <p align="justify" data-ng-bind-html="data.expectedOutcome"></p>
+                            </div>
+                            <div>
+                                <h4 class="sub-header"> Courses</h4>
+                                <div data-ng-repeat="bar in data.tracksCourses track by bar.courseId">
+                                    <ul>
+                                        <li>{{bar.courseName}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="sub-header"> Pre-Requisites</h4>
+                                <div data-ng-repeat="pre in data.prerequisites">
+                                    <ul>
+                                        <li>{{pre.courseName}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section scripts {
+
+    <script type="text/javascript">
+        sabio.page.serverModel = @Html.RawJson(Model);
+    </script>
+    <script src="~/Scripts/Sabio.track.service.js"></script>
+    <script type="text/javascript">
+
+        (function () {
+            'use strict';
+            sabio.ng.app.module.directive('ngSlideDown', [
+                '$timeout',
+                function ($timeout) {
+                    var link;
+                    var getTemplate = function (tElement, tAttrs) {
+                        if (tAttrs.lazyRender !== void 0) {
+                            return '<div ng-if=\'lazyRender\' ng-transclude></div>';
+                        } else {
+                            return '<div ng-transclude></div>';
+                        }
+                    };
+                    link = function (scope, element, attrs, ctrl, transclude) {
+                        var closePromise, duration, elementScope, emitOnClose, getHeight, hide, lazyRender, onClose, show;
+                        duration = attrs.duration || 1;
+                        elementScope = element.scope();
+                        emitOnClose = attrs.emitOnClose;
+                        onClose = attrs.onClose;
+                        lazyRender = attrs.lazyRender !== void 0;
+                        if (lazyRender) {
+                            scope.lazyRender = scope.expanded;
+                        }
+                        closePromise = null;
+                        element.css({
+                            overflow: 'hidden',
+                            transitionProperty: 'height',
+                            transitionDuration: '' + duration + 's',
+                            transitionTimingFunction: 'ease-in-out'
+                        });
+                        getHeight = function (passedScope) {
+                            var c, children, height, _i, _len;
+                            height = 0;
+                            children = element.children();
+                            for (_i = 0, _len = children.length; _i < _len; _i++) {
+                                c = children[_i];
+                                height += c.clientHeight;
+                            }
+                            return '' + height + 'px';
+                        };
+                        show = function () {
+                            if (closePromise) {
+                                $timeout.cancel(closePromise);
+                            }
+                            if (lazyRender) {
+                                scope.lazyRender = true;
+                            }
+                            return element.css('height', getHeight());
+                        };
+                        hide = function () {
+                            element.css('height', '0px');
+                            if (emitOnClose || onClose || lazyRender) {
+                                return closePromise = $timeout(function () {
+                                    if (emitOnClose) {
+                                        scope.$emit(emitOnClose, {});
+                                    }
+                                    if (onClose) {
+                                        elementScope.$eval(onClose);
+                                    }
+                                    if (lazyRender) {
+                                        return scope.lazyRender = false;
+                                    }
+                                    return scope.lazyRender = false;
+
+                                }, duration * 1000);
+                            }
+                        };
+                        scope.$watch('expanded', function (value, oldValue) {
+                            if (value) {
+                                return $timeout(show);
+                            } else {
+                                return $timeout(hide);
+                            }
+                        });
+                        return scope.$watch(getHeight, function (value, oldValue) {
+                            if (scope.expanded && value !== oldValue) {
+                                return $timeout(show);
+                            }
+                        });
+                    };
+                    return {
+                        restrict: 'A',
+                        scope: { expanded: '=ngSlideDown' },
+                        transclude: true,
+                        link: link,
+                        template: function (tElement, tAttrs) {
+                            return getTemplate(tElement, tAttrs);
+                        }
+                    };
+                }
+            ]);
+        }.call(this));
+
+
+        sabio.page.startUp = function() {
+
+            sabio.page.trackController = sabio.ng.getControllerInstance($("#trackCtrler"));
+        }
+
+        sabio.track.services.tracksListFactory = function($baseService) {
+     
+            var aSabioServiceObject = sabio.track.services.tracksList;
+
+            var newService = $baseService.merge(true, {}, aSabioServiceObject, $baseService);
+
+            return newService;
+        }
+
+
+        sabio.page.trackControllerFactory = function(
+            $scope, $baseController, $trackService) {
+
+            var vm = this;
+
+            $baseController.merge(vm, $baseController);
+
+            vm.$trackService = $trackService;
+
+            vm.$scope = $scope;
+
+            vm.getName = "Angular is good to go";
+            vm.receiveItems = _receiveItems;
+            vm.onTrackError = _onTrackError;
+            vm.getFormat = _getFormat;
+
+
+            vm.notify = vm.$trackService.getNotifier($scope);
+
+            render();
+
+            function render() {
+                vm.$trackService.get(vm.receiveItems, vm.onTrackError);
+            }
+
+
+            function _receiveItems(data) {
+                vm.notify(function() {
+                    vm.items = data.items;
+                    console.log(vm.items);
+                });
+            }
+
+            function _onTrackError(jqXhr, error) {
+                console.log(error);
+            }
+
+            function _getFormat(formatId) {
+
+                return vm.$sabio.serverModel.formats[formatId];
+            }
+        }
+
+        sabio.ng.addService(sabio.ng.app.module,
+            "$trackService",
+            ["$baseService"],
+            sabio.track.services.tracksListFactory
+        );
+
+        sabio.ng.addController(sabio.ng.app.module,
+            "trackController",
+            ['$scope', '$baseController', '$trackService'],
+            sabio.page.trackControllerFactory);
+
+
+    </script>
+
+}

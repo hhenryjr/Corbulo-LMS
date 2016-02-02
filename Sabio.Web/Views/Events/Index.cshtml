@@ -1,0 +1,247 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_dashboardLayout.cshtml";
+}
+
+<div class="row form-horizontal form-bordered">
+    <!-- Basic Event Form Elements Block -->
+    <div class="block full block-alt-noborder">
+        <!-- Basic Form Elements Title -->
+        <div class="block-title">
+            <div class="block-options pull-right">
+                <a href="javascript:void(0)" class="btn btn-alt btn-sm btn-default toggle-bordered enable-tooltip" data-toggle="button" title="Toggles .form-bordered class">No Borders</a>
+            </div>
+            <h2><strong>Event Form</strong> </h2>
+        </div>
+        <!-- END Form Elements Title -->
+        <!-- Basic Form Elements Content -->
+        <form action="page_forms_general.html" method="post" enctype="multipart/form-data" class="form-horizontal form-bordered" id="event-form" onsubmit="return false;">
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="Event Name">Event Name</label>
+                <div class="col-md-9">
+                    <input type="text" id="eventName" name="eventName" class="form-control" placeholder="">
+                    <span class="help-block">Type of event</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="Event Venue">Venue</label>
+                <div class="col-md-9">
+                    <input type="text" id="venue" name="venue" class="form-control" placeholder="">
+                    <span class="help-block">Event Location</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="Event Date">Date</label>
+                <div class="col-md-9">
+                    <input type="text" id="date" name="date" class="form-control" placeholder="mm/dd/yyyy , 3:00pm">
+                    <span class="help-block">Date and time of event</span>
+                </div>
+            </div>
+            @*<div class="form-group">
+                    <label class="col-md-3 control-label" for="Event Time">Time</label>
+                    <div class="col-md-9">
+                        <input type="text" id="time" name="time" class="form-control" placeholder="">
+                        <span class="help-block">Time of Event</span>
+                    </div>
+                </div>*@
+            <div class="form-group">
+                <label class="col-md-3 control-label" for="Phone Number">Phone Number</label>
+                <div class="col-md-9">
+                    <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" placeholder="(555)555-5555">
+                    <span class="help-block"></span>
+                </div>
+            </div>
+
+            <div class="form-group form-actions">
+                <div class="col-md-9 col-md-offset-3">
+                    <button type="button" value="submit" class="btn btn-sm btn-primary" id="cmdSubmitForm"><i class="fa fa-angle-right"></i> Submit</button>
+                    <button type="reset" class="btn btn-sm btn-warning"><i class="fa fa-repeat"></i> Reset</button>
+                </div>
+            </div>
+            <div class="alert alert-warning" role="alert">Be Sure to check the Firebug Net Tab for more detailed information</div>
+            <div class="alert " id="msgWindow"></div>
+        </form>
+        <!-- END Basic Form Elements Content -->
+    </div>
+    <!-- END Basic Form Elements Block -->
+</div>
+
+
+
+@*<form name="eventForm" onsubmit="return validateForm()" method="post"></form>*@
+
+@*<input class="form-textbox validate[required] form-validation-errsor" type="text" size="10" name="q36_name[first]" id="first_36">*@
+
+@section scripts
+{
+
+    <script type="text/javascript">
+
+
+        sabio.page.startUp = function () {
+
+            sabio.page.initializeValidation();
+            //document.getElementById(".submit_btn").onclick = validateFrom;
+            $("#cmdSubmitForm").on("click", sabio.page.handlers.onSubmitFormClicked);
+            //$("#cmdSubmitForm").on("click", sabio.page.handlers.echoInputs);
+
+            console.log("startup exited");
+        };
+
+
+        sabio.page.initializeValidation = function () {
+            jQuery.validator.setDefaults({
+                debug: true
+            });
+
+            $('#event-form').validate({
+                rules: {
+                    "eventName": {
+                        required: true,
+                        minlength: 2,
+                    },
+                    "venue": {
+                        required: true,
+                    },
+                    "date": {
+                        required: true,
+                        minlength: 10,
+                        maxlength:10,
+                       
+                    },
+                    "phoneNumber": {
+                        required: true,
+                    },
+                },
+                messages: {
+                    "eventName": {
+                        required: "Event name is required.",
+                        minlength: "Please enter a minimun of 2 characters."
+
+                    },
+                    "venue": {
+                        required: "Event venue must be entered.",
+                    },
+                    "date": {
+                        required: "Event date and time must be entered in correct format: mm/dd/yyyy",
+                    },
+                    "phoneNumber": {
+                        required: "Phone number must be entered.",
+                    }
+
+                }
+
+            });
+        };
+
+        //<button id="but" onclick="validateDate()">Validate</button>
+
+
+        ////function validateDate() {
+        //    var date = new Date(document.getElementById("txtYear").value, document.getElementById("txtMonth").value, document.getElementById("txtDay").value);
+
+        //    if (date == "Invalid Date") {
+        //        alert("jnvalid date");
+
+        //    }
+
+
+        ////dd/mm/yyyy 
+
+        //var date = new Date();
+        //var month = date.getMonth();
+        //var day = date.getDate();
+        //var year = date.getFullYear();
+
+        //console.log(month + "/" + day + "/" + year);
+
+
+
+
+
+        sabio.page.handlers.onSubmitFormClicked = function () {
+            //  this line checks the data from the form against the rules defined on startUp.
+            if ($('#event-form').valid()) {
+
+                console.log("All info was validated")
+                //  the form is valid: submit the form via ajax here
+
+                sabio.page.handlers.echoInputs();
+            }
+
+        };
+
+
+        sabio.page.handlers.echoInputs = function () {
+            var url = "/Api/Events/EchoEvents";
+            var myData = $("#event-form").serialize();
+            console.log(myData);
+            var settings = {
+                cache: false
+                , contentType: "application/x-www-form-urlencoded; charset=UTF-8"
+                , data: myData
+                , dataType: "json"
+                , success: sabio.page.AjaxSuccess
+                , error: sabio.page.AjaxError
+                , type: "POST"
+            };
+
+            $.ajax(url, settings);
+        }
+
+        /*This function will be called by $ when the ajax
+            request's response is received as succesful.
+            A successul response has a HTTP_STATUS Code of 200
+        */
+        sabio.page.AjaxSuccess = function (data, status, xhr) {
+            console.log(JSON.stringify(data));
+            $("#msgWindow").removeClass("alert-danger");
+            $("#msgWindow").addClass("alert-info");
+        }
+
+        /*This function will be called by $ when the ajax
+            request's response is NOT received as successful.
+           This has a HTTP_STATUS Code of something OTHER than 200
+        */
+        sabio.page.AjaxError = function (jqXHR, textStatus, errorThrown) {
+            $("#msgWindow").addClass("alert-danger");
+            $("#msgWindow").removeClass("alert-info");
+        }
+
+
+
+
+
+        //////////////////////////////////////////////////////////////////////-
+        //////////////////////////////////////////////////////////////////////-
+        //////////////////////////////////////////////////////////////////////-
+
+
+
+
+
+
+
+
+        //sabio.page.handlers.onSubmitCommentClicked = function (evt) {
+        //    evt.preventDefault();
+
+        //    var targetFormId = $(this).attr("#event-form");
+        //    var targetForm = $(targetFormId);
+        //    var targetFormElement = null;
+
+        //    if (sabio.page.lastReplyLink) {
+
+        //        targetFormElement = $(sabio.page.lastReplyLink).closest(".comment-content");
+        //    };
+
+        //    var formGrab = sabio.page.grabDataInput(targetForm);
+
+        //    targetForm[0].reset();
+        //    sabio.page.lastReplyLink = null;
+        //    $("#myModal").modal("hide");
+        //};
+
+    </script>
+
+}

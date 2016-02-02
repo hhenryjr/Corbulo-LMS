@@ -1,0 +1,101 @@
+﻿@model Sabio.Web.Models.ViewModels.SectionViewModel
+
+@{
+    Layout = "~/Views/Shared/_dashboardLayout.cshtml";
+}
+
+
+@section styles{
+    <link href="~/Sabio.CSS/ng-tags-input.min.css" rel="stylesheet" />
+    <link href="~/Sabio.CSS/DnD-List/DnD-List.css" rel="stylesheet" />
+    <link href="/Sabio.CSS/CourseSelect.css" rel="stylesheet">
+}
+
+<div class="row" data-ng-controller="adminTrackIndexController as track">
+    <div class="block col-sm-5 col-lg-6">
+        <div class="block-title">
+            <h2><strong>Tracks</strong></h2>
+            <a href="track#/create" class="btn btn-xs btn-success pull-right" style="margin-top: 15px"><i class="fa fa-pencil-square"></i> Add a new track</a>
+        </div>
+        <div class="row">
+            <uib-accordion close-others="true">
+                <uib-accordion-group class="animate-repeat"
+                                     data-ng-repeat="tracks in track.tracks track by tracks.id">
+                    <uib-accordion-heading>
+                        {{tracks.name}}
+                    </uib-accordion-heading>
+                    <div>
+                        <a href="track#/edit/{{tracks.id}}" class="pull-right btn btn-xs btn-danger">
+                            <i class="fa fa-edit"> Edit</i>
+                        </a>
+                    </div>
+                    <div data-ng-bind-html="tracks.description">
+                        {{tracks.description}}
+                    </div>
+                    <uib-accordion close-others="true">
+                        <uib-accordion-group class="animate-repeat"
+                                             data-ng-repeat="tracksCourses in tracks.tracksCourses track by tracksCourses.courseId"
+                                             data-ng-click="track.getCourse(tracksCourses.courseId)">
+                            <uib-accordion-heading>
+                                {{tracksCourses.courseName}}
+                            </uib-accordion-heading>
+                            <div data-ng-bind-html="track.course.description">
+                                {{track.course.description}}
+                            </div>
+                            <a href="/admin/sections#/manage/{{track.section.id}}" data-ng-if="track.section.id > 0">{{track.course.courseName}}</a>
+                            <a href="track#/edit/course/{{tracksCourses.courseId}}" class="pull-right btn btn-xs btn-danger"><i class="fa fa-edit"> Edit</i></a>
+                        </uib-accordion-group>
+                    </uib-accordion>
+                </uib-accordion-group>
+            </uib-accordion>
+        </div>
+    </div>
+    <div ng-view></div>
+</div>
+
+<script type="application/json" id="courseFormats">
+    @Html.RawJson(Model.CourseFormat.ToDictionaryByValue())
+</script>
+
+@section pageInitScripts {
+    <script src="~/js/helpers/ckeditorstandard/ckeditor.js"></script>
+    <script src="~/Scripts/ng/angular-ckeditor.js"></script>
+    <script src="~/Scripts/ng/angular-ckeditor-placeholder.js"></script>
+    <script src="~/Scripts/ng/angular-elasticTextArea.js"></script>
+    <script src="~/Scripts/ng/angular-drag-and-drop-lists.min.js"></script>
+    <script src="~/Scripts/ng/ng-tags-input.min.js"></script>
+
+    <script type="text/javascript">
+        sabio.extraNgDependencies = ["ckeditor", 'monospaced.elastic', "dndLists", 'ngTagsInput']
+    </script>
+
+}
+
+@section scripts{
+
+
+
+    <script src="~/Scripts/sabio.services.wiki.js"></script>
+    <script src="~/Scripts/app/services/wikiService.js"></script>
+
+    <script src="~/Scripts/app/admin/track/track.config.js"></script>
+    <script src="~/Scripts/Sabio.Services.Tracks.js"></script>
+
+    <script src="~/Scripts/app/services/coursesService.js"></script>
+    <script src="~/Scripts/Sabio.Services.Courses.js"></script>
+    <script src="~/Scripts/app/services/trackService.js"></script>
+    @*<script src="~/Scripts/app/services/trackContentService.js"></script>*@
+    <script src="~/Scripts/ng/isteven-multi-select.js"></script>
+    <script src="~/Scripts/ng/ng-tags-input.min.js"></script>
+    <script src="~/Scripts/app/admin/track/controllers/index.js"></script>
+    <script src="~/Scripts/app/admin/track/controllers/course.js"></script>
+    <script src="~/Scripts/app/admin/track/controllers/manage.js"></script>
+
+
+
+
+
+
+
+}
+

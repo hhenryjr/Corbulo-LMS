@@ -1,0 +1,126 @@
+﻿<div class="block col-lg-6 col-sm-5">
+    <div class="block-title">
+        <h2> Edit A Course Track</h2>
+    </div>
+    <form id="courseTrack-form" method="post" class="form-horizontal form-bordered" data-ng-submit="track.submit()">
+        <input type="hidden" id="trackId" value="{{track.singleTrack.id}}" />
+        <input type="hidden" id="tracks.id">
+        <fieldset>
+            <div class="form-group">
+                <div class="courseName">
+                    <label class="col-md-3 control-label">Name<span class="text-danger">*</span></label>
+                    <div class="col-md-7">
+                        <textarea class="form-control
+                                  data-ng-class:{'error': track.showNewTrackError && !track.courseTrack-form.name.$valid}"
+                                  placeholder="Track Name"
+                                  id="name"
+                                  name="name"
+                                  data-ng-model="track.singleTrack.name"
+                                  data-ng-minlength="4"
+                                  ng-required="true"
+                                  required>
+                            {{track.singleTrack.name}}
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="format">
+                    <label class="col-md-3 control-label">Format<span class="text-danger">*</span></label>
+                    <div class="col-md-7">
+                        <select id="format" name="format" chosen
+                                class="form-control data-ng-class:{'error': track.showNewTrackError && !track.courseTrack-form.format.$valid}"
+                                data-ng-model="track.singleTrack.format"
+                                data-ng-options="track.id as track.format for track in track.format"
+                                placeholder="Select a Format"
+                                required>
+                            <option value="number{{track.singleTrack.format}}" label="{{track.format}}">{{track.format}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="from-group prerequisites">
+                <br />
+                <label class="col-md-3 control-label">Prerequisites<span class="text-danger">*</span></label>
+                <div class="col-md-7">
+                    <ul class="list-group">
+                        <li class="list-group-item-text" name="prerequisites" id="prerequisites"></li>
+                    </ul>
+                </div>
+            </div>-->
+
+            <div class="form-group description">
+                <label class="col-md-3 control-label" for="description">Description<span class="text-danger">*</span></label>
+                <div class="form-group col-md-7 description">
+                    <textarea id="description" rows="5"
+                              class="data-ng-class:{'error': track.showNewTrackError && !track.courseTrack-form.description.$valid}"
+                              name="description"
+                              data-ng-model="track.singleTrack.description"
+                              ckeditor="track.ckeditorOptions"
+                              placeholder="Please enter a description"
+                              required>
+                        {{track.singleTrack.description}}
+                    </textarea>
+                </div>
+            </div>
+            <div class="form-group expectedOutcome">
+                <label class="col-md-3 control-label" for="expectedOutcome">Expected Outcome<span class="text-danger">*</span></label>
+                <div class="col-md-7">
+                    <textarea id="expectedOutcome" name="expectedOutcome" rows="5"
+                              class="data-ng-class:{'error': track.showNewTrackError && !track.courseTrack-form.expectedOutcome.$valid}"
+                              placeholder="Please Enter the Expected Outcome"
+                              data-ng-model="track.singleTrack.expectedOutcome"
+                              ckeditor="track.ckeditorOptions"
+                              required>
+                        {{track.singleTrack.expectedOutcome}}
+                    </textarea>
+                </div>
+            </div>
+            <div class="form-group cost">
+                <label class="col-md-3 control-label">Cost<span class="text-danger">*</span></label>
+                <div class="col-md-7">
+                    <input ype="number" id="cost" name="cost" rows="1"
+                           class="form-control
+                           data-ng-class:{'error': track.showNewTrackError && !track.courseTrack-form.cost.$valid}"
+                           placeholder="Please Enter the Cost for the Course"
+                           data-ng-model="track.singleTrack.cost"
+                           required
+                           value="{{track.singleTrack.cost}}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label" style="padding-bottom:200px">Courses<span class="text-danger">*</span></label>
+                <span class="col-md-9"
+                     data-ng-repeat="course in track.courses"
+                     data-ng-model="track.singleTrack.courseIds">
+                    <label for="courses">
+                        {{course.courseName}}
+                        <input type="checkbox" value="course.id"
+                               data-ng-checked="track.chosenCourses.indexOf(course.id) > -1"
+                               data-ng-click="track.isChecked($event, course.id)" />
+                    </label>
+                </span>
+            </div>
+            <!--<div class="form-group">
+                <label class="col-md-3 control-label">Courses<span class="text-danger">*</span></label>
+                <select chosen multiple id="trackCourses" name="trackCourses"
+                        class="form-control animate-repeat"
+                        style="width: 250px;"
+                        data-ng-model="track.singleTrack.courseIds"
+                        data-ng-options="course as course.courseName for course in track.courses track by course.id ">
+                </select>
+                <span class="help-block" style="padding-left:130px">Use the Control key to select Mutiple</span>
+            </div>-->
+            <!--<div class="form-group">
+                <div class="selected items" ng-repeat="(key, value) in track.singleTrack.tracksCourses">{{key}}{{value}}</div>
+            </div>-->
+            <div class="form-group form-actions">
+                <div class="col-md-8 col-md-offset-4">
+                    <button type="submit" class="btn btn-sm btn-primary" id="submitCourseTrack"><i class="fa fa-arrow-right"></i>Submit</button>
+                    <a href="/admin/track#/" type="reset" class="btn btn-sm btn-warning" id="cancel"><i class="fa fa-repeat"></i> Cancel</a>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+

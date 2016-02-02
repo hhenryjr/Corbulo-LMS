@@ -1,0 +1,8 @@
+﻿
+<div class="">    
+    <a href="#/space/{{nav.currentSpaceId.id}}/{{node.url}}">{{node.title}}</a>
+</div>
+<ol>
+    <li ng-repeat="node in node.nodes" ng-include="'/scripts/app/wiki/templates/leaf.html'">
+    </li>
+</ol>

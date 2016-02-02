@@ -1,0 +1,59 @@
+﻿<div class="content-header">
+    <div class="header-section">
+        <h1>
+            <i class="fa fa-globe"></i><strong>Modules</strong><br><small>Learning Command System</small>
+        </h1>
+    </div>
+</div>
+
+<div class="breadcrumb breadcrumb-top">
+    
+       
+    <a class="btn btn-sm btn-primary" href="#/add"><i class="fa fa-plus"></i> <strong>Add New Module</strong></a>
+</div>
+
+
+
+<div class="block">
+
+    <div class="block-title">
+        <h2 class="text-center"><strong></strong></h2>
+    </div>
+
+    <div id="modulesTable" class="table-responsive">
+
+        <table id="modulesList" class="table table-striped table-vcenter">
+
+            <thead>
+                <tr>
+                    <!--<th class="text-center">CourseId</th>-->
+                    <th class="text-center">Module Name</th>
+                    <th class="text-center">Labs</th>
+                    <th class="text-center">Required Reading</th>
+                    <th class="text-center">Homework</th>
+                    <th class="text-center">Description</th>
+                   
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+               
+                <tr class="text-center" ng-repeat="module in modules.mList track by module.id">
+
+                    <td>{{module.moduleName}}</td>
+                    <td>{{module.labs}}</td>
+                    <td>{{module.requiredReading}}</td>
+                    <td>{{module.homework}}</td>
+                    <td>{{module.description}}</td>
+                    <td>
+                        <div class="btn-group btn-group-xs">
+                            <a ng-href="#/edit/{{module.id}}" id="edit" data-toggle="tooltip" title="Edit" class="btn btn-default"><i class="fa fa-pencil"></i></a>
+                            <a data-toggle="tooltip" title="Delete" class="btn btn-danger" ng-click="modules.deleteModule(module.id)"><i class="fa fa-times"></i></a>
+                        </div>
+                    </td>
+                </tr>
+
+            </tbody>
+         
+        </table>
+    </div>
+</div>

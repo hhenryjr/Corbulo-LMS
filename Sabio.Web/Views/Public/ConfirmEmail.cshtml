@@ -1,0 +1,173 @@
+﻿@model Sabio.Web.Models.ViewModels.ItemViewModel<Guid>
+
+@{
+    Layout = "~/Views/Shared/_simpleLayout.cshtml";
+}
+
+<!--[if (gte mso 9)|(IE)]>
+<table width="600" align="center" cellpadding="0" cellspacing="0" border="0">
+  <tr>
+    <td>
+<![endif]-->
+
+<img id="picture" src="" alt="Login Full Background" class="full-bg animation-pulseSlow">
+<div id="login-container" class="animation-fadeIn">
+    <input type="hidden" id="token" name="token" value="@Model.Item" />
+    <input type="hidden" id="userName" name="userName" value="" />
+    <table align="center" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse; width: 100%; max-width: 600px;" class="content">
+        <tr>
+            <td style="padding: 15px 10px 15px 10px;">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <tr>
+                        <td align="center" style="color: #aaaaaa; font-family: Arial, sans-serif; font-size: 12px;">
+                            @*Email not displaying correctly?  <a href="#" style="color: #18537A;">View it in your browser</a>*@
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" bgcolor="#18537A" style="padding: 20px 20px 20px 20px; color: #ffffff; font-family: Arial, sans-serif; font-size: 36px; font-weight: bold;">
+                <img src="" alt="Logo" width="152" height="152" style="display:block;" />
+            </td>
+        </tr>
+        <tr>
+            <td align="center" bgcolor="#ffffff" style="padding: 40px 20px 40px 20px; color: #555555; font-family: Arial, sans-serif; font-size: 20px; line-height: 30px; border-bottom: 1px solid #f6f6f6;">
+                <b>
+                    Please click the button to confirm your email and go to the login page.
+                </b>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" bgcolor="#f9f9f9" style="padding: 30px 20px 30px 20px; font-family: Arial, sans-serif;">
+                <table bgcolor="#18537A" border="0" cellspacing="0" cellpadding="0" class="buttonwrapper">
+                    <tr>
+                        
+                        <td align="center" height="50" style="background-color:#18537A; padding: 0 0 0 0; font-family: Arial, sans-serif; font-size: 16px; font-weight: bold;" >
+
+                            <a id="confirm"  style="color: #e9ffff; text-align: center; text-decoration: none; margin: 0 20px 0 20px">Welcome to @Model.BrandName</a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" bgcolor="#dddddd" style="padding: 15px 10px 15px 10px; color: #555555; font-family: Arial, sans-serif; font-size: 12px; line-height: 18px;">
+                @*<b>Sabio.la Enterprises, Inc.</b><br />400 Corporate Pointe &bull; Culver City &bull; Los Angeles, CA USA*@
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 15px 10px 15px 10px;">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <tr>
+                        <td align="center" width="100%" style="color: #999999; font-family: Arial, sans-serif; font-size: 12px;">
+                            2015-16 &copy; 
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+@section Scripts {
+    <script src="~/Scripts/sabio.services.userTokens.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/sabio.services.confirmEmail.js"></script>
+    <script>
+        sabio.page.startUp = function () {
+            sabio.page.cycleThruBackgroundPic();
+            $('#confirm').on('click', sabio.page.confirmEmail);
+        }
+
+        sabio.page.cycleThruBackgroundPic = function () {
+            var randomNumber = (Math.random()) * 10;
+            var Number = Math.floor(randomNumber) + 1;
+            console.log(Number);
+            var src;
+            switch (Number) {
+                case 1:
+                case 2:
+                    src = "http://sabio.la/images/hacks/IMG_6094.JPG";
+                    break;
+                case 3:
+                case 4:
+                    src = "http://sabio.la/images/hacks/img19.jpg";
+                    break;
+                case 5:
+                case 6:
+                    src = "http://sabio.la/images/hacks/IMG_6021.JPG";
+                    break;
+                case 7:
+                case 8:
+                    src = "http://sabio.la/images/hacks/women.JPG";
+                    break;
+                case 9:
+                case 10:
+                    src = "http://sabio.la/images/hacks/IMG_6057.JPG";
+                    break;
+            }
+            sabio.page.thisBackGroundPic(src);
+        }
+
+        sabio.page.thisBackGroundPic = function (pic) {
+            $("#picture").attr("src", pic);
+        }
+
+        sabio.page.confirmEmail = function (evt) {
+            evt.preventDefault();
+            var tokenId = $("#token").val();
+            console.log("Confirming token id " + tokenId);
+            sabio.services.confirmEmail(tokenId, sabio.page.onConfirmEmailSuccess, sabio.page.onConfirmEmailError);
+        }
+
+        sabio.page.onConfirmEmailSuccess = function (data, status, xhr) {
+            Command: toastr["success"]("Email confirmed");
+
+            toastr.options = {
+                "closeButton": true,
+                "debug": true,
+                "newestOnTop": true,
+                "progressBar": false,
+                "positionClass": "toast-top-center",
+                "preventDuplicates": true,
+                "onclick": null,
+                "showDuration": "1000",
+                "hideDuration": "1000",
+                "timeOut": "0",
+                "extendedTimeOut": "0",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+
+            window.location.assign("http://corbulo.biz");
+        }
+
+        sabio.page.onConfirmEmailError = function (jqXHR, textStatus, errorThrown) {
+            Command: toastr["error"]("Email confirmation failed! " + jqXHR.responseJSON.message);
+
+            toastr.options = {
+                "closeButton": true,
+                "debug": true,
+                "newestOnTop": true,
+                "progressBar": true,
+                "positionClass": "toast-top-center",
+                "preventDuplicates": true,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "0",
+                "extendedTimeOut": "0",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+
+        }
+
+    </script>
+}

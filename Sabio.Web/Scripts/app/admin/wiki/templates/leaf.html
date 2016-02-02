@@ -1,0 +1,28 @@
+﻿
+<div ui-tree-handle class="tree-node tree-node-content">
+    <a class="btn btn-success btn-xs" ng-if="node.nodes && node.nodes.length > 0" data-nodrag ng-click="toggle(this)">
+        <span class="gi gi-alarm"
+              ng-class="{
+          'gi-right_arrow': collapsed,
+          'gi-down_arrow': !collapsed
+        }"></span>
+    </a>
+    {{node.title}}
+
+    <a title="Edit Page Content" class="btn btn-xs btn-alt btn-info pull-right" 
+       data-nodrag
+       ng-href="#/manage/{{admin.$routeParams.sectionId}}/modules/{{module.id}}/wiki/edit/{{node.id}}/content">
+        <i class="fa fa-puzzle-piece"></i>
+    </a>    
+    <a title="Edit Wiki Page" class="btn btn-xs btn-alt btn-success pull-right" 
+       style="margin-right:5px;" 
+       data-nodrag
+       ng-href="#/manage/{{admin.$routeParams.sectionId}}/modules/{{module.id}}/wiki/edit/{{node.id}}">
+            <i class="fa fa-pencil"></i>
+    </a>
+    
+</div>
+<ol ui-tree-nodes="" ng-model="node.nodes" ng-class="{hidden: collapsed}">
+    <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'/scripts/app/admin/wiki/templates/leaf.html'">
+    </li>
+</ol>

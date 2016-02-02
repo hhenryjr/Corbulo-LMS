@@ -1,0 +1,25 @@
+﻿<div class="col-md-4 col-md-offset-4 clearfix" id="addContentWidget">
+    <div class="block">
+        <div class="block-title">
+            <div class="block-options pull-right">                
+                <a class="btn btn-alt btn-sm btn-default" ng-click="wiki.cancelAddContent()" uib-tooltip="Cancel"><i class="fa fa-times"></i></a>
+            </div>
+            <h2><strong>Add</strong> Content</h2>
+        </div>
+        <div class="block-section text-center">
+            <select size="1"
+                    ng-options="key as value for (key, value) in wiki.contentTypes"
+                    ng-model="wiki.pageContent.contentTypeId"
+                    class="form-control"></select>
+        </div>
+        <div class="block-section text-center">
+            <input type="text"
+                   ng-model="wiki.pageContent.title"
+                   class="form-control"
+                   placeholder="Block Title" />            
+        </div>
+        <div class="block-section">
+            <a class="btn btn-lg btn-primary btn-block" ng-click="wiki.addContent()"><i class="fa fa-plus"></i> Add</a>
+        </div>
+    </div>
+</div>

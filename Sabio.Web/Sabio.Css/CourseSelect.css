@@ -1,0 +1,164 @@
+﻿body > li {
+
+  width: 177px;
+  margin: 5px;
+  padding: 5px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  list-style-type: none;
+  list-style-position: inside;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ccc !important;
+  background-color: #fafafa !important;
+  color: #bbb !important;
+}
+.listActive {
+  border: 1px solid #ccc;
+  background-color: #fcfcfc;
+  padding: 0.5em 0 3em 0 !important;
+}
+.placeholder {
+  list-style-type: none;
+  text-align: center;
+  font-style: italic;
+  border: 1px dashed #ddd !important;
+  background-color: #fff !important;
+  color: #aaa !important;
+}
+.dismiss {
+  float: right;
+  position: relative;
+  top: -8px;
+  line-height: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  text-decoration: none !important;
+  color: #468847;
+
+}
+ul.source, ul.target {
+  min-height: 50px;
+  margin: 0 25px 10px 0;
+  padding: 2px;
+  border-width: 1px;
+  border-style: solid;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  list-style-type: none;
+  list-style-position: inside;
+}
+ul.source {
+  border-color: #333333;
+    height: 320px;
+    width: 300px;
+}
+ul.target {
+    
+  border-color: #468847;
+    height: 320px;
+    width: 300px;
+}
+.source li, .target li {
+font-size: 1.5em;
+  margin: 5px;
+  padding: 5px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    text-align: center;
+}
+.source li {
+  background-color: #F5F5F5;
+  border: 1px solid #F5F5F5; /* 999999*/
+  color: #333333;
+    
+}
+.target li {
+  background-color: #D0E9C6;
+  border: 1px solid #d6e9c6;
+  color: #468847;
+}
+.sortable-dragging {
+  border-color: #ccc !important;
+  background-color: #fafafa !important;
+  color: #bbb !important;
+}
+.sortable-placeholder {
+  height: 40px;
+}
+.source .sortable-placeholder {
+  border: 2px dashed #aaa8a3 !important;
+  background-color: #fefcf5 !important;
+}
+.target .sortable-placeholder {
+  border: 2px dashed #add38d !important;
+  background-color: #f6fbf4 !important;
+}
+
+
+/* Scroll CSS starts here */
+#scrollbox4 {
+    overflow: auto;
+ 
+}
+#scrollbox3 {
+    overflow: auto;
+}
+
+.track4 {
+    width: 8px;
+    background-clip: padding-box;
+    background: #fff;
+    border-style: solid;
+    border-color: transparent;
+    border-width: 0;
+    border-left-width: 1px;
+}
+
+.track4.dragging,
+.track4:hover {
+    background: #f2f2f2; /* No RGBA support */
+    background: rgba(0, 0, 0, 0.05);
+    -webkit-box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.1);
+    box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.1);
+}
+
+.track4:active {
+    background: #f2f2f2; /* No RGBA support */
+    background: rgba(0, 0, 0, 0.05);
+    -webkit-box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.14),
+                        inset -1px -1px 0 rgba(0, 0, 0, 0.07);
+    box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.14),
+                inset -1px -1px 0 rgba(0, 0, 0, 0.07);
+}
+
+.handle4 {
+    width: 8px;
+    background-clip: padding-box;
+    background: #ccc; 
+    background: rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.1),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.07);
+    box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.1),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.07);
+}
+
+.handle4:hover {
+    background: #999; 
+    background: rgba(0, 0, 0, 0.4);
+    -webkit-box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25);
+    box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.25);
+}
+
+.dragging .handle4,
+.handle4:active {
+    background: gray; 
+    background: rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.35);
+    box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.35);
+}

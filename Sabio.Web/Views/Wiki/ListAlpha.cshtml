@@ -1,0 +1,162 @@
+﻿
+@section styles{
+    <link href="~/Sabio.CSS/UiTree/angular-ui-tree.css" rel="stylesheet" />
+}
+@{
+    ViewBag.Title = "ListAlpha";
+    Layout = "~/Views/Shared/_dashboardLayout.cshtml";
+}
+<h2>ListAlpha</h2>
+<div ng-controller="wikiSpaceController as WikiS" id="wikiSCtrler" style="padding: 10px 0px 10px 0px; ">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="col-md-6">
+                <h3> Wiki pages </h3>
+                <select id="wikiSpaceIds"
+                        name="wikiSpaceIds"
+                        ng-required="true"
+                        class="form-control"
+                        ng-model="WikiS.selectedSpace"
+                        ng-change="WikiS.getSpaceID()"
+                        ng-options="obj.name for obj in WikiS.spaces"></select>
+            </div>
+        </div>
+        <div class="col-md-6">
+        </div>
+    </div>
+
+    <div class="row">
+        <br/>
+        
+        <div ui-tree>
+            <ol ui-tree-nodes="" ng-model="WikiS.items">
+                <li ng-repeat="item in WikiS.items" ui-tree-node >
+                    <div ui-tree-handle>
+                        {{item.name}}
+                    </div>
+                </li>
+            </ol>
+            <ol ui-tree-nodes="" ng-model="item">
+                <li ng-repeat="subItem in itemschildren" ui-tree-node>
+                    <div ui-tree-handle>
+                        {{subItem.name}}
+                    </div>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+</div>
+
+
+@section scripts{
+
+    <script src="~/Scripts/sabio.WikiPage.services.Wiki.js"></script>
+    <script src="~/Scripts/ng/angular-ui-tree.js"></script>
+
+    <script>
+        // trying jquery tree ui with angular
+        sabio.page.startUp = function () {
+
+            sabio.page.wikiSpaceController = sabio.ng.getControllerInstance($("#wikiSCtrler"));
+        }
+
+        sabio.WikiPage.services.wikiSpaceListFactory = function ($baseService) {
+
+            var aSabioServiceObject = sabio.WikiPage.services.Wiki;
+
+            var newService = $baseService.merge(true, {}, aSabioServiceObject, $baseService);
+
+            return newService;
+        }
+
+
+        sabio.page.wikiSpaceControllerFactory = function (
+            $scope, $baseController, $wikiSpaceService, ngTreeDirective) {
+
+            var vm = this;
+
+            $baseController.merge(vm, $baseController, ngTreeDirective);
+
+            vm.$wikiSpaceService = $wikiSpaceService;
+
+            vm.$scope = $scope;
+
+            vm.getName = "Angular is good to go";
+            vm.receiveItems = _receiveItems;
+            vm.onTrackError = _onTrackError;
+            //vm.nodeSelected = _nodeSelected;
+            //vm.nodeMoved = _nodeMoved;
+            //vm.onReceiveSpaces = _onReceiveSpaces;
+            //vm.onSpaceError = _onSpaceError;
+           // vm.onReceiveSpaceById = _onReceiveSpaceById;
+           // vm.onSpaceByIdError = _onSpaceByIdError;
+           // vm.selectedSpace = null;
+            //vm.onParentIdSuccess = _onParentIdSuccess;
+            //vm.onParentError = _onParentError;
+            //vm.getSpaceID = _getSpaceID;
+            //vm.getPageSuccess = _getPageSuccess;
+            //vm.onPageError = _onPageError;
+
+            vm.notify = vm.$wikiSpaceService.getNotifier($scope);
+
+            function render() {
+                vm.$wikiSpaceService.getAll(vm.receiveItems, vm.onTrackError);
+                vm.$wikiSpaceService.getAllSpaces(vm.onReceiveSpaces, vm.onSpaceError);
+
+            }
+            render();
+
+            function _receiveItems(data) {
+                console.log(data);
+                vm.notify(function () {
+                    vm.items = data.items;
+                });
+            }
+            function _onTrackError(jqXhr, error) {
+                console.log(error);
+            }
+            //function _getSpaceID() {
+            //    var id = vm.selectedSpace.id;
+            //    vm.$wikiSpaceService.getSpaceById(id, vm.receiveItems, vm.onSpaceByIdError);
+
+            //}
+
+            //function _onReceiveSpaces(data) {
+            //    vm.notify(function () {
+            //        vm.spaces = data.items;
+            //    });
+            //}
+
+            //function _onSpaceError(jqXhr, error) {
+            //    console.log(error);
+            //}
+
+            //function _onReceiveSpaceById(data) {
+            //    vm.notify(function () {
+            //        vm.spacesById = data.items;
+            //        console.log(data.items);
+            //    });
+            //}
+
+            //function _onSpaceByIdError(jqXhr, error) {
+            //    console.log(error);
+            //}
+
+          
+
+        }
+
+        sabio.ng.addService(sabio.ng.app.module,
+            "$wikiSpaceService",
+            ["$baseService"],
+            sabio.WikiPage.services.wikiSpaceListFactory
+        );
+
+        sabio.ng.addController(sabio.ng.app.module,
+            "wikiSpaceController",
+            ['$scope', '$baseController', "$wikiSpaceService", "ngTreeDirective"],
+            sabio.page.wikiSpaceControllerFactory);
+    </script>
+
+}

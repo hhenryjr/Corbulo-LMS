@@ -1,0 +1,58 @@
+﻿<div class="block">
+    <div class="table-responsive">
+        <table class="table table-striped table-vcenter">
+            <thead>
+                <tr>
+                    <td colspan="8">
+                        <div class="form-group form-actions">
+                            <div class="col-md-2">
+                                <a class="btn btn-sm btn-primary" href="#/create"><i class="fa fa-plus"></i> <strong>Add New Wiki Page</strong></a>
+                            </div>
+                            <div class="col-md-4">
+                                <select id="wikiSpaceIds"
+                                        name="wikiSpaceIds"
+                                        ng-required="true"
+                                        class="form-control"
+                                        ng-model="wiki.wikiPages"
+                                        ng-change="wiki.getSpaceByID()"
+                                        ng-options="obj.title for obj in wiki.spaces">
+                                    <option value=''>- Select By Space Id -</option>
+                                </select>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="text-center">Id</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">URL</th>
+                    <th class="text-center">PublishDate</th>
+                    <th class="text-center">Language</th>
+                    <th class="text-center">ParentId</th>
+                    <th class="text-center">&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr class="text-center" ng-repeat="page in wiki.wikiPages">
+                    <td>{{page.id}}</td>
+                    <td>{{page.title}}</td> 
+                    <td>{{page.url}}</td>
+                    <td>{{page.publishDate | date:'shortDate'}}</td>
+                    <td>{{page.language}}</td>
+                    <td>{{page.parentId}}</td>
+                    <td class="text-center">
+                        <div class="btn-group btn-group-xs">
+                            <a title="Edit Wiki Page" class="btn btn-xs btn-alt btn-success" ng-href="#/edit/{{page.id}}"><i class="fa fa-pencil"></i></a>
+                            <a title="Edit Page Content" class="btn btn-xs btn-alt btn-info" ng-href="#/edit/{{page.id}}/content"><i class="fa fa-puzzle-piece"></i></a>
+                            <a title="Delete Page Content" class="btn btn-xs btn-alt btn-danger"><i class="fa fa-ban" ng-click="wiki.delete(page.id)"></i></a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button type="button" class="pull-left btn btn-primary" ng-model="wiki.currentPage" ng-click="wiki.onPageClickPrevious()">Previous</button>
+        <button type="button" class="pull-right btn btn-primary" ng-model="wiki.currentPage" ng-click="wiki.onPageClickNext()">Next</button>
+
+    </div>
+</div>

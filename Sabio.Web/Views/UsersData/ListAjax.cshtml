@@ -1,0 +1,179 @@
+﻿
+@{
+    ViewBag.Title = "ListAjax";
+    Layout = "~/Views/Shared/_dashboardLayout.cshtml";
+}
+
+<h2>ListAjax</h2>
+<div class="row">
+    <div class="userListAjax">
+
+        <div class="container hidden">
+            <div class="row row-items text-center">
+                <div class="col-sm-3 col-md-3">
+                    <img src="http://www.picgifs.com/avatars/games/halo/avatars-halo-607655.gif" alt="Photo" class="img-circle visibility-none" data-toggle="animation-appear" data-animation-class="animation-fadeIn" data-element-offset="-64">
+                    <h3 class="uName">
+                        <br />
+                        <small>james@007.com </small>
+                    </h3>
+                    <p class="userName"> Bond007 </p>
+                    <div class="hideInfo" style="display: none">
+                        <p class="userEmailId"> james@007.com </p>
+                        <p class="userPhone"> 00000000007</p>
+                        <p class="gender">Not sure</p>
+                        <p class="userBio"> Kill for MI6 Lame stuff f df afdf dasfa fas </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="userModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">User Info</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mName">
+                            <h3></h3>
+                        </div>
+                        <p class="mUserName"></p>
+                        <p class="mUserPhone"></p>
+                        <p class="mGender"></p>
+                        <p class="mUserBio"> </p>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+@section scripts{
+    <script src="~/Scripts/Sabio.Services.Users.js"></script>
+
+    <script type="text/javascript">
+
+        sabio.page.startUp = function () {
+
+            console.log("Enter");
+            sabio.page.handlers.listAjax();
+            sabio.page.wireUpList(document);
+            console.log("Exit");
+
+            $(".showDetails").on("click", sabio.page.handlers.onWidgetClicked);
+        }
+
+        sabio.page.handlers.listAjax = function () {
+
+            sabio.services.users.getArray(sabio.page.getsAjaxListSuccess);
+        }
+
+
+        sabio.page.getsAjaxListSuccess = function (data) {
+
+            if (!data) {
+
+                return;
+            }
+            for (var i = 0; i < data.items.length; i++) {
+                var getData = {};
+
+                getData.FirstName = data.items[i].firstName;
+                getData.LastName = data.items[i].lastName;
+                getData.UserName = data.items[i].userName;
+                getData.Email = data.items[i].email;
+                getData.Phone = data.items[i].phone;
+                getData.Gender = data.items[i].gender;
+                getData.Bio = data.items[i].bio;;
+
+                sabio.page.addAjaxData(getData);
+            }
+        }
+
+        sabio.page.addAjaxData = function (info) {
+
+            var listTemp = sabio.page.getClone();
+
+            listTemp.find(".uName").html(info.FirstName + " " + info.LastName + "<br/>" + "<small>" + info.Email + "</small>");
+            listTemp.find(".userName").html(info.UserName);
+            listTemp.find(".userPhone").html(info.Phone);
+            listTemp.find(".gender").html(info.Gender);
+            listTemp.find(".userBio").html(info.Bio);
+
+            var target = $(".userListAjax");
+
+            target.attr("data-target", "true");
+            target.append(listTemp);
+
+            sabio.page.wireUpList(listTemp, info);
+            return listTemp;
+
+        }
+
+        sabio.page.getClone = function () {
+            return $($("#UserInfoTemp").html()).clone();
+        }
+
+        sabio.objects = [];
+
+        sabio.page.wireUpList = function (context) {
+
+            var widgets = $(".widgetPhoto", context);
+
+            sabio.objects.push(widgets);
+
+            widgets.on('click', sabio.page.handlers.onWidgetClicked);
+
+        }
+
+        sabio.page.handlers.onWidgetClicked = function (e) {
+            e.preventDefault();
+            $("#userModal").modal('show');
+
+            var apples = this;
+            sabio.page.modalListInfo(apples);
+
+        }
+
+
+        sabio.page.modalListInfo = function (apples) {
+
+            var targetInfo = $($(apples).closest(".modalStuff"));
+
+            $(".mName").html($(".uName", targetInfo).html());
+            $(".mUserName").html($(".userName", targetInfo).html());
+            $(".mUserPhone").html($(".userPhone", targetInfo).html());
+            $(".mGender").html($(".gender", targetInfo).html());
+            $(".mUserBio").html($(".userBio", targetInfo).html());
+
+        }
+
+
+
+    </script>
+
+    <script type="text/template" id="UserInfoTemp">
+        <div class="col-sm-3 col-md-3 modalStuff">
+            <a href="#" class="showDetails">
+                <img src="http://www.picgifs.com/avatars/games/halo/avatars-halo-607655.gif" alt="Photo" class="img-circle visibility-none widgetPhoto" data-toggle="animation-appear" data-animation-class="animation-fadeIn" data-element-offset="-64">
+            </a>
+            <h3 class="uName">
+                <small>james@007.com </small>
+            </h3>
+            <div class="hideInfo" style="display:none">
+                <p class="userName"></p>
+                <p class="userPhone"></p>
+                <p class="gender"></p>
+                <p class="userBio"></p>
+            </div>
+        </div>
+    </script>
+
+
+}

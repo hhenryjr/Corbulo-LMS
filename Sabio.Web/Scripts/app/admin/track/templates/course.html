@@ -1,0 +1,218 @@
+﻿<div class="block col-lg-6 col-sm-5">
+    <div class="block-title">
+        <div class="block-options pull-right">
+        </div>
+        <h2><strong>Course Entry</strong></h2>
+    </div>
+
+    <form class="form-bordered" id="coursesInputForm" name="track.courseForm" ng-submit="track.updateCourseDetails(track.course.id)">
+        <div class="form-group">
+            <label for="courseName">Course Name</label>
+            <div class="form-group courseName">
+                <input type="text"
+                       id="courseName"
+                       name="courseName"
+                       ng-model="track.course.courseName"
+                       class="form-control"
+                       placeholder="Course Name"
+                       maxlength="50" value="{{track.course.courseName}}">
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Length">Course Length</label>
+            <div class="form-group Length">
+                <textarea id="Length"
+                          rows="2"
+                          style="width:300px"
+                          class="animate msd-elastic: \n;"
+                          name="length"
+                          ng-model="track.course.length"
+                          placeholder="Enter the Course Length please..."></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="format">Course Format</label>
+            <div class="form-group">
+                <select id="format"
+                        name="format"
+                        class="form-control"
+                        ng-model="track.course.format.id"
+                        size="1"
+                        ng-options="obj.id as obj.value for obj in track.courseFormats"></select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Course Description</label>
+            <div class="form-group description">
+                <textarea id="description"
+                          rows="2"
+                          name="description"
+                          ckeditor="track.ckeditorOptions"
+                          class="form-control ng-class:{'error': track.showCourseFormErrors && !track.courseForm.description.$valid}"
+                          ng-model="track.course.description"></textarea>
+            </div>
+
+        </div>
+        <div class="form-group">
+            <label for="learningObjectives">Learning Objectives</label>
+            <div class="form-group learningObjectives">
+                <textarea id="learningObjectives"
+                          rows="2"
+                          name="learningObjectives"
+                          ckeditor="track.ckeditorOptions"
+                          ng-model="track.course.learningObjectives"
+                          class="form-control ng-class:{'error': track.showCourseFormErrors && !track.courseForm.sectionDescription.$valid}"
+                          placeholder="Enter learning Objectives.."></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="expectedOutcome">Expected Outcome</label>
+            <div class="form-group expectedOutcome">
+                <textarea id="expectedOutcome"
+                          rows="2"
+                          name="expectedOutcome"
+                          ckeditor="track.ckeditorOptions"
+                          ng-model="track.course.expectedOutcome"
+                          class="form-control ng-class:{'error': track.showCourseFormErrors && !track.courseForm.expectedOutcome.$valid}"
+                          placeholder="Enter expected outcome..."></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="evaluationCriteria">Evaluation Criteria</label>
+            <div class="form-group evaluationCriteria">
+                <textarea id="evaluationCriteria"
+                          rows="2"
+                          name="evaluationCriteria"
+                          ckeditor="track.ckeditorOptions"
+                          ng-model="track.course.evaluationCriteria"
+                          class="form-control ng-class:{'error': track.showCourseFormErrors && !track.courseForm.evaluationCriteria.$valid}"
+                          placeholder="Enter evaluation criteria..."></textarea>
+            </div>
+        </div>
+
+        <div class="form-group col-md-6">
+            <label for="start">Course Start Date</label>
+            <div class="form-group start">
+                <input type="date"
+                       id="start"
+                       name="start"
+                       ng-model="track.course.start"
+                       class="form-control"
+                       placeholder="Start Date" />
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="end">Course End Date</label>
+            <div class="form-group end">
+                <input type="date"
+                       id="end"
+                       name="end"
+                       ng-model="track.course.end"
+                       class="form-control"
+                       placeholder="End Date" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="prereqs">Prerequisites</label>
+
+            <div>
+                <tags-input ng-model="track.course.prereqs"
+                            display-property="courseName"
+                            on-tag-added="track.prereqAdded($tag)"
+                            on-tag-removed="track.prereqRemoved($tag)">
+                    <auto-complete source="track.preqList"
+                                   min-length="0"
+                                   load-on-focus="true"
+                                   load-on-empty="true"
+                                   max-results-to-show="32">
+                    </auto-complete>
+                </tags-input>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="tags">Enter Tags</label>
+            <div>
+                <tags-input ng-model="track.course.tags"
+                            display-property="tagName"
+                            on-tag-added="track.tagAdded($tag)"
+                            on-tag-removed="track.tagRemoved($tag)">
+                    <auto-complete source="track.tagList"
+                                   min-length="0"
+                                   load-on-focus="true"
+                                   load-on-empty="true"
+                                   max-results-to-show="32">
+                    </auto-complete>
+                </tags-input>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="instructors">Instructor(s)</label>
+            <div class="instrutorsDnD row">
+                <div class="row">
+                    <div class="col-lg-6">
+
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Course Instructor</h3>
+                            </div>
+                            <ul dnd-list="track.instructors.lists.Chosen"
+                                dnd-dragover="track.onInstructorDragover(event, index, external, 'Chosen')"
+                                dnd-drop="track.onInstructorDrop(event, index, item, external, 'Chosen')">
+
+                                <li ng-repeat="item in track.instructors.lists.Chosen"
+                                    dnd-draggable="item"
+                                    dnd-moved="track.instructors.lists.Chosen.splice($index, 1)"
+                                    dnd-effect-allowed="move"
+                                    dnd-selected="track.instructors.lists.Chosen.selected = item"
+                                    ng-class="{'selected': track.instructors.lists.Chosen.selected === item}">
+                                    {{item.name}}
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-lg-6">
+
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Instructor Pool</h3>
+                            </div>
+
+                            <ul dnd-list="track.instructors.lists.List_Of"
+                                dnd-dragover="track.onInstructorDragover(event, index, external, 'Available')"
+                                dnd-drop="track.onInstructorDrop(event, index, item, external, 'Available')">
+
+                                <li ng-repeat="item in track.instructors.lists.List_Of"
+                                    dnd-draggable="item"
+                                    dnd-moved="track.instructors.lists.List_Of.splice($index, 1)"
+                                    dnd-effect-allowed="move"
+                                    dnd-selected="track.instructors.lists.List_Of.selected = item"
+                                    ng-class="{'selected': track.instructors.lists.List_Of === item}">
+                                    {{item.name}}
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="form-group form-actions">
+                <button type="submit" class="btn btn-success" id="updateCourse"><i class="fa fa-sign-in" ng-click=""></i> Submit</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+

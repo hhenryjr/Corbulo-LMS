@@ -1,0 +1,256 @@
+﻿@model Sabio.Web.Models.ViewModels.ItemViewModel<int>
+
+@{
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="content-header">
+    <div class="header-section">
+        <h1>
+            <i class="gi gi-folder_plus"></i>
+            <strong>Wiki</strong>
+        </h1>
+        <h4>@Model.BrandName Wiki</h4>
+    </div>
+</div>
+<div class="block">
+    <div class="block-title">
+        <h2>
+            Add a new <strong>Wiki</strong>
+        </h2>
+    </div>
+    <div class="row" ng-controller="$mainController as main" id="mainController">
+        <form id="wiki-form" name="wikiForm" method="post" class="form-horizontal form-bordered" novalidate="novalidate">
+            <fieldset>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="nameLbl">Name<span class="text-danger">*</span></label>
+                    <div class="col-md-6 name">
+                        <input type="text" id="nameLbl" name="nameLbl" class="form-control ng-class:{'error': main.showErrors && !main.wikiForm.nameLbl.$valid}"
+                               placeholder="Your Name"
+                               ng-model="main.nameLbl"
+                               required
+                               ng-required="true"
+                               minLength="2"
+                               maxlength="50">
+                    </div>
+                    <div role="alert" class="help-inline error">
+                        <span class="error has-error" ng-show="main.showErrors && !main.wikiForm.nameLbl.$error.required">Name is Required</span>
+                        <span class="error has-error" ng-show="main.showErrors && !main.wikiForm.nameLbl.$error.minlength">Minimun length should be atleast 2 characters.</span>
+                        <span class="error has-error" ng-show="main.showErrors && !main.wikiForm.nameLbl.$error.maxlength">Max Character length is 50.</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" id="categories" for="categories">Categories <span class="text-danger">*</span></label>
+                    <div class="col-md-6 categories">
+                        <select id="categoryOptions" name="categories" class="form-control" data-placeholder="Choose a category" style="width: 250px;">
+                            <option value="">Choose a category</option>
+                            <option value="1">Category 1</option>
+                            <option value="2">Category 2</option>
+                            <option value="3">Category 3</option>
+                            <option value="4">Category 4</option>
+                            <option value="5">Category 5</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group ">
+                    <label class="col-md-4 control-label" for="url">URL: <span class="text-danger">*</span></label>
+                    <div class="col-md-6 url">
+                        <input type="url" id="url" name="url"
+                               class="form-control ng-class:{'error': main.showErrors && !main.wikiForm.url.$valid"
+                               placeholder="URL Here"
+                               ng-model="main.url"
+                               required
+                               ng-required="true">
+                    </div>
+                    <div role="alert" class="help-inline error">
+                        <span class="error has-error" ng-show="main.showErrors && !main.wikiForm.url.$error.required">Please Enter a valid URL</span>  
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="publishDate">Publish Date <span class="text-danger">*</span></label>
+                    <div class="col-md-6 publishDate">
+                        <input type="date" id="publishDate" name="publishDate" class="form-control" placeholder="Ex. 09/21/2015">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" id="language" for="language">Choose Language<span class="text-danger">*</span></label>
+                    <div class="col-md-6 languages">
+                        <select id="languageChoices" name="language" class="form-control" data-placeholder="Choose a language" style="width: 250px;">
+                            <option value="">Choose a language</option>
+                            <option value="1">English</option>
+                            <option value="2">Spanish</option>
+                            <option value="3">French</option>
+                            <option value="4">German</option>
+                            <option value="5">Italian</option>
+                            <option value="6">Chinese</option>
+                            <option value="7">Tagalog</option>
+                            <option value="8">Polish</option>
+                            <option value="9">Korean</option>
+                            <option value="10">Vietnamese</option>
+                            <option value="11">Portuguese</option>
+                            <option value="12">Japanese</option>
+                            <option value="13">Greek</option>
+                            <option value="14">Arabic</option>
+                            <option value="15">Hindi</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="wikiSpaceIds">Spaces Selected<span class="text-danger">*</span></label>
+                    <div class="col-md-6">
+                        <select id="space" name="wikiSpaceIds" class="form-control select-chosen" data-placeholder="Choose a Space.." style="width: 250px;" multiple>
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-functions btn-group col-md-6">
+                    <div class="form-group col-md-6">
+                        <button type="submit" id="submitWiki" class="btn btn-md btn-success fa fa-send-o"> Submit</button>
+                    </div>
+                </div>
+            </fieldset>
+            <input type="hidden" id="wikiId" name="id" value="@Model.Item" />
+        </form>
+    </div>
+</div>
+
+
+@*//CLIENT SIDE VALIDATION BEGIN
+
+    //  be sure to wrap all of your script tags with this Razor directive or your js will not work properly*@
+@section Scripts {
+
+
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/Sabio.Services.Wikis.js"></script>
+
+    <script>
+        // trying jquery tree ui with angular
+        sabio.page.startUp = function() {
+
+            sabio.page.wikiPageController = sabio.ng.getControllerInstance($("#mainController"));
+        }
+
+        sabio.WikiPage.services.Wiki.wikiPageFactory = function($baseService) {
+
+            var aSabioServiceObject = sabio.WikiPage.services.Wiki;
+
+            var newService = $baseService.merge(true, {}, aSabioServiceObject, $baseService);
+
+            return newService;
+        }
+
+        sabio.page.wikiPageControllerFactory = function(
+            $scope, $baseController, $wikiPageService) {
+            var vm = this;
+
+            $baseController.merge(vm, $baseController);
+
+            vm.$wikiPageService = $wikiPageService;
+
+            vm.$scope = $scope;
+
+            vm.getName = "Angular is good to go";
+            vm.items = null;
+
+            vm.receiveItems = _receiveItems;
+            vm.onReceiveError = _onReceiveError;
+            vm.getSpaceID = _getSpaceID;
+            vm.onReceiveSpaces = _onReceiveSpaces;
+            vm.onSpaceError = _onSpaceError;
+            vm.setupSettings = _setupSettings;
+            vm.onReceiveSpaceById = _onReceiveSpaceById;
+            vm.onSpaceByIdError = _onSpaceByIdError;
+
+            vm.onParentIdSuccess = _onParentIdSuccess;
+            vm.onParentError = _onParentError;
+
+
+            vm.notify = vm.$wikiPageService.getNotifier($scope);
+
+            function render() {
+                vm.setupSettings();
+                vm.$wikiPageService.getAll(vm.receiveItems, vm.onReceiveError);
+                vm.$wikiPageService.getAllSpaces(vm.onReceiveSpaces, vm.onSpaceError);
+            }
+
+            render();
+
+            function _receiveItems(data) {
+                vm.notify(function() {
+                    vm.items = data.items;
+                });
+            }
+
+            function _onReceiveError(jqXhr, error) {
+                console.log(error);
+            }
+
+            function _onReceiveSpaces(data) {
+                vm.notify(function() {
+                    vm.spaces = data.items;
+                });
+            }
+
+            function _onSpaceError(jqXhr, error) {
+                console.log(error);
+            }
+
+            function _getSpaceID() {
+                var id = vm.items.id;
+                vm.$wikiPageService.getSpaceById(id, vm.onReceiveSpaceById, vm.onSpaceByIdError);
+            }
+
+            function _onReceiveSpaceById(data) {
+                vm.notify(function() {
+                    vm.items = data.items;
+                });
+            }
+
+            function _onSpaceByIdError(jqXhr, error) {
+                console.log(error);
+            }
+
+            vm.options = {
+                dropped: function(e) {
+
+                    vm.pageId = (e.source.nodeScope.$modelValue.id);
+                    if (e.dest.nodesScope.$parent.$modelValue) {
+                        vm.newParentId = e.dest.nodesScope.$parent.$modelValue.id;
+                    } else {
+                        vm.newParentId = 0;
+                    }
+                    vm.$wikiPageService.updateParentId(vm.pageId, vm.newParentId, _onParentIdSuccess, _onParentError);
+                }
+            }
+
+            function _onParentIdSuccess(move) {
+                console.log(move);
+            }
+
+            function _onParentError(jqXhr, error) {
+                console.log(error);
+            }
+            function _setupSettings() {
+                vm.categories = [{ id: 1, name: 'angular' }, { id: 2, name: 'javascript' }, { id: 3, name: 'MVC' }];
+                vm.language = [{ id: 1, name: 'C#' }, { id: 2, name: 'C++' }, { id: 3, name: 'Java' }];
+            }
+        }
+
+        sabio.ng.addService(sabio.ng.app.module,
+            "$mainService",
+            ["$baseService"],
+            sabio.WikiPage.services.Wiki.wikiPageFactory
+        );
+
+        sabio.ng.addController(sabio.ng.app.module,
+            "$mainController",
+            ['$scope', '$baseController', "$mainService"],
+            sabio.page.wikiPageControllerFactory);
+    </script>
+
+}
+
+
+
+

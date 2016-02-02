@@ -1,0 +1,222 @@
+﻿@{
+    ViewBag.Title = "TestimonialList";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <h2><strong>Testimonials</strong></h2>
+    </div>
+</div>
+
+<div class="carousel-reviews broun-block">
+    <div class="container">
+        <div class="row block full">
+
+            <!--Carousel start-->
+            @*<div id="testimonials">*@
+            <div id="carousel-reviews" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+
+                    @*<div class="item active" id="testimonials">
+                        </div>*@
+
+                </div>
+            </div>
+            @*</div>*@
+        </div>
+        <!--Carousel end-->
+
+    </div>
+    <div class="form-group form-actions row">
+        <div class="col-md-9 col-md-offset-3">
+            <button type="submit" id="previous" href="#carousel-reviews" class="btn btn-sm btn-primary" role="button" data-slide="prev">
+                <i class="fa fa-angle-left"></i> Previous
+            </button>
+            <button type="reset" id="nxt" href="#carousel-reviews" class="btn btn-sm btn-warning" role="button" data-slide="next">
+                <i class="fa fa-angle-right"></i> Next
+            </button>
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script type="text/javascript" src="~/Scripts/moment.js"></script>
+    <script type="text/javascript" src="~/Scripts/Sabio.Services.Testimonials.js"></script>
+    <script type="text/javascript">
+
+        sabio.page.startUp = function () {
+            sabio.services.testimonials.GetList(sabio.page.listSuccess, sabio.page.ajaxError);
+        }
+
+        sabio.page.listSuccess = function (data, status, xhr) {
+            console.log(data);
+            if (data && data.items) {
+                var itemsQty = Math.ceil(data.items.length / 3);
+                console.log(itemsQty);
+
+                for (var index = 0; index < itemsQty; index++) {
+                    var itemData = {};
+                    var itemClone = sabio.page.insertItemDOM(itemData);
+
+                    if (index == 0) {                        
+                        itemClone.addClass("active");
+                        console.log(itemClone);
+                    }
+                }
+
+                ////for (var index = 0; index < data.items.length; index++) {
+                //for (var index = 0; index < itemsQty; index++) {
+                //    var itemData = {}
+                //    itemData.testimonials = data.items[index].testimonials;
+
+                //    var testimonialData = {}
+                //    testimonialData.title = data.items[index].title;
+                //    testimonialData.body = data.items[index].body;
+                //    testimonialData.starRating = data.items[index].starRating;
+                //    testimonialData.id = data.items[index].id;
+                //     sabio.page.insertTestimonialDOM(testimonialData);
+                //}
+            }
+        }
+
+        sabio.page.insertItemDOM = function (itemData) {
+            var newItem = $($("#itemTemplate").html()).clone();
+            var targetLoc = $('.carousel-inner');
+            targetLoc.attr("data-target", "true");
+            targetLoc.append(newItem);
+            
+            return newItem;
+        }
+
+        sabio.page.insertTestimonialDOM = function (testimonialData) {
+            var newTemplate = $($("#testimonialTemplate").html()).clone();
+            //var edit = "/testimonial/" + testimonialData.id;
+
+            newTemplate.find('.title').html(testimonialData.title);
+            newTemplate.find('.body').html(testimonialData.body);
+            //newTemplate.find('.starRating').html(testimonialData.starRating);
+            //newTemplate.find('.title').attr('href', edit);
+
+            //var targetLoc = $('#testimonials');
+            var targetLoc = $('.carousel-inner');
+            targetLoc.attr("data-target", "true");
+            targetLoc.append(newTemplate);
+
+        }
+
+        sabio.page.ajaxError = function (jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR.responseJSON);
+            alert("Error, Item was not sent to the database.")
+        }
+
+        sabio.page.getClone = function () {
+            return $($("#testimonialTemplate").html()).clone();
+        }
+
+    </script>
+
+    <script type="text/template" id="testimonialTemplate">
+        <div class="col-md-4 col-sm-6">
+            <div class="block-text rel zmin">
+                <a title="" id="title" href="#" class="title">
+                    @*Testimonial 1*@
+                </a>
+                <p class="body">
+                    @*Sample Testimonial This is sample information which takes the place of an actual
+                        testimonial. This is not an actual testimonial. I repeat this is a sample Testimonial
+                        used in place of an actual testimonial. Most of these words are just here so that I can see
+                        How a large chunk of text looks on the browser.*@
+                </p>
+                <div id="starRating" class="mark starRating">
+                    My rating: <span class="rating-input">
+                        <span data-value="0" class="glyphicon glyphicon-star"></span>
+                        <span data-value="1" class="glyphicon glyphicon-star"></span>
+                        <span data-value="2" class="glyphicon glyphicon-star"></span>
+                        <span data-value="3" class="glyphicon glyphicon-star"></span>
+                        <span data-value="4" class="glyphicon glyphicon-star-empty"></span>
+                        <span data-value="5" class="glyphicon glyphicon-star-empty"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/template" id="itemTemplate">
+        <div class="item" id="testimonials">
+            <div class="col-md-4 col-sm-6">
+                <div class="block-text rel zmin">
+                    <a title="" id="title" href="#" class="title">
+                        @*Testimonial 1*@
+                    </a>
+                    <p class="body">
+                        @*Sample Testimonial This is sample information which takes the place of an actual
+                            testimonial. This is not an actual testimonial. I repeat this is a sample Testimonial
+                            used in place of an actual testimonial. Most of these words are just here so that I can see
+                            How a large chunk of text looks on the browser.*@
+                    </p>
+                    <div id="starRating" class="mark starRating">
+                        My rating: <span class="rating-input">
+                            <span data-value="0" class="glyphicon glyphicon-star"></span>
+                            <span data-value="1" class="glyphicon glyphicon-star"></span>
+                            <span data-value="2" class="glyphicon glyphicon-star"></span>
+                            <span data-value="3" class="glyphicon glyphicon-star"></span>
+                            <span data-value="4" class="glyphicon glyphicon-star-empty"></span>
+                            <span data-value="5" class="glyphicon glyphicon-star-empty"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="block-text rel zmin">
+                    <a title="" id="title" href="#" class="title">
+                        @*Testimonial 1*@
+                    </a>
+                    <p class="body">
+                        @*Sample Testimonial This is sample information which takes the place of an actual
+                            testimonial. This is not an actual testimonial. I repeat this is a sample Testimonial
+                            used in place of an actual testimonial. Most of these words are just here so that I can see
+                            How a large chunk of text looks on the browser.*@
+                    </p>
+                    <div id="starRating" class="mark starRating">
+                        My rating: <span class="rating-input">
+                            <span data-value="0" class="glyphicon glyphicon-star"></span>
+                            <span data-value="1" class="glyphicon glyphicon-star"></span>
+                            <span data-value="2" class="glyphicon glyphicon-star"></span>
+                            <span data-value="3" class="glyphicon glyphicon-star"></span>
+                            <span data-value="4" class="glyphicon glyphicon-star-empty"></span>
+                            <span data-value="5" class="glyphicon glyphicon-star-empty"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="block-text rel zmin">
+                    <a title="" id="title" href="#" class="title">
+                        @*Testimonial 1*@
+                    </a>
+                    <p class="body">
+                        @*Sample Testimonial This is sample information which takes the place of an actual
+                            testimonial. This is not an actual testimonial. I repeat this is a sample Testimonial
+                            used in place of an actual testimonial. Most of these words are just here so that I can see
+                            How a large chunk of text looks on the browser.*@
+                    </p>
+                    <div id="starRating" class="mark starRating">
+                        My rating: <span class="rating-input">
+                            <span data-value="0" class="glyphicon glyphicon-star"></span>
+                            <span data-value="1" class="glyphicon glyphicon-star"></span>
+                            <span data-value="2" class="glyphicon glyphicon-star"></span>
+                            <span data-value="3" class="glyphicon glyphicon-star"></span>
+                            <span data-value="4" class="glyphicon glyphicon-star-empty"></span>
+                            <span data-value="5" class="glyphicon glyphicon-star-empty"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </script>
+
+}

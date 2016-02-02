@@ -1,0 +1,247 @@
+﻿@model Sabio.Web.Models.ViewModels.ItemViewModel<int>
+
+
+@{
+    ViewBag.Title = "Course/Tracks/add";
+
+}
+
+ 
+        <div class="content-header">
+            <div class="header-section">
+                <h1>
+                    <i class="gi gi-warning_sign"></i>COURSE TRACKS<br><small>Lorem ipsum dolor sit amet, consectetur adipiscing elit</small>
+                </h1>
+            </div>
+        </div>
+        <ul class="breadcrumb breadcrumb-top">
+            <li></li>
+            <li><a href=""></a></li>
+        </ul>
+        
+        <div class="block">
+           
+            <div class="block-title">
+                <h2> Add A Course Track</h2>
+            </div>
+
+            <form id="courseTrack-form" action="page_forms_validation.html" method="post" class="form-horizontal form-bordered">
+                <input type="hidden" id="trackId" value="@Model.Item" />
+                <input type="hidden" id="idFromAjax">
+                <fieldset>
+                    <div class="form-group">
+
+                        <div class="courseName">
+                            <label class="col-md-4 control-label" for="example-select">Course Name<span class="text-danger">*</span></label>
+                            <div class="col-md-6">
+                                <select id="val_courseName" name="courseId" class="form-control">
+                                    <option value="0" disabled selected>Please choose one</option>
+                                    <option value="1">Frontend Training</option>
+                                    <option value="2">Full Stack Training</option>
+                                    <option value="3">Virtual Training</option>
+                                    <option value="4">Ruby Development</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="from-group form-group prerequisites">
+                        <label class="col-md-4 control-label" for="val_bio">Prerequisites<span class="text-danger">*</span></label>
+                        <div class="col-md-6">
+                            <textarea id="val_prerequisites" name="prerequisites" rows="5" class="form-control prerequisites" placeholder="Please Enter the Prerequisites"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group expectedOutcome">
+                        <label class="col-md-4 control-label" for="val_bio">Expected Outcome<span class="text-danger">*</span></label>
+                        <div class="col-md-6">
+                            <textarea id="val_expectedOutcome" name="expectedOutcome" rows="5" class="form-control expectedOutcome" placeholder="Please Enter the Expected Outcome"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group cost">
+                        <label class="col-md-4 control-label" for="val_bio">Cost<span class="text-danger">*</span></label>
+                        <div class="col-md-6">
+                            <input type="text" id="val_cost" name="cost" rows="1" class="form-control courseCost" placeholder="Please Enter the Cost for the Course">
+
+                        </div>
+                    </div>
+                    <div class="form-group form-actions">
+                        <div class="col-md-8 col-md-offset-4">
+                            <button type="button" class="btn btn-sm btn-primary" id="submitCourseTrack"><i class="fa fa-arrow-right"></i>Submit</button>
+                            <button type="reset" class="btn btn-sm btn-warning" id="resetCourseTrack"><i class="fa fa-repeat"></i> Reset</button>
+                            <button type="button" class="btn btn-sm btn-warning" id="deleteCourseTrack"><i class="fa fa-arrow-left"></i> Delete</button>
+                        </div>
+                    </div>
+                </fieldset>
+
+            </form>
+        </div>
+
+@section Scripts {
+
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Scripts/Sabio.Services.CourseTracks.js"></script>
+    <script type="text/javascript">
+        sabio.page.startUp = function () {
+
+            sabio.page.initializeValidation();
+            sabio.page.populateForm();
+
+            $("#submitCourseTrack").on("click", sabio.page.handlers.onSubmitForm);
+            $("#deleteCourseTrack").on("click", sabio.page.handlers.deleteCourseTrackData);
+        }
+
+        sabio.page.initializeValidation = function () {
+
+            if ($("#trackId").val() == 0) {
+                $("#deleteCourseTrack").prop("disabled", true);
+            }
+            
+            jQuery.validator.setDefaults({
+                debug: true
+            });
+
+           
+            $('#courseTrack-form').validate({
+                errorClass: 'help-block animation-slideDown', 
+                errorElement: 'div',
+                errorPlacement: function (error, e) {
+                    e.parents('.form-group > div').append(error);
+                },
+                highlight: function (e) {
+                    $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                    $(e).closest('.help-block').remove();
+                },
+                success: function (e) {
+                    
+                    e.closest('.form-group').removeClass('has-success has-error'); 
+                    e.closest('.help-block').remove();
+                },
+                rules: {
+                    courseId: {
+                        required: true
+                    },
+                    prerequisites: {
+                        required: true,
+                        minlength: 10
+                    },
+                    expectedOutcome: {
+                        required: true,
+                        minlength: 10
+                    },
+                    cost: {
+                        required: true,
+                        digits: true
+                    }
+                },
+               
+                messages: {
+                    courseId: 'Please Choose One',
+                    prerequisites: 'Please enter the Prerequisistes for this Course Track.',
+                    expectedOutcome: 'Please enter an Expected Outcome.',
+                    cost: 'Please Enter the Cost of this course.'
+                }
+            });
+
+        };
+
+        sabio.page.populateForm = function () {
+            if ($("#trackId").val() != 0) {
+                var id = $("#trackId").val();
+                console.log("populating form fields");
+                sabio.services.courseTracks.get(id, sabio.page.getAjaxSuccess, sabio.page.ajaxError);
+                $("#submitCourseTrack").html("Update");
+            }
+        }
+
+        sabio.page.handlers.onSubmitForm = function () {
+
+            sabio.page.addAndUpdate();
+
+        }
+
+        sabio.page.addAndUpdate = function () {
+
+            if ($('#courseTrack-form').valid()) {
+                $("#msgWindow").hide();
+                var myData = $('#courseTrack-form').serialize();
+                var ajaxId = $("#idFromAjax").val();
+                var trackId = $("#trackId").val();
+                
+                if (ajaxId == "" || trackId == "") {
+
+                    console.log("posting new record");
+                    sabio.services.courseTracks.add(myData, sabio.page.ajaxSuccess, sabio.page.ajaxError);
+                    $("#submitCourseTrack").html("Update");
+
+                } else {
+                    console.log("updating record id#" + " " + id);
+                    var id = ajaxId;
+                    var myData2 = "id=" + id + "&" + myData
+                    sabio.services.courseTracks.update(id, myData2, sabio.page.updateSuccess, sabio.page.ajaxError);
+                }
+            }
+        }
+
+        sabio.page.handlers.deleteCourseTrackData = function () {
+            
+            var id = $("#trackId").val();
+            sabio.services.courseTracks.delete(id, sabio.page.deleteAjaxSuccess, sabio.page.ajaxError);
+        }
+
+
+        //the value of ID is taken from this function
+        sabio.page.ajaxSuccess = function (data, status, xhr) {
+
+            $(".courseName").addClass("has-success");
+            $(".expectedOutcome").addClass("has-success");
+            $(".prerequisites").addClass("has-success");
+            $(".cost").addClass("has-success");
+
+            if (data && data.item) {
+                $("#idFromAjax").val(data.item);
+            }
+            $("#trackId").val(data.item);
+            var id = $("#trackId").val();
+            $("#deleteCourseTrack").prop("disabled", false);
+            console.log("The record insert with an id of" + " " + id + " " +  "was a success!");
+
+        }
+
+        sabio.page.updateSuccess = function (data, status, xhr) {
+            console.log("The update was a success!");
+            console.log(JSON.stringify(data));
+
+        }
+
+        //loads the data from database to your form upon page load
+        sabio.page.getAjaxSuccess = function (data) {
+            if (data && data.item) {
+                $("#idFromAjax").val(data.item.id);
+                $("#val_cost").val(data.item.cost);
+                $("#val_expectedOutcome").html(data.item.expectedOutcome);
+                $("#val_prerequisites").html(data.item.prerequisites);
+                $("#val_courseName").val(data.item.courseId);
+            }
+
+        }
+
+        sabio.page.deleteAjaxSuccess = function () {
+            location.href = 'http://localhost:54822/Course/Tracks/add';
+            $(window).load(function () {
+                alert("You have been redirected to the Add Page");
+            });
+        }
+
+        sabio.page.ajaxError = function (jqXHR, textStatus, errorThrown) {
+
+           console.log(jqXHR.responseJSON);
+           
+        }
+
+
+
+    </script>
+}

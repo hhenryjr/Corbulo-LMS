@@ -1,0 +1,63 @@
+﻿<div class="row">
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="employmentStatusId">Employment Status<span class="text-danger">*</span></label>
+        <div class="col-md-6">
+            <select type="button" id="employmentStatusId" name="employmentStatusId" class="select-select2 form-control" data-placeholder="please make a selection" size="1" required>
+                @*
+                <option value="">Please make a selection</option>*@
+                @foreach (var emplomentStatuses in Model.EmploymentStatuses)
+                {
+                <option value="@emplomentStatuses.Key">@emplomentStatuses.Value</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="learningObjective">Learning Objective<span class="text-danger">*</span></label>
+        <div class="col-md-6">
+            <div class="input-group">
+                <input type="text" id="learningObjective" name="learningObjective" class="form-control" placeholder="Your learning objectives.." required>
+                <span class="input-group-addon"><i class="gi gi-book"></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="targetEmploymentLocation">Target Employment Location<span class="text-danger">*</span></label>
+        <div class="col-md-6">
+            <div class="input-group">
+                <input type="text" id="targetEmploymentLocation" name="targetEmploymentLocation" class="form-control" placeholder="Where would you eventually like to work?" required>
+                <span class="input-group-addon"><i class="gi gi-briefcase"></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="example-advanced-bio">Brief Bio<span class="text-danger">*</span></label>
+        <div class="col-md-6">
+            <textarea id="bio" name="bio" rows="6" class="form-control" placeholder="Tell us your story.." required></textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="programmingExperience">Programming Experience<span class="text-danger">*</span></label>
+        <div class="col-md-6">
+            <div class="input-group">
+                <input type="text" id="programmingExperience" name="programmingExperience" class="form-control" placeholder="Your programming experience" required>
+                <span class="input-group-addon"><i class="gi gi-qrcode"></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-4 control-label" for="workExperience">Work Experience<span class="text-danger">*</span></label>
+        <div class="col-md-6">
+            <div class="input-group">
+                <input type="text" id="workExperience" name="workExperience" class="form-control" placeholder="Your work experience.." required>
+                <span class="input-group-addon"><i class="gi gi-briefcase"></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group form-actions">
+        <div class="col-md-8 col-md-offset-4">
+            <input type="reset" class="btn btn-sm btn-warning" id="back2" value="Back">
+            <input type="submit" class="btn btn-sm btn-primary" id="next2" value="Next">
+        </div>
+    </div>
+</div>

@@ -1,0 +1,213 @@
+﻿
+
+@section styles{
+
+    <link href="~/Sabio.CSS/UiTree/angular-ui-tree.css" rel="stylesheet" />
+    <link href="~/Sabio.CSS/UiTree/app.css" rel="stylesheet" />
+}
+
+@{
+    Layout = "~/Views/Shared/_dashboardLayout.cshtml";
+}
+
+<div class="content-header">
+    <div class="header-section">
+        <h1>            
+            <strong>Wiki Pages Tree</strong>
+        </h1>
+        <h4>@Model.BrandName Wiki</h4>
+        <p>
+            <a href="/admin/wiki" class="btn btn-alt btn-xs btn-primary"><i class="fa fa-list"></i> List View</a>
+        </p>
+
+    </div>
+</div>
+
+<div ng-controller="$mainController as main" id="mainController" style="padding: 10px 0px 10px 0px; ">
+    <div class="col-md-3">
+        <select id="wikiSpaceIds"
+                name="wikiSpaceIds"
+                ng-required="true"
+                class="form-control"
+                ng-model="main.items"
+                ng-change="main.getSpaceID()"
+                ng-options="obj.title for obj in main.spaces"></select>
+    </div>
+    <br />
+    <!-- Nested node template -->
+    <script type="text/ng-template" id="nodes_renderer.html">
+        <div ui-tree-handle class="tree-node tree-node-content">
+            <a class="btn btn-success btn-xs" ng-if="node.nodes && node.nodes.length > 0" data-nodrag ng-click="toggle(this)">
+                <span class="gi gi-alarm"
+                      ng-class="{
+          'gi-right_arrow': collapsed,
+          'gi-down_arrow': !collapsed
+        }"></span>
+            </a>
+            {{node.title}}
+            <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="newSubItem(this)" style="margin-right: 8px;">
+                <span class="gi gi-plus"></span>
+            </a>
+        </div>
+        <ol ui-tree-nodes="" ng-model="node.nodes" ng-class="{hidden: collapsed}">
+            <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'nodes_renderer.html'">
+            </li>
+        </ol>
+    </script>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>Basic Example</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div ui-tree="main.options" id="tree-root">
+                <ol ui-tree-nodes ng-model="main.items">
+                    <li ng-repeat="node in main.items" ui-tree-node ng-include="'nodes_renderer.html'">
+                        {{node.nodes}}
+                    </li>
+                </ol>
+            </div>
+        </div>
+
+        <div>
+            <div class="info">
+                {{info}}
+            </div>
+            <pre class="code col-md-6">{{ main.items | json }}</pre>
+
+        </div>
+    </div>
+
+</div>
+
+
+@section scripts{
+
+    <script src="~/Scripts/sabio.WikiPage.services.Wiki.js"></script>
+    <script src="~/Scripts/tree.jquery.js"></script>
+
+    <script>
+        // trying jquery tree ui with angular
+        sabio.page.startUp = function () {
+
+            sabio.page.wikiPageController = sabio.ng.getControllerInstance($("#mainController"));
+        }
+
+        sabio.WikiPage.services.Wiki.wikiPageFactory = function ($baseService) {
+
+            var aSabioServiceObject = sabio.WikiPage.services.Wiki;
+
+            var newService = $baseService.merge(true, {}, aSabioServiceObject, $baseService);
+
+            return newService;
+        }
+
+        sabio.page.wikiPageControllerFactory = function (
+            $scope, $baseController, $wikiPageService) {
+            var vm = this;
+
+            $baseController.merge(vm, $baseController);
+
+            vm.$wikiPageService = $wikiPageService;
+
+            vm.$scope = $scope;
+
+            vm.getName = "Angular is good to go";
+            vm.items = null;
+
+            vm.receiveItems = _receiveItems;
+            vm.onReceiveError = _onReceiveError;
+            vm.getSpaceID = _getSpaceID;
+            vm.onReceiveSpaces = _onReceiveSpaces;
+            vm.onSpaceError = _onSpaceError;
+
+            vm.onReceiveSpaceById = _onReceiveSpaceById;
+            vm.onSpaceByIdError = _onSpaceByIdError;
+
+            vm.onParentIdSuccess = _onParentIdSuccess;
+            vm.onParentError = _onParentError;
+
+
+            vm.notify = vm.$wikiPageService.getNotifier($scope);
+
+            function render() {
+               // vm.$wikiPageService.getAll(vm.receiveItems, vm.onReceiveError);
+                vm.$wikiPageService.getAllSpaces(vm.onReceiveSpaces, vm.onSpaceError);
+            }
+
+            render();
+
+            function _receiveItems(data) {
+                vm.notify(function () {
+                    vm.items = data.items;
+                });
+            }
+
+            function _onReceiveError(jqXhr, error) {
+                console.log(error);
+            }
+
+            function _onReceiveSpaces(data) {
+                vm.notify(function () {
+                    vm.spaces = data.items;
+                });
+            }
+
+            function _onSpaceError(jqXhr, error) {
+                console.log(error);
+            }
+
+            function _getSpaceID() {
+                var id = vm.items.id;
+                vm.$wikiPageService.getSpaceById(id, vm.onReceiveSpaceById, vm.onSpaceByIdError);
+            }
+
+            function _onReceiveSpaceById(data) {
+                vm.notify(function () {
+                    vm.items = data.items;
+                });
+            }
+
+            function _onSpaceByIdError(jqXhr, error) {
+                console.log(error);
+            }
+
+            vm.options = {
+                dropped: function (e) {
+
+                    vm.pageId = (e.source.nodeScope.$modelValue.id);
+                    if (e.dest.nodesScope.$parent.$modelValue) {
+                        vm.newParentId = e.dest.nodesScope.$parent.$modelValue.id;
+                    } else {
+                        vm.newParentId = 0;
+                    }
+                    vm.$wikiPageService.updateParentId(vm.pageId, vm.newParentId, _onParentIdSuccess, _onParentError);
+                }
+            }
+
+            function _onParentIdSuccess(move) {
+                console.log(move);
+            }
+
+            function _onParentError(jqXhr, error) {
+                console.log(error);
+            }
+        }
+
+        sabio.ng.addService(sabio.ng.app.module,
+            "$mainService",
+            ["$baseService"],
+            sabio.WikiPage.services.Wiki.wikiPageFactory
+        );
+
+        sabio.ng.addController(sabio.ng.app.module,
+            "$mainController",
+            ['$scope', '$baseController', "$mainService"],
+            sabio.page.wikiPageControllerFactory);
+
+    </script>
+
+}

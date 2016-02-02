@@ -1,0 +1,336 @@
+﻿@model Sabio.Web.Models.ViewModels.ItemViewModel<int>
+
+@{
+    ViewBag.Title = "Q & A Form";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<h2>Q & A Form</h2>
+
+<div id="IndexForm">
+    <form id="faq-form" method="post" class="form-horizontal form-bordered" novalidate="novalidate">
+        <input type="hidden" id="id" name="id" value="@Model.Item" />
+        <fieldset>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="categoryId">Category<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <select id="categoryId" name="categoryId" class="form-control">
+                        <option value="0"> Please select a category</option>
+                        <option value="1"> Admission</option>
+                        <option value="2"> Centers</option>
+                        <option value="3"> Track</option>
+                        <option value="4"> Courses</option>
+                        <option value="5"> Books</option>
+                        <option value="6"> PreWork</option>
+                        <option value="7"> Course Cost</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="languageId">Language<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <select id="languageId" name="languageId" class="form-control">
+                        <option value="">Please select a language</option>
+                        <option value="1">English</option>
+                        <option value="2">Spanish</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="question">Question <span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <textarea id="question" name="question" rows="6" class="form-control" placeholder="Ask Your Question.."></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="answer">Answer<span class="text-danger">*</span></label>
+                <div class="col-md-6">
+                    <textarea id="answer" name="answer" rows="6" class="form-control" placeholder="Answer here.."></textarea>
+                </div>
+            </div>
+            <div class="col-md-8 col-md-offset-4">
+                <button type="button" id="submit-form" class="btn btn-sm btn-primary"><i class="fa fa-arrow-right"></i> </button>
+                <button type="reset" class="btn btn-sm btn-warning"><i class="fa fa-repeat"></i> Reset</button>
+                <button type="reset" id="deleteFAQ" class="btn btn-sm btn-warning"><i class="fa fa-repeat"></i> Delete</button>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+@section scripts
+{
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script type="text/javascript">
+
+        sabio.page.startUp = function () {
+
+            sabio.page.initializeValidation();
+
+            $("#submit-form").on("click", sabio.page.handlers.onSampleFormSubmit);
+            $("#cmdEchoPerson").on("click", sabio.page.handlers.echoInputs);
+            var id = $("#id").val(); {
+
+            }
+            if (id > 0) {
+                sabio.page.handlers.GetData();
+            }
+        };
+
+        sabio.page.initializeValidation = function () {
+            jQuery.validator.setDefaults({
+                debug: true
+            });
+
+            $('#faq-form').validate({
+                rules: {
+                    "question": {
+                        required: true,
+                        minlength: 10,
+                        maxlength: 250
+
+                    },
+                    "answer": {
+                        required: true,
+                        minlength: 10,
+                        maxlength: 1000
+
+                    },
+                    "categoryId": {
+                        required: true,
+                        minlength: 1
+
+                    },
+                    "languageId": {
+                        required: true,
+                        minlength: 1
+
+                    }
+                },
+
+                messages: {
+                    "question": {
+                        required: "Question is required.",
+                        maxlength: "Maximum of 250 characters"
+                    },
+                    "answer": {
+                        required: "Answer is required."
+                    },
+                    "categoryId": {
+                        required: "Choose a category."
+                    },
+                    "languageId": {
+                        required: "Choose a category."
+                    }
+                }
+            });
+        }
+
+        sabio.page.handlers.onSampleFormSubmit = function (evt) {
+            evt.preventDefault();
+            console.log("click");
+            sabio.page.formValidate();
+            sabio.page.getData();
+            var id = $('#id').val();
+            if (id > 0) {
+                sabio.page.handlers.updateInputs();
+            }
+            else {
+                sabio.page.handlers.echoInputs();
+            }
+        }
+
+        sabio.page.getData = function () {
+            var formData = $("#faq-form");
+            var thisObject = {};
+            thisObject.question = $(formData).find("#question").val();
+            thisObject.answer = $(formData).find("#answer").val();
+            thisObject.categoryId = $(formData).find("#category").val();
+            thisObject.languageId = $(formData).find("#language").val();
+
+        }
+
+        sabio.page.handlers.deleteData = function () {
+            console.log("#faq-form");
+            console.log($("#id").val());
+            var id = $("#id").val();
+            sabio.services.FAQ.delete(id, sabio.page.deleteAjaxSuccess, sabio.page.ajaxError);
+
+        }
+
+        sabio.page.formValidate = function () {
+            if ($('#faq-form').valid()) {
+                console.log("valid");
+                console.log($("#faq-form").serialize());
+
+
+            }
+            else {
+                console.log("invalid")
+            }
+        }
+
+        sabio.page.handlers.echoInputs = function () {
+            var url = "/api/faq/";
+
+            var myData = $("#faq-form").serialize();
+
+            var settings = {
+                cache: false
+                , contentType: "application/x-www-form-urlencoded; charset=UTF-8"
+                , data: myData
+                , dataType: "json"
+                , success: sabio.page.AjaxSuccess
+                , error: sabio.page.AjaxError
+                , type: "POST"
+            };
+            $.ajax(url, settings);
+        }
+
+        sabio.page.AjaxSuccess = function (data, status, xhr) {
+            var id = data.item;
+            $('#id').val(id);
+            console.log(JSON.stringify(data));
+            $("#msgWindow").removeClass("alert-danger");
+            $("#msgWindow").addClass("alert-info");
+        }
+
+        sabio.page.PutAjaxSuccess = function (data, status, xhr) {
+            console.log(JSON.stringify(data));
+            $("#msgWindow").removeClass("alert-danger");
+            $("#msgWindow").addClass("alert-info");
+        }
+
+        sabio.page.AjaxError = function (jqXHR, textStatus, errorThrown) {
+            $("#msgWindow").addClass("alert-danger");
+            $("#msgWindow").removeClass("alert-info");
+        }
+
+        sabio.page.handlers.updateInputs = function () {
+            var url = "/api/faq/update";
+
+            var myData = $("#faq-form").serialize() + "&id=" + sabio.page.currentId;
+
+            var settings = {
+                cache: false
+                , contentType: "application/x-www-form-urlencoded; charset=UTF-8"
+                , data: myData
+                , dataType: "json"
+                , success: sabio.page.PutAjaxSuccess
+                , error: sabio.page.AjaxError
+                , type: "PUT"
+            };
+            $.ajax(url, settings);
+        }
+
+        sabio.page.handlers.GetData = function () {
+
+            var id = $("#id").val();
+            var url = "/api/faq/" + id;
+
+            var myData = $("#faq-form").serialize() + "&id=" + id;
+
+            var settings = {
+                cache: false
+                , contentType: "application/x-www-form-urlencoded; charset=UTF-8"
+                , dataType: "json"
+                , success: sabio.page.GetAjaxSuccess
+                , error: sabio.page.AjaxError
+                , type: "GET"
+            };
+            $.ajax(url, settings);
+        }
+
+        sabio.page.fillTheTable = function (data) {
+            var tableData = sabio.page.clone();
+            var category = sabio.page.getFAQId(data);
+
+            tableData.attr("data-FAQId", data.id);
+            tableData.find("#id").val(data.id);
+            tableData.find(".categoryId").html(data.categoryId);
+            tableData.find(".languageId").html(data.languageId);
+            tableData.find(".question").html(data.question);
+            tableData.find(".answer").html(data.answer);
+
+            sabio.page.append(tableData);
+        }
+
+        sabio.page.clone = function () {
+            return $($(".targetTable").html()).clone();
+
+        }
+
+        sabio.page.GetAjaxSuccess = function (data, status, xhr) {
+            if (data && data.item) {
+                $("#FAQ").val(data.item);
+
+                $("#id").val(data.item.id);
+                $("#languageId").val(data.item.languageId);
+                $("#categoryId").val(data.item.categoryId);
+                $("#question").html(data.item.question);
+                $("#answer").html(data.item.answer);
+            }
+
+        }
+
+        sabio.page.deleteAjaxSuccess = function () {
+            location.href = 'http://localhost:49370/api/faq/add';
+            $(window).load(function () {
+                alert("You have been redirected to the Add Page");
+            });
+        }
+
+        sabio.page.ajaxError = function (jqXHR, textStatus, errorThrown) {
+
+            $("#msgWindow").addClass("alert-danger");
+            $("#msgWindow").removeClass("alert-info");
+        }
+
+    </script>
+
+    <script type="text/template">
+
+
+        <div id="FAQ">
+            <!-- FAQ Header -->
+            <!-- Intro Content -->
+            <h3 class="sub-header"><strong>Frequently Asked Questions</strong></h3>
+            <div id="faqHeadingZero" class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <i class="fa fa-angle-right"></i>
+                            <a class="accordion-toggle"
+                               data-toggle="collapse"
+                               data-parent="#faqHeadingZero"
+                               href="#faqZero">FAQ#1</a>
+                        </h4>
+                    </div>
+                    <div id="faqZero" class="panel-collapse collapse">
+                        <div class="panel-body">Answer#1</div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title"><i class="fa fa-angle-right"></i> <a class="accordion-toggle" data-toggle="collapse" data-parent="#faq1" href="#faq1_q2">FAQ#2</a></h4>
+                    </div>
+                    <div id="faq1_q2" class="panel-collapse collapse">
+                        <div class="panel-body">Answer#2</div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title"><i class="fa fa-angle-right"></i> <a class="accordion-toggle" data-toggle="collapse" data-parent="#faq1" href="#faq1_q3">FAQ#3</a></h4>
+                    </div>
+                    <div id="faq1_q3" class="panel-collapse collapse">
+                        <div class="panel-body">Answer#3</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </script>
+}
+
+
+
+

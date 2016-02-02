@@ -1,0 +1,60 @@
+﻿<div class="row">
+<div class="form-group">
+    <label class="col-md-4 control-label" for="countryId">Country<span class="text-danger">*</span></label>
+    <div class="col-md-6">
+        <select type="button" id="countryId" name="countryId" class="select-select2 form-control" data-placeholder="Select your country" size="1" required></select>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-4 control-label" for="streetAddress1">Street Address<span class="text-danger">*</span></label>
+    <div class="col-md-6">
+        <div class="input-group">
+            <input type="text" id="streetAddress1" name="streetAddress1" class="form-control" placeholder="Your street address.." required>
+            <span class="input-group-addon"><i class="gi gi-road"></i></span>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-4 control-label" for="streetAddress2">Street address 2</label>
+    <div class="col-md-6">
+        <div class="input-group">
+            <input type="text" id="streetAddress2" name="streetAddress2" class="form-control" placeholder="Your street address..">
+            <span class="input-group-addon"><i class="gi gi-road"></i></span>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-4 control-label" for="city">City<span class="text-danger">*</span></label>
+    <div class="col-md-6">
+        <div class="input-group">
+            <input type="text" id="city" name="city" class="form-control" placeholder="Your city.." required>
+            <span class="input-group-addon"><i class="gi gi-home"></i></span>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-4 control-label" for="stateProvinceId">State/Province<span class="text-danger">*</span></label>
+    <div class="col-md-6">
+        <span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span>
+        <select id="stateProvinceId" name="StateProvinceId" class="select-select2 form-control" data-placeholder="Select" size="1" required></select>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-4 control-label" for="zipCode">Zip code<span class="text-danger">*</span></label>
+    <div class="col-md-6">
+        <div class="input-group">
+            <input type="text" id="zipCode" name="zipCode" class="form-control" placeholder="Your zip code.." required>
+            <span class="input-group-addon"><i class="gi gi-home"></i></span>
+        </div>
+    </div>
+</div>
+<div>
+    <input type="text" id="addressId" name="addressId" class="form-control hidden">
+</div>
+<div class="form-group form-actions">
+    <div class="col-md-8 col-md-offset-4">
+        <input type="reset" class="btn btn-sm btn-warning" id="back2" value="Back">
+        <input type="submit" class="btn btn-sm btn-primary" id="next3" value="Next">
+    </div>
+</div>
+</div>

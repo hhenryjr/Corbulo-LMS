@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_dashboardLayout.cshtml";
+}
+
+<div ng-view></div>
+
+
+@section pageInitScripts
+{
+
+    <script type="text/javascript">
+        sabio.extraNgDependencies = ["checklist-model"]
+    </script>
+}
+
+@section scripts{
+
+    <script src="~/Scripts/ng/checklist-model.js"></script>
+    <script src="~/Scripts/sabio.services.roles.js"></script>
+
+    <script src="~/Scripts/app/services/roleService.js"></script>
+
+    <script src="~/Scripts/app/admin/users/controllers/netUsersController.js"></script>
+    <script src="~/Scripts/app/admin/users/controllers/rolesController.js"></script>
+
+    <script src="~/Scripts/app/admin/users/roles.config.js"></script>
+}
+

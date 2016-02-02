@@ -1,0 +1,981 @@
+﻿@model Sabio.Web.Models.ViewModels.ItemViewModel<int>
+
+@{
+    ViewBag.Title = "Sections";
+    Layout = "~/Views/Shared/_dashboardLayout.cshtml";
+}
+
+@section styles{
+    <link data-require="bootstrap@3.3.2" data-semver="3.3.2" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.css" />
+    @*<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />*@
+    <link href="~/Content/toastr.css" rel="stylesheet" />
+    <link href="~/Sabio.CSS/isteven-multi-select.css" rel="stylesheet" />
+}
+
+<input type="hidden" id="id" name="id" value="@Model.Item" />
+<div class="content-header">
+    <div class="header-section">
+        <h1>
+            <i class="fa fa-globe"></i><strong>Sections</strong><br><small>Lorem ipsum dolor sit amet</small>
+        </h1>
+    </div>
+</div>
+<ul class="breadcrumb breadcrumb-top">
+    <li>Pages</li>
+    <li>e-Learning</li>
+    <li><a href="">Intro to HTML5</a></li>
+</ul>
+
+
+<!-- Form Start-->
+<div class="block" id="sectionsCtrler" ng-controller="SectionsController as sections">
+
+    <div class="block-title">
+        <div class="block-options pull-right">
+        </div>
+        <h2><strong>Create Sections</strong></h2>
+    </div>
+
+    <div class="row">
+        <form id="sectionsForm" ng-submit="sections.onFormSubmit()" class="form-horizontal form-bordered" name="sections.sectionsForm" novalidate>
+
+            <div class="col-md-6">
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="selectCourse">Course</label>
+                    <div class="col-md-8">
+                        <select id="selectCourse"
+                                required
+                                ng-required="true"
+                                name="selectCourse"
+                                class="form-control ng-class:{'error': sections.showSectionFormErrors && !sections.sectionsForm.selectCourse.$valid}"
+                                size="1"
+                                style="width: 90%;"
+                                ng-model="sections.courses.name"
+                                ng-options="obj.id as obj.courseName for obj in sections.courses"></select>
+                        <div role="alert" class="help-inline error">
+                            <span class="error has-error" ng-show="sections.showSectionFormErrors && sections.sectionsForm.selectCourse.$error.required">Course is required</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="status">Course Instructor/s</label>
+                    <div class="col-md-8">
+                        <isteven-multi-select class="ng-class:{'error': sections.showSectionFormErrors && !sections.sectionsForm.instructors.$valid}"
+                                              required
+                                              ng-required="true"
+                                              input-model="sections.allInstructors"
+                                              output-model="sections.chosenInstructors"
+                                              name="instructors"
+                                              button-label="name"
+                                              item-label="name"
+                                              orientation="horizontal"
+                                              output-properties="id"
+                                              tick-property="ticked">
+                        </isteven-multi-select>
+                        <div role="alert" class="help-inline error">
+                            <span class="error has-error" ng-show="sections.showSectionFormErrors && sections.sectionsForm.instructors.$error.required">Course is required</span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label daysOfTheWeek">Class Days</label>
+
+                    <div class="col-md-8">
+                        <div ng-repeat="(key, value) in sections.daysEnum" ng-enum-model="sections.chosenDays">
+                            <label>
+                                <input type="checkbox"
+                                       class="ng-class:{'error': sections.showSectionFormErrors && !sections.sectionsForm.daysOfTheWeek.$valid}"
+                                       name="daysOfTheWeek"
+                                       ng-enum-flag="value"
+                                       ng-enum-model="sections.chosenDays"
+                                       required
+                                       ng-required="true" /> {{key}}
+                            </label>
+
+                        </div>
+                        <div ng-show="sections.invalidCheckBoxes">
+                            <p class="has-error"> please select class days </p>
+                        </div>
+                        <input type="text"
+                               class="form-control hidden"
+                               name="dayOfTheWeek"
+                               id="dayOfTheWeek"
+                               rows="1"
+                               ng-model="sections.myFormData[sections.chosenDays]"
+                               style="width: 40%;"
+                               value={{sections.chosenDays}} />
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label" for="startOfClass">Start Date</label>
+                    <div class=" col-md-7">
+                        <input type="text"
+                               class="form-control ng-class:{'error': sections.showSectionFormErrors && !sections.sectionsForm.startOfClass.$valid}"
+                               name="startOfClass"
+                               uib-datepicker-popup="{{sections.dateFormat}}"
+                               ng-model="sections.dateToday"
+                               is-open="sections.startStatus.opened"
+                               ng-click="sections.openCalendar($event)"
+                               min-date="sections.minDate"
+                               max-date="sections.maxDate"
+                               datepicker-options="dateOptions"
+                               close-text="Close"
+                               required
+                               ng-required="true" />
+                        <input class="hidden" id="startOfClass" value={{sections.dateToday|date:'short'}}>
+                        <div role="alert" class="help-inline error">
+                            <span class="error has-error" ng-show="sections.showSectionFormErrors && sections.sectionsForm.startOfClass.$error.required">Please Select the Start Date for this Course</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label" for="endOfClass">End Date</label>
+                    <div class=" col-md-7">
+                        <input type="text"
+                               name="endOfClass"
+                               class="form-control ng-class:{'error': sections.showSectionFormErrors && !sections.sectionsForm.endOfClass.$valid}"
+                               uib-datepicker-popup="{{sections.dateFormat}}"
+                               ng-model="sections.minEndDate"
+                               is-open="sections.endStatus.opened"
+                               ng-click="sections.openEndDateCalendar($event)"
+                               min-date="sections.minEndDate"
+                               max-date="sections.maxENdDate"
+                               ng-disabled="sections.dateToday == null"
+                               datepicker-options="dateOptions"
+                               close-text="Close"
+                               required
+                               ng-required="true" />
+                        <input class="hidden" id="endOfClass" name="EndDate" value={{sections.minEndDate|date:'short'}}>
+                        <div role="alert" class="help-inline error">
+                            <span class="error has-error" ng-show="sections.showSectionFormErrors && sections.sectionsForm.endOfClass.$error.required">Please Select the End Date for this Course</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+                <div class="form-group" style="display:inline">
+                    <div id="startTimeGroup">
+                        <label class="col-md-4 control-label" for="startClassTime">Class Start Time</label>
+                        <div class="col-md-8" style="margin-right:-20px">
+                            <uib-timepicker ng-model="sections.startTime"
+                                            name="startClassTime"
+                                            ng-change="sections.timeChange()"
+                                            hour-step="sections.timePickerHourStep"
+                                            minute-step="sections.timePickerMinuteStep"
+                                            show-meridian="sections.showMeridian"></uib-timepicker>
+                            <input class="form-control hidden" name="startClassTime" id="secStarTime" rows="1" style="width: 40%;" value={{sections.startTime|date:'shortTime':'UTC'}} />
+
+                            <div ng-show="sections.invalidTime">
+                                <p class="has-error"> start time should not exceed end time </p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div id="endClassTime">
+                        <label class="col-md-4 control-label" for="endClassTime">Class End Time</label>
+                        <div class="col-md-8">
+                            <uib-timepicker ng-model="sections.endTime"
+                                            name="endClassTime"
+                                            ng-change="sections.timeChange()"
+                                            hour-step="sections.timePickerHourStep"
+                                            minute-step="sections.timePickerMinuteStep"
+                                            show-meridian="sections.showMeridian"></uib-timepicker>
+                            <input class="form-control hidden" name="endClassTime" id="secEndTime" rows="1" style="width: 40%;" value={{sections.endTime|date:'shortTime':'UTC'}} />
+
+                            <div ng-show="sections.invalidTime">
+                                <p class="has-error"> end time should be after the start time </p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="timeZone">Time Zone</label>
+                    <div class="col-md-8">
+                        <select id="timeZone"
+                                name="timeZone"
+                                chosen
+                                required
+                                ng-required="true"
+                                class="form-control ng-class:{'error': sections.showSectionFormErrors && !sections.sectionsForm.timeZone.$valid}"
+                                size="1"
+                                style="width: 90%;"
+                                ng-options="obj.id as obj.tZone for obj in sections.timeZones"
+                                ng-model="sections.timeZone"></select>
+                        <div role="alert" class="help-inline error">
+                            <span class="error has-error" ng-show="sections.showSectionFormErrors && sections.sectionsForm.timeZone.$error.required">Select the Time Zone please</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 col-md-offset-1 control-label" for="regDeadline" style="padding-left: 20px">Registration Deadline</label>
+                    <div class=" col-md-7">
+                        <input type="text"
+                               name="regDeadline"
+                               class="form-control ng-class:{'error': sections.showSectionFormErrors && !sections.sectionsForm.regDeadline.$valid}"
+                               uib-datepicker-popup="{{sections.dateFormat}}"
+                               ng-model="sections.regMaxDate"
+                               is-open="sections.regStatus.opened"
+                               ng-click="sections.openRegCalendar($event)"
+                               min-date="sections.regMinDate"
+                               max-date="sections.regMaxDate"
+                               datepicker-options="dateOptions"
+                               ng-required="true"
+                               ng-disabled="sections.minEndDate == null"
+                               close-text="Close" />
+                        <input class="hidden" id="regDeadline" name="EndDate" value={{sections.regMaxDate|date:'short'}}>
+                        <div role="alert" class="help-inline error">
+                            <span class="error has-error" ng-show="sections.showSectionFormErrors && sections.sectionsForm.regDeadline.$error.required">Please Select the Registration Deadline for this Course</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-10 col-md-offset-1">
+                    <div class="input-group">
+                        <textarea id="sectionDescription"
+                                  rows="5"
+                                  name="sectionDescription"
+                                  ckeditor="sections.ckeditorOptions"
+                                  ng-model="sections.sectionDescription"
+                                  class="form-control ng-class:{'error': sections.showSectionFormErrors && !sections.sectionsForm.sectionDescription.$valid}"
+                                  required
+                                  ng-required="true"
+                                  minlength="18"
+                                  maxlength="4000"></textarea>
+                        <div role="alert" class="help-inline error">
+                            <span class="error has-error" ng-show="sections.showSectionFormErrors && sections.sectionsForm.sectionDescription.$error.required">A Course Description is Required</span>
+                            <span class="error has-error" ng-show="sections.showSectionFormErrors && sections.sectionsForm.sectionDescription.$error.minlength">Too short! Course Description must be at least 10 characters</span>
+                            <span class="error has-error" ng-show="sections.showSectionFormErrors && sections.sectionsForm.sectionDescription.$error.maxlength">Too long! Course Description must be 4000 characters or less</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="format">Format</label>
+                        <div class="col-md-8">
+                            <select id="format"
+                                    name="format"
+                                    chosen
+                                    required
+                                    ng-required="true"
+                                    ng-model="sections.format"
+                                    class="form-control ng-class:{'error': sections.showSectionFormErrors && !sections.sectionsForm.format.$valid}"
+                                    size="1"
+                                    ng-options="obj.id as obj.format for obj in sections.formats"></select>
+                            <div role="alert" class="help-inline error">
+                                <span class="error has-error" ng-show="sections.showSectionFormErrors && sections.sectionsForm.format.$error.required">Select the Time Zone please</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="roomNumber" style="padding-left: 40px">Room Number</label>
+                        <div class="col-md-8">
+                            <select id="roomNumber"
+                                    name="roomNumber"
+                                    chosen
+                                    required
+                                    ng-required="true"
+                                    ng-model="sections.roomNumber"
+                                    class="form-control ng-class:{'error': sections.showSectionFormErrors && !sections.sectionsForm.roomNumber.$valid}"
+                                    size="1"
+                                    ng-options="obj.id as obj.room for obj in sections.roomNumbers"></select>
+                            <div role="alert" class="help-inline error">
+                                <span class="error has-error" ng-show="sections.showSectionFormErrors && sections.sectionsForm.roomNumber.$error.required">Select the Time Zone please</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="campusLocation">Campus</label>
+                        <div class="col-md-8">
+                            <select id="campusLocation"
+                                    name="campusLocation"
+                                    required
+                                    ng-required="true"
+                                    class="form-control ng-class:{'error': sections.showSectionFormErrors && !sections.sectionsForm.campusLocation.$valid}"
+                                    size="1"
+                                    ng-model="sections.campuses.name"
+                                    ng-options="obj.id as obj.name for obj in sections.campuses"></select>
+                            <div role="alert" class="help-inline error">
+                                <span class="error has-error" ng-show="sections.showSectionFormErrors && sections.sectionsForm.campusLocation.$error.required">Select the Time Zone please</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <div class="form-group" readonly=true>
+                        <label class="col-md-4 control-label" for="currentInput">Current Enrollment</label>
+                        <div class="container col-md-6">
+                            <h-number value="sections.currentInput.initialNum"
+                                      ng-readonly="sections.checked"
+                                      name="currentInput"
+                                      class="numPick"
+                                      ng-model="sections.currentInput.initialNum"
+                                      singular="fellow"
+                                      plural="fellows"
+                                      min=" 0"
+                                      max="10"
+                                      step="1"
+                                      change="sections.numChange()"></h-number>
+                            <input class="hidden form-control" name="currentInput" id="currentInput" value={{sections.currentInput.initialNum}} />
+                            <div ng-show="sectionsForm.currentInput.$invalid && sectionsForm.currentInput.$touched">
+                                <p>Please Enter Current Enrollees.</p>
+                            </div>
+                            <div ng-show="sections.invalidNumber">
+                                <p class="has-error"> Current enrollees should not exceed capacity </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="capacity">Class Capacity</label>
+                        <div class="container col-md-6">
+                            <h-number value="sections.capacityInput.initialNum"
+                                      class="numPick"
+                                      name="capacity"
+                                      ng-model="sections.capacityInput.initialNum"
+                                      singular="fellow"
+                                      plural="fellows"
+                                      min="1"
+                                      max="10"
+                                      step="1"
+                                      change="sections.numChange()"></h-number>
+                            <input class="hidden form-control" name="capacity" id="secCapacity" value={{sections.capacityInput.initialNum}} />
+                            <div ng-show="sections.invalidNumber">
+                                <p class="has-error"> Capacity Should be More than the Current Enrollees</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="status">Enrollment Status</label>
+                        <div class="col-md-8">
+                            <select id="status"
+                                    name="status"
+                                    chosen
+                                    required
+                                    ng-required="true"
+                                    ng-model="sections.status"
+                                    class="form-control ng-class:{'error': sections.showSectionFormErrors && !sections.sectionsForm.status.$valid}"
+                                    size="1"
+                                    style="width: 73%"
+                                    ng-options="obj.id as obj.status for obj in sections.eStatus"></select>
+                            <div role="alert" class="help-inline error">
+                                <span class="error has-error" ng-show="sections.showSectionFormErrors && sections.sectionsForm.status.$error.required">Please Select The Status for This Section</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-10 col-md-offset-1">
+                    <input type="submit"
+                           id="submitForm"
+                           class="btn btn-sm btn-primary"
+                           ng-show="sections.addSection"
+                           value="Submit Form" />
+                    <input type="submit"
+                           id="updateSection"
+                           class="btn btn-sm btn-primary"
+                           value="Update Section"
+                           ng-click="sections.submitMyData"
+                           ng-show="sections.editSections" />
+                    <button type="button"
+                            id="resetForm"
+                            class="btn btn-sm btn-warning"
+                            ng-click="sections.resetSectionsForm($event)">
+                        <i class="fa fa-repeat"></i> Reset Form
+                    </button>
+                    <input type="button"
+                           id="deleteSection"
+                           class="btn btn-sm btn-primary"
+                           value="Delete"
+                           ng-click="sections.deleteSection()"
+                           ng-show="sections.editSections" />
+                    <input type="button"
+                           id="registerUser"
+                           class="btn btn-sm btn-success"
+                           value="Register"
+                           ng-show="sections.register"
+                           ng-click="sections.submitRegistration()"
+                           />
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@section pageInitScripts
+{
+
+}
+
+@section Scripts
+    {
+
+    <script src="~/js/helpers/ckeditor/ckeditor.js"></script>
+    <script src="~/Scripts/ng/angular-ckeditor.js"></script>
+    <script src="~/Scripts/ng/angular-ckeditor-placeholder.js"></script>
+    <script src="~/Scripts/sabio.services.sections.js"></script>
+    <script src="~/Scripts/ng/isteven-multi-select.js"></script>
+    <script src="~/Scripts/ng/angular-messages.js"></script>
+    <script src="~/Scripts/ng/angular-chosen.js"></script>
+    <script src="~/Scripts/ng/angular-enum-flag-directive.js"></script>
+    <script src="~/Scripts/ng/angular-number-picker.min.js"></script>
+    <script src="~/Scripts/ng/angular-timepicker.js"></script>
+    <script src="~/Scripts/ng/angular-ui-bootstrap-0.14.2.js"></script>
+    <script src="~/Scripts/ui-bootstrap-tpls-0.14.2.min.js"></script>
+    <script src="~/Scripts/toastr.min.js"></script>>
+
+    <script type="text/javascript">
+
+        sabio.page.startUp = function () {
+
+            sabio.page.sectionsController = sabio.ng.getControllerInstance($("#sectionsCtrler"));
+        }
+
+        sabio.services.sectionsFactory = function ($baseService) {
+            var aSabioServiceObject = sabio.services.sections;
+            var newService = $baseService.merge(true, {}, aSabioServiceObject, $baseService);
+            return newService;
+        }
+
+        sabio.page.SectionsControllerFactory = function ($scope, $baseController, $log, daysEnum, $sectionsService) {
+
+            var vm = this;
+
+            $baseController.merge(vm, $baseController, $log, daysEnum);
+
+            vm.$sectionsService = $sectionsService;
+            vm.$scope = $scope;
+
+            vm.setupSettings = _setupSettings;
+            vm.toggleMeridian= _toggleMeridian;
+            vm.minimumDate = _minimumDate;
+            vm.submitMyData = _submitMyData;
+            vm.submitRegistration = _submitRegistration;
+            vm.timeChange = _timeChange;
+            vm.numChange = _numChange;
+            vm.resetSectionsForm = _resetSectionsForm;
+            vm.receiveCampuses = _receiveCampuses;
+            vm.receiveCourses = _receiveCourses;
+            vm.receiveSection = _receiveSection;
+            vm.receiveInstructors = _receiveInstructors;
+            vm.onSecError = _onSecError;
+            vm.convertDate = _convertDate;
+            vm.openRegCalendar = _openRegCalendar;
+            vm.openCalendar = _openCalendar;
+            vm.openEndDateCalendar = _openEndDateCalendar;
+            vm.regDMaxDate = _regDMaxDate;
+            vm.minEDate = _minEDate;
+            vm.addSectionSuccess = _addSectionSuccess;
+            vm.updateSectionSuccess = _updateSectionSuccess;
+            vm.deleteSectionSuccess = _deleteSectionSuccess;
+            vm.registrationSuccess = _registrationSuccess;
+            vm.registrationError = _registrationError;
+            vm.onFormSubmit = _onFormSubmit;
+            vm.getInstructorId = _getInstructorId;
+            vm.deleteSection =_deleteSection;
+            vm.validateCheckboxes = _validateCheckboxes;
+
+            vm.notify = vm.$sectionsService.getNotifier($scope);
+
+            render();
+
+            function render() {
+
+                vm.setupSettings();
+                vm.minimumDate();
+
+                vm.$sectionsService.getCampuses(vm.receiveCampuses, vm.onSecError);
+                vm.$sectionsService.getCourses(vm.receiveCourses, vm.onSecError);
+
+                var id = @Model.Item;
+
+                if (id > 0) {
+
+                    vm.editSections = true;
+                    vm.register = true;
+                    vm.addSection = false;
+
+                    vm.$sectionsService.getSection(id, vm.receiveSection, vm.onSecError);
+
+                }else{
+                    vm.$sectionsService.getInstructors(vm.receiveInstructors, vm.onSecError);
+                }
+            }
+
+            function _deleteSection (){
+                var id = @Model.Item;
+                vm.$sectionsService.deleteSection(id, vm.deleteSectionSuccess, vm.onSecError);
+            }
+
+            //AJAX Success for my getCampuses Ajax Call
+            function _receiveCampuses(data) {
+                vm.notify(function () {
+                    vm.campuses = data.items;
+                });
+            };
+
+            //AJAX success for getCourses
+            function _receiveCourses(data) {
+                vm.notify(function () {
+                    vm.courses = data.items;
+                });
+            };
+
+            //AJAX success for getInstructors
+            function _receiveInstructors(data) {
+
+                var id = @Model.Item;
+
+                vm.notify(function () {
+
+                    //id from instructors databse
+                    vm.allInstructors = data.items;
+
+                    for (var x = 0; x < vm.allInstructors.length; x++) {
+                        var currentInstructor = vm.allInstructors[x];
+                        currentInstructor.ticked = false;
+                    }
+
+                    if(id <= 0 ){
+                        return;
+                    }
+                    for (var x = 0; x < vm.allInstructors.length; x++) {
+                        var thisInstructor = vm.allInstructors[x];
+
+                        for ( var i = 0; i < vm.selectedSection.instructors.length; i++) {
+                            if (thisInstructor.id === vm.selectedSection.instructors[i].instructorId ){
+                                thisInstructor.ticked=true;
+                            }
+                        }
+                    }
+                });
+            }
+
+            function _receiveSection(data) {
+
+                vm.notify(function () {
+                    vm.$sectionsService.getInstructors(vm.receiveInstructors, vm.onSecError);
+
+                    vm.selectedSection = data.item;
+
+                    console.log(data.item);
+
+                    vm.courses.name =  vm.selectedSection.courseId;
+                    vm.chosenDays =  vm.selectedSection.daysOfWeek;
+                    vm.sectionDescription = vm.selectedSection.info;
+                    vm.dateToday = vm.convertDate(vm.selectedSection.startDate);
+                    vm.minEndDate = vm.convertDate(vm.selectedSection.endDate);
+                    vm.regMaxDate = vm.convertDate(vm.selectedSection.registrationDeadline);
+                    vm.campuses.name = vm.selectedSection.campusLocation;
+                    vm.timeZone = vm.selectedSection.timeZone;
+                    vm.status = vm.selectedSection.status;
+                    vm.format = vm.selectedSection.format;
+                    vm.roomNumber = vm.selectedSection.roomNumber;
+                    vm.startTime = vm.selectedSection.startTime;
+                    vm.endTime = vm.selectedSection.endTime;
+
+                    vm.capacityInput = {
+                        initialNum: vm.selectedSection.capacity
+                    };
+
+                    vm.currentInput = {
+                        initialNum: vm.selectedSection.currentEnrollment
+                    };
+
+                });
+            }
+
+            function _submitMyData() {
+
+                vm.getInstructorId();
+
+                var myFormData = new Object();
+
+                myFormData.CourseId = vm.courses.name;
+                myFormData.StartDate = angular.element("#startOfClass").val();
+                myFormData.EndDate = angular.element("#endOfClass").val();
+                myFormData.RegistrationDeadline = angular.element("#regDeadline").val();
+                myFormData.DaysOfWeek = vm.chosenDays;
+                myFormData.StartTime = angular.element("#secStarTime").val();
+                myFormData.EndTime = angular.element("#secEndTime").val();
+                myFormData.TimeZone = vm.timeZone;
+                myFormData.Info = vm.sectionDescription;
+                myFormData.Format = vm.format;
+                myFormData.CampusLocation = vm.campuses.name;
+                myFormData.RoomNumber = vm.roomNumber;
+                myFormData.Capacity = vm.capacityInput.initialNum;
+                myFormData.CurrentEnrollment = vm.currentInput.initialNum;
+                myFormData.Status = vm.status;
+                myFormData.Instructors = vm.instructorId;
+
+                var id = @Model.Item;
+
+                if(id==0){
+                    console.log("saving new record");
+                    vm.$sectionsService.addSection(myFormData, vm.addSectionSuccess, vm.onSecError);
+
+                }else{
+                    myFormData.Id = id;
+                    vm.$sectionsService.updateSection(id, myFormData, vm.updateSectionSuccess, vm.onSecError);
+                }
+            }
+
+            function _submitRegistration() {
+                var id = @Model.Item;
+                var sectionData = "sectionId="+id;
+
+                vm.$sectionsService.register(sectionData, vm.registrationSuccess, vm.registrationError);
+            }
+
+            function _registrationSuccess() {
+
+                var registrationSuccess = "You have successfully registered for this section...";
+                sabio.ui.notifications.success(registrationSuccess);
+                
+            }
+
+            function _registrationError() {
+
+                var registrationError = "You have already registered for this course...";
+                sabio.ui.notifications.error(registrationError);
+
+            }
+
+            //Number picker validation
+            function _numChange() {
+                if (vm.currentInput.initialNum > vm.capacityInput.initialNum) {
+                    vm.notify(function () {
+                        vm.invalidNumber = true;
+                    });
+                } else {
+                    vm.notify(function () {
+                        vm.invalidNumber = false;
+                    });
+                }
+            };
+
+            //Timepicker Validation
+            function _timeChange() {
+                if (vm.endTime <= vm.startTime) {
+                    vm.invalidTime = true;
+                } else {
+                    vm.invalidTime = false;
+                }
+            };
+
+            function _toggleMeridian() {
+                vm.meridian = !vm.meridian;
+            };
+
+            //Date picker
+
+            function _minimumDate() {
+                vm.minDate = vm.minDate ? null : new Date();
+            };
+
+            function _openCalendar($event) {
+                vm.dateToday = new Date();
+                vm.maxDate = new Date(2020, 5, 22);
+                vm.startStatus.opened = true;
+            };
+
+            function _openEndDateCalendar($event) {
+                vm.endStatus.opened = true;
+                var startDate = angular.element("#startOfClass").val();
+                vm.minEndDate = vm.minEDate(startDate);
+            };
+
+            function _minEDate(date) {
+
+                var pattern = /(\d{4})(\d{2})(\d{2})/;
+                vm.date = new Date(date.replace(pattern, '$1-$2-$3'));
+
+                return new Date(
+                    vm.date.getFullYear(),
+                    vm.date.getMonth(),
+                    vm.date.getDate()
+                );
+            }
+
+            function _openRegCalendar($event) {
+                vm.regStatus.opened = true;
+                var regMax = angular.element("#startOfClass").val();
+                var days = 14;
+                vm.regMaxDate = vm.regDMaxDate(regMax, days);
+            };
+
+            function _regDMaxDate(date, days) {
+                var pattern = /(\d{4})(\d{2})(\d{2})/;
+                vm.date = new Date(date.replace(pattern, '$1-$2-$3'));
+
+                return new Date(
+                    vm.date.getFullYear(),
+                    vm.date.getMonth(),
+                    vm.date.getDate() - days
+                );
+            }
+
+            function _convertDate(date) {
+                var pattern = /(\d{4})(\d{2})(\d{2})/;
+                vm.date = new Date(date.replace(pattern, '$1-$2-$3'));
+
+                return new Date(
+                    vm.date.getFullYear(),
+                    vm.date.getMonth(),
+                    vm.date.getDate()
+                );
+            }
+
+            function _setupSettings() {
+
+                vm.daysEnum = daysEnum;
+                vm.chosenDays = 0;
+                vm.showSectionFormErrors = false;
+                vm.readOnlyCurrentEnrollees = true;
+                vm.editSections = false;
+                vm.register = false;
+                vm.addSection = true;
+                vm.meridian = true;
+                vm.regMax = null;
+                vm.courses = null;
+                vm.instructors = null;
+                vm.campuses = null;
+                vm.instructorList = [];
+                vm.chosenInstructors = [];
+                vm.instructorId = [];
+                vm.minEndDate = null;
+                vm.regMaxDate = null;
+                vm.timePickerHourStep = 1;
+                vm.timePickerMinuteStep = 1;
+                vm.startTime = new Date();
+                vm.endTime = new Date();
+                vm.showMeridian = true;
+                vm.timeZones = [{id:1, tZone:'Atlantic Standard Time (AST)'}, {id:2,tZone:'Eastern Standard Time (EST)'},{id:3, tZone:'Central Standard Time (CST)'},{id:4,tZone:'Mountain Standard Time (MST)'}, {id:5,tZone:'Pacific Standard Time (PST)'}, {id:6,tZone:'Alaskan Standard Time (AKST)'}, {id:7,tZone:'Hawaii-Aleutian Standard Time (HST)'}, {id:8,tZone:'Samoa Standard Time (UTC-11)'}, {id:9,tZone:'Chamorro Standard Time (UTC+10)'}];
+                vm.eStatus = [{id:1,status:'Open'}, {id:2,status:'Closed'}];
+                vm.roomNumbers = [{id:1,room:'1010B'}, {id:2,room:'1020B'}, {id:3,room:'1030B'}, {id:4,room:'1040B'}, {id:5,room:'1050B'}];
+                vm.formats = [{id:1,format:'In-person Training'}, {id:2,format:'Online Training'}];
+
+                //Number picker settings
+                vm.currentInput = {
+                    initialNum: 6
+                };
+                vm.capacityInput = {
+                    initialNum: 6
+                };
+
+                vm.ckeditorOptions = {
+                    language: 'en',
+                    allowedContent: true,
+                    entities: false
+                };
+
+                vm.setDate = function (year, month, day) {
+                    vm.dateToday = new Date(year, month, day);
+                };
+
+                vm.dateOptions = {
+                    formatYear: 'yy',
+                    startingDay: 1
+                };
+
+                vm.dateFormats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+                vm.dateFormat = vm.dateFormats[3];
+                vm.startStatus = {
+                    opened: false
+                };
+
+                vm.endStatus = {
+                    opened: false
+                };
+
+                vm.regStatus = {
+                    opened: false
+                };
+            }
+
+            function _getInstructorId() {
+                vm.instructorId =[];
+                var instructor = vm.chosenInstructors;
+                for (var x = 0; x < instructor.length; x++) {
+                    vm.instructorId.push(instructor[x].id);
+                }
+            }
+
+            function _onFormSubmit() {
+
+                vm.showSectionFormErrors = true;
+
+                vm.validateCheckboxes();
+
+                if (vm.sectionsForm.$valid) {
+
+                    console.log("form section is valid");
+
+                    vm.submitMyData();
+                }
+            };
+
+            function _addSectionSuccess(data) {
+                console.log("add section is successful!");
+                console.log(data);
+            }
+
+            function  _updateSectionSuccess(data) {
+                console.log("update section is successful!");
+                console.log(data);
+            }
+
+            function  _deleteSectionSuccess(data) {
+                console.log("section delete is successful!");
+                console.log(data);
+            }
+
+            function _onSecError(jqXhr, error) {
+                console.log(error);
+            }
+
+            function _resetSectionsForm($event) {
+
+                $event.stopPropagation();
+
+                vm.courses.name = undefined;
+                vm.timeZone = undefined;
+                vm.format = undefined;
+                vm.status = undefined;
+                vm.roomNumber = undefined;
+                vm.sectionDescription = undefined;
+                vm.campuses.name = undefined;
+                vm.minEndDate = null;
+                vm.regMaxDate = null;
+                vm.dateToday = null;
+                vm.chosenDays = 0;
+
+                vm.sectionsForm.$setUntouched();
+                vm.sectionsForm.$setPristine();
+
+                for (var x = 0; x < vm.allInstructors.length; x++) {
+                    var currentInstructor = vm.allInstructors[x];
+                    currentInstructor.ticked = false;
+                }
+
+                vm.showSectionFormErrors = false;
+            }
+
+            function _validateCheckboxes(){
+
+                if(vm.chosenDays == 0){
+                    vm.invalidCheckBoxes = true;
+                }else{
+                    vm.invalidCheckBoxes = false;
+                }
+            }
+        }
+
+        sabio.ng.app.module.factory('daysEnum', [
+            function () {
+                return Object.freeze({
+                    SUNDAY: 1,
+                    MONDAY: 2,
+                    TUESDAY: 4,
+                    WEDNESDAY: 8,
+                    THURSDAY: 16,
+                    FRIDAY: 32,
+                    SATURDAY: 64
+                });
+            }
+        ]);
+
+        sabio.ui.notifications.success = function (data) {
+            toastr.options = {
+                "closeButton": true,
+                "debug": true,
+                "newestOnTop": true,
+                "progressBar": false,
+                "positionClass": "toast-top-center",
+                "preventDuplicates": true,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "0",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+            toastr.success(data);
+        }
+
+        sabio.ui.notifications.error = function (data) {
+            toastr.options = {
+                "closeButton": true,
+                "debug": true,
+                "newestOnTop": true,
+                "progressBar": true,
+                "positionClass": "toast-top-center",
+                "preventDuplicates": true,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "0",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+            toastr.error(data);
+        }
+
+        sabio.ng.addService(sabio.ng.app.module
+           , "$sectionsService"
+           , ["$baseService"]
+           , sabio.services.sectionsFactory);
+
+        sabio.ng.addController(sabio.ng.app.module
+           , "SectionsController"
+           , ['$scope', '$baseController', '$log', 'daysEnum', '$sectionsService']
+           , sabio.page.SectionsControllerFactory);
+
+    </script>
+}
+
+

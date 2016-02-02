@@ -1,0 +1,29 @@
+﻿<div class="content-header">
+    <div class="header-section">
+        <h1>
+            <strong>Assign User Roles</strong>
+        </h1>
+    </div>
+</div>
+
+<ul class="breadcrumb breadcrumb-top">
+    <li><a href="#/">Back</a></li>
+</ul>
+<div class="row">
+    <div class="col-md-6 ">
+        <ul class="list-group">
+            <li class="list-group-item">{{roles.aspNetUser.email}}</li>
+            <li class="list-group-item">{{roles.aspNetUser.userName}}</li>
+        </ul>
+    </div>
+    <div class="col-md-4">
+        <ul class="list-group">
+            <li class="list-group-item" ng-repeat="(key, value) in roles.rolesList">
+                <input type="checkbox" class="pull-right"
+                       checklist-model="roles.chosen.Roles" checklist-value="value"
+                       ng-click="roles.CheckBoxClicked(value, checked)">
+                {{key}}
+            </li>
+        </ul>
+    </div>
+</div>

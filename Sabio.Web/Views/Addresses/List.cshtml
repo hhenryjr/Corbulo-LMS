@@ -1,0 +1,393 @@
+﻿@{
+    ViewBag.Title = "ListAddresses";
+    Layout = "~/Views/Shared/_dashboardLayout.cshtml";
+
+
+}
+
+
+<div class="row">
+    <div class="content-header block">
+        <div class="header-section">
+            <h2><strong>List of Addresses</strong></h2>
+            <p>
+                @Html.ActionLink("Create New Address", "Add")
+            </p>
+        </div>
+    </div>
+
+</div>
+
+
+@section Scripts {
+    <script src="~/Scripts/sabio.services.address.js"></script>
+    <script type="text/javascript">
+
+        sabio.page.startUp = function () {
+            console.log("start");
+
+            sabio.page.loadAddresses();
+
+            //sabio.page.wireUpAnchor(document);
+            sabio.page.wireUpDelete(document);
+            sabio.page.wireUpEdit(document);
+        }
+
+
+
+        //sabio.page.wireUpAnchor = function (context) {
+        //}
+
+        sabio.page.wireUpDelete = function (context) {
+
+            $(context).on("click", ".delete", sabio.page.handlers.onDelete);
+        }
+
+        sabio.page.wireUpEdit = function (context) {
+
+            $(context).on("click", ".edit", sabio.page.handlers.onEdit);
+        }
+
+        sabio.page.handlers.onEdit = function () {
+
+
+            var hiddenEdit = $(this).closest(".widget-simple").find(".addressId");
+            var editId = hiddenEdit.val();
+
+            window.location.href = "http://lms.dev/Addresses/" + editId    //after the edit click it will go to update page + id number
+        }
+
+        sabio.page.handlers.onDelete = function (context) {
+            sabio.page.deleteTarget = this;
+            var hiddenInput = $(sabio.page.deleteTarget).closest(".widget-simple").find(".addressId");
+            var deleteId = hiddenInput.val();
+            console.log("delete");
+            var id = $(".addressId").val();
+
+            sabio.services.address.delete(deleteId, id, sabio.page.deleteItemSuccess, sabio.page.ajaxError);
+            sabio.page.removeDeletedRow(sabio.page.deleteTarget);
+
+        }
+
+        sabio.page.removeDeletedRow = function (target) {
+
+            $(target).closest(".widgetContainer").remove();
+        }
+
+        sabio.page.reload = function () {
+            location.reload();
+        }
+
+        sabio.page.ajaxError = function (jqXHR, textStatus, errorThrown) {
+
+            sabio.page.logToBottom(jqXHR.responseJSON);
+            $("msgWindow").show();
+            $("#msgWindow").addClass("alert-danger");
+            $("#msgWindow").removeClass("alert-info");
+        }
+
+        sabio.page.deleteItemSuccess = function (data, status, xhr) {
+
+            //console.log("deleting");
+            //sabio.page.deleteTarget = this;
+            //var hiddenInput = $(this).closest(".widget-simple").find(".addressId");
+            //hiddenInput.val();
+            //sabio.page.removeDeletedRow(this);
+
+            sabio.page.logToBottom(data);
+
+            $("#msgWindow").removeClass("alert-danger");
+            $("#msgWindow").addClass("alert-info");
+        }
+
+
+        //AJAX CALL
+        sabio.page.loadAddresses = function () {
+            console.log("load");
+
+            sabio.services.address.getList(sabio.page.getAddressSuccess, sabio.page.ajaxError);
+
+        }
+        
+        //AJAX SUCCESS
+        sabio.page.getAddressSuccess = function (data) {
+            //console.log("Ajax Success");
+            console.log(data);
+            if (!data) {
+
+                return;
+            }
+
+            for (var i = 0; i < data.items.length; i++) {
+
+                var addressData = {};
+
+                addressData.id = data.items[i].id;
+                addressData.Line1 = data.items[i].line1;
+                addressData.Line2 = data.items[i].line2;
+                addressData.City = data.items[i].city;
+                addressData.StateId = data.items[i].stateId;
+                addressData.ZipCode = data.items[i].zipCode;
+
+                sabio.page.addAddressToDom(addressData);
+
+            }
+        }
+
+        sabio.page.addAddressToDom = function (addressData) {
+            //console.log("Add to DOM");
+
+            var newAddress = sabio.page.getClone();
+            var theStateId = sabio.page.getStateId(addressData);
+            var mapUrl = "https://maps.googleapis.com/maps/api/staticmap?center=" +
+                addressData.Line1.replace(" ", "+") + "," +
+                //addressData.Line2.replace(" ", "+") + ","+
+                addressData.City.replace(" ", "+") + "," +
+                //addressData.StateId.replace(" ", "+") + ","+
+                addressData.ZipCode.replace(" ", "+") + "," +
+
+                //"Line1 + Line2 + City + StateId + ZipCode"
+                 "&&zoom=15&size=300x200&markers=color:red%7Clabel:A%7C" +
+                addressData.Line1.replace(" ", "+") + "," +
+                //addressData.Line2.replace(" ", "+") + "," +
+                addressData.City.replace(" ", "+") + "," +
+                //addressData.StateId.replace(" ", "+") + "," +
+               addressData.ZipCode.replace(" ", "+") + "," +
+            //"Line1 + Line2 + City + StateId + ZipCode"
+                "&maptype=roadmap18&sensor=false";
+
+
+            newAddress.find(".addressId").val(addressData.id);
+            newAddress.find(".googleMap").attr("src", mapUrl);
+            newAddress.find(".Line1").html(addressData.Line1);  //find is a builtin function from jquery
+            newAddress.find(".Line2").html(addressData.Line2);
+            newAddress.find(".City").html(addressData.City);
+            newAddress.find(".StateId").html("CA");
+            newAddress.find(".ZipCode").html(addressData.ZipCode);
+
+
+            var addressTarget = $(".content-header");
+
+            newAddress.val(".addressId", addressData.id)
+
+            addressTarget.append(newAddress);
+
+            //sabio.page.wireUpWidgets(newTrack, minions);
+
+            return newAddress;
+
+        }
+
+        sabio.page.getClone = function () {
+            //console.log("Cloned");
+
+            return $($("#addressTemplate").html()).clone();
+        }
+
+        sabio.page.getStateId = function (addressData) {
+            //console.log("Get States");
+
+            var theStateId;
+            switch (addressData.stateId) {
+                case 1:
+                    theStateId = "Alabama";
+                    break;
+                case 2:
+                    theStateId = "Alaska";
+                    break;
+                case 3:
+                    theStateId = "Arizona";
+                    break;
+                case 4:
+                    theStateId = "Arkansas";
+                    break;
+                case 5:
+                    theStateId = "California";
+                    break;
+                case 6:
+                    theStateId = "Colorado";
+                    break;
+                case 7:
+                    theStateId = "Connecticut";
+                    break;
+                case 8:
+                    theStateId = "Delaware";
+                    break;
+                case 9:
+                    theStateId = "District of Columbia";
+                    break;
+                case 10:
+                    theStateId = "Florida";
+                    break;
+                case 11:
+                    theStateId = "Georgia";
+                    break;
+                case 12:
+                    theStateId = "Hawaii";
+                    break;
+                case 13:
+                    theStateId = "Idaho";
+                    break;
+                case 14:
+                    theStateId = "Illinois";
+                    break;
+                case 15:
+                    theStateId = "Indiana";
+                    break;
+                case 16:
+                    theStateId = "Iowa";
+                    break;
+                case 17:
+                    theStateId = "Kansas";
+                    break;
+                case 18:
+                    theStateId = "Kentucky";
+                    break;
+                case 19:
+                    theStateId = "Louisiana";
+                    break;
+                case 20:
+                    theStateId = "Maine";
+                    break;
+                case 21:
+                    theStateId = "Maryland";
+                    break;
+                case 22:
+                    theStateId = "Massachusetts";
+                    break;
+                case 23:
+                    theStateId = "Michigan";
+                    break;
+                case 24:
+                    theStateId = "Minnesota";
+                    break;
+                case 25:
+                    theStateId = "Mississippi";
+                    break;
+                case 26:
+                    theStateId = "Missouri";
+                    break;
+                case 27:
+                    theStateId = "Montana";
+                    break;
+                case 28:
+                    theStateId = "Nebraska";
+                    break;
+                case 29:
+                    theStateId = "Nevada";
+                    break;
+                case 30:
+                    theStateId = "New Hampshire";
+                    break;
+                case 31:
+                    theStateId = "New Jersey";
+                    break;
+                case 32:
+                    theStateId = "New Mexico";
+                    break;
+                case 33:
+                    theStateId = "New York";
+                    break;
+                case 34:
+                    theStateId = "North Carolina";
+                    break;
+                case 35:
+                    theStateId = "North Dakota";
+                    break;
+                case 36:
+                    theStateId = "Ohio";
+                    break;
+                case 37:
+                    theStateId = "Oklahoma";
+                    break;
+                case 38:
+                    theStateId = "Oregon";
+                    break;
+                case 39:
+                    theStateId = "Pennsylvania";
+                    break;
+                case 40:
+                    theStateId = "Rhode Island";
+                    break;
+                case 41:
+                    theStateId = "South Carolina";
+                    break;
+                case 42:
+                    theStateId = "South Dakota";
+                    break;
+                case 43:
+                    theStateId = "Tennessee";
+                    break;
+                case 44:
+                    theStateId = "Texas";
+                    break;
+                case 45:
+                    theStateId = "Utah";
+                    break;
+                case 46:
+                    theStateId = "Vermont";
+                    break;
+                case 47:
+                    theStateId = "Virginia";
+                    break;
+                case 48:
+                    theStateId = "Washington";
+                    break;
+                case 49:
+                    theStateId = "West Virginia";
+                    break;
+                case 50:
+                    theStateId = "Wisconsin";
+                    break;
+                case 51:
+                    theStateId = "Wyoming";
+                    break;
+            }
+            return theStateId;
+        }
+
+        //AJAX ERROR
+        sabio.page.logToBottom = function (data) {
+            $("#msgWindow").html((JSON.stringify(data)));
+        }
+
+
+
+
+    </script>
+
+
+    <script type="text/template" id="addressTemplate">
+
+
+
+        <div class="col-lg-4 col-lg-offset-1 widgetContainer">
+            <div class="widget-simple">
+                <input type="hidden" class="addressId" name="addressId" value=" ">
+                <img class="pull-right googleMap" />
+                @*<img src="https://maps.googleapis.com/maps/api/staticmap?center=Line1 + Line2 + City + StateId + ZipCode&&zoom=15&size=300x200&markers=color:red%7Clabel:A%7CLine1 + Line2 + City + StateId + ZipCode&maptype=roadmap18&sensor=false" class="googleMap" />*@
+
+                <h4><strong>Address</strong></h4>
+                <address>
+                    <div class="Line1"></div>
+                    <div class="Line2"></div>
+                    <div class="City"></div>
+                    <div class="StateId"></div>
+                    <div class="ZipCode"></div>
+                </address>
+                <p>
+                    <a href="javascript:void(0)" data-toggle="tooltip" title="Edit" class="btn-xs btn-default edit"><i class="fa fa-pencil"></i></a>
+                    <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" class=" btn-xs btn-danger delete"><i class="fa fa-times"></i></a>
+                </p>
+
+                @*<img src="https://maps.googleapis.com/maps/api/staticmap?center=101+South+7th+St.,Apt.+B,Burbank,CA,91501&&zoom=15&size=350x200&markers=color:red%7Clabel:A%7C101+South+7th+St.,Apt.+B,Burbank,CA,91501&maptype=roadmap18&sensor=false" class="pull-right" />*@
+                @*<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3308.154761275639!2d-118.3845389!3d33.988558399999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2b756e355e529%3A0x1ff3011b869271b0!2s400+Corporate+Pointe%2C+Culver+City%2C+CA+90230!5e0!3m2!1sen!2sus!4v1444085920234" width="350" height="200" frameborder="0" style="border:0" allowfullscreen> </iframe>*@
+
+            </div>
+        </div>
+
+    </script>
+
+}
+
+

@@ -1,0 +1,60 @@
+﻿
+<div class="row">
+    <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+        <h3 class="sub-header">Comments</h3>
+        <div class="block block-alt-noborder" ng-repeat="node in main.comments ">
+            <div class="media-list">
+                <div class="media">
+                    <a class="pull-left">
+                        <img ng-src="Https://sabio-training.s3-us-west-2.amazonaws.com/C11/{{node.avatarPhotoUrl}}" alt="Avatar" class="img-circle" width="64" height="64" />
+                    </a>
+                    <div class="media-body">
+                        <p class="pull-right"><span class="text-muted">{{node.firstName}} {{node.lastName}}</span> {{node.dateAdded | date:'shortDate'}}</p>
+                        <h4><strong>{{node.title}}</strong></h4>
+                        <p>{{node.body}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-sm btn-primary pull-right" id="modal-comment-reply.html" ng-click="main.open()"><i class="fa fa-pencil"> Add Comment</i></button>
+    </div>
+</div>
+
+
+<script type="text/ng-template" id="modal-comment-reply.html">
+    <div class="modal-dialog" role="document">
+        <div class="modal-body">
+            <form method="post" id="reviewForm" novalidate name="reviewForm">
+                <div class="form-group">
+                    <label for="formTitle">Title</label>
+                    <input type="text" class="form-control data-ng-class:{'error': modal.showErrors && !modal.reviewForm.title.$valid}"
+                           id="formTitle" ng-model="modal.comment.title"
+                           ng-required="true"
+                           ng-minlength="2" ng-maxlength="150" name="formTitle" placeholder="Title ..." required>
+                </div>
+                <div role="alert" class="help-inline error">
+                    <span class="error has-error" ng-show="modal.showErrors && !modal.reviewForm.title.$error.required"> Title filed required. MinLength 2 characters</span>
+                </div>
+                <div class="form-group">
+                    <div>
+                        <label for="formBody">Message</label>
+                        <textarea id="formBody" class="form-control ng-class:{'error': modal.showErrors && !modal.reviewForm.body.$valid}"
+                                  ng-model="modal.comment.body" name="formBody" rows="5"
+                                  ng-minlength="10" ng-required="true"
+                                  placeholder="Enter Your Comment.." required></textarea>
+                    </div>
+                    <div role="alert" class="help-inline error">
+                        <span class="error has-error" ng-show="modal.showErrors && !modal.reviewForm.body.$error.required"> Message filed required. MinLength 10 characters</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <div class="pull-right">
+                <button class="btn btn-info" type="submit" ng-click="modal.addComment(modal.comment)">Post</button>
+                <button class="btn btn-default" data-dismiss="modal" type="button" ng-click="modal.cancel()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+</script>

@@ -1,0 +1,208 @@
+﻿@model Sabio.Web.Models.ViewModels.ItemViewModel<int>
+@{
+    ViewBag.Title = "CreateTestimonial";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+<div class="row">
+    <div class="col-md-6">
+        <!-- Basic Form Elements Block -->
+        <div class="block">
+            <!-- Basic Form Elements Title -->
+            <div class="block-title">
+                <h2><strong>Add a Testimonial</strong></h2>
+            </div>
+            <!-- END Form Elements Title -->
+            <!-- Basic Form Elements Content -->
+            <form action="page_forms_general.html" id="testimonial-form" method="post" enctype="multipart/form-data" class="form-horizontal form-bordered" onsubmit="return false;">
+                <div class="form-group">
+                    <label class="col-md-3 control-label" for="title">Title<span class="text-danger">*</span></label>
+                    <div class="col-md-9">
+                        <input type="text" id="title" name="title" class="form-control" placeholder="Text" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label" for="body">Testimonial<span class="text-danger">*</span></label>
+                    <div class="col-md-9">
+                        <textarea id="body" name="body" rows="9" class="form-control" placeholder="Content.." required></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label" for="starRating">Rating<span class="text-danger">*</span></label>
+                    <div class="col-md-9">
+                        <select id="starRating" name="starRating" class="form-control" size="5" multiple required>
+                            <option value="1">One Star</option>
+                            <option value="2">Two Stars</option>
+                            <option value="3">Three Stars</option>
+                            <option value="4">Four Stars</option>
+                            <option value="5">Five Stars</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group form-actions">
+                    <div class="col-md-9 col-md-offset-3">
+                        <button type="button" id="submit" class="btn btn-sm btn-primary"><i class="fa fa-angle-right"></i> Submit</button>
+                        <button type="button" id="delete" class="btn btn-sm btn-warning"><i class="fa fa-repeat"></i> Delete</button>
+                    </div>
+                </div>
+
+                <div>
+                    <input type="text" id="id" name="id" class="form-control hidden" value="@Model.Item">
+                </div>
+            </form>
+            <!-- END Basic Form Elements Content -->
+        </div>
+        <!-- END Basic Form Elements Block -->
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript" src="~/Scripts/moment.js"></script>
+    <script type="text/javascript" src="~/Scripts/Sabio.Services.Testimonials.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+    <script type="text/javascript">
+
+
+        sabio.page.startUp = function (){
+            sabio.page.validation();
+            sabio.page.checkForId();
+            $("#submit").on("click", sabio.page.handlers.validateAndSubmit);
+            $("#delete").on("click", sabio.page.handlers.deleteTestimonial);
+        }
+
+        sabio.page.validation = function () {
+            jQuery.validator.setDefaults({
+                //debug: true
+            });
+
+            //tags and the multiselect box both create elements when the page is loaded, these below select those new hidden elements
+            //and allow for validation to be applied to those elements.
+            $(".chosen-choices").addClass("form-control");
+            $(".tagsinput").addClass("form-control");
+
+            var validator = $("#testimonial-form").validate({
+                errorClass: 'help-block animation-slideDown', // You can change the animation class for a different entrance animation - check animations page
+                errorElement: 'div',
+                errorPlacement: function (error, e) {
+                    e.parents('.form-group > div').append(error);
+                },
+                highlight: function (e) {
+                    $(e).closest('.form-group').removeClass('has-success has-error').addClass('has-error');
+                    $(e).closest('.help-block').remove();
+                },
+                success: function (e) {
+                    // You can use the following if you would like to highlight with green color the input after successful validation!
+                    e.closest('.form-group').removeClass('has-success has-error'); // e.closest('.form-group').removeClass('has-success has-error').addClass('has-success');
+                    e.closest('.tagsinput').remove();
+                    e.closest('.tagsinput').removeClass("form-control");
+                },
+
+                rules: {
+                    title: {
+                        required: true,
+                        maxlength: 50
+                    },
+                    body: {
+                        required: true,
+                        maxlength: 5000,
+                    },
+
+                    starRating: {
+                        required: true,
+                    },
+                },
+                messages: {
+                    title: "A title is required",
+                    body: "You must include a testimonial",
+                    starRating: "Please rate",
+                },
+            });
+
+            var checkerrors = function () {
+                validator.form();
+            };
+
+        };
+
+        sabio.page.checkForId = function () {
+            var id = $("#id").val();
+            if (id > 0) {
+                sabio.page.getTestimonial();
+            }
+        };
+
+        sabio.page.getTestimonial = function () {
+            var id = $("#id").val();
+            sabio.services.testimonials.Get(id, sabio.page.getSuccess, sabio.page.ajaxError);
+        };
+        
+        sabio.page.getSuccess = function (data) {
+            console.log(data.item);
+            $("#title").val(data.item.title);
+            $("#body").val(data.item.body);
+            $("#starRating").val(data.item.starRating);
+            $("#starRating").trigger("change");
+        };
+
+        sabio.page.handlers.validateAndSubmit = function () {
+            if ($("#testimonial-form").valid()) {
+                sabio.page.postOrPut();
+            }
+            else {
+                console.log("invalid fields on the form");
+            }
+        };
+
+        sabio.page.postOrPut = function () {
+            var id = $("#id").val();
+            var myData = $("#testimonial-form").serialize();
+            if (id === "0") {
+                sabio.services.testimonials.Post(myData, sabio.page.addSuccess, sabio.page.ajaxError);
+            }
+            else {
+                sabio.services.testimonials.Update(id, myData, sabio.page.updateSuccess, sabio.page.ajaxError);
+            }
+        };
+
+        sabio.page.addSuccess = function (data, status, xhr) {
+            console.log(JSON.stringify(data));
+            var idCheck = $("#id").val();
+            if (idCheck === "0") {
+                sabio.page.insertHiddenId(data);
+            }
+            location.href = 'http://lms.dev/testimonial/list';
+        };
+
+        sabio.page.insertHiddenId = function (data) {
+            $("#id").val(data.item);
+        };
+
+        sabio.page.updateSuccess = function (data, status, xhr) {
+            sabio.page.logToBottom(data);
+            $("#msgWindow").removeClass("alert-danger");
+            $("#msgWindow").addClass("alert-info");
+            location.href = 'http://lms.dev/testimonial/list';
+        };
+
+        sabio.page.handlers.deleteTestimonial = function () {
+            var id = $("#id").val();
+            sabio.services.testimonials.Delete(id, sabio.page.deleteSuccess, sabio.page.ajaxError);
+        };
+
+        sabio.page.deleteSuccess = function () {
+            console.log("Deleting Testimonial #" + " " + id);
+            location.href = 'http://lms.dev/testimonial/list';
+        };
+
+        sabio.page.ajaxError = function (jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR.responseJSON);
+            alert("Error, Item was not sent to the database.")
+        }
+
+        sabio.page.logToBottom = function (data) {
+            $("#msgWindow").html((JSON.stringify(data)));
+        }
+
+    </script>
+}
+

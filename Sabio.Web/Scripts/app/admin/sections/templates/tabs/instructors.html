@@ -1,0 +1,54 @@
+﻿<div class="instrutorsDnD row">
+    <div class="row">
+        <div class="col-lg-4 col-lg-offset-1">
+
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Section Instructor/s</h3>
+                </div>
+                <ul dnd-list="admin.instructors.lists.Chosen"
+                    dnd-dragover="admin.onInstructorDragover(event, index, external, 'Chosen')"
+                    dnd-drop="admin.onInstructorDrop(event, index, item, external, 'Chosen')">
+
+                    <li ng-repeat="item in admin.instructors.lists.Chosen"
+                        dnd-draggable="item"
+                        dnd-moved="admin.instructors.lists.Chosen.splice($index, 1)"
+                        dnd-effect-allowed="move"
+                        dnd-selected="admin.instructors.lists.Chosen.selected = item"
+                        ng-class="{'selected': admin.instructors.lists.Chosen.selected === item}">
+                        {{item.name}}
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+
+        <div class="col-lg-4 col-lg-offset-1">
+
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Instructor Pool</h3>
+                </div>
+
+                <ul dnd-list="admin.instructors.lists.List_Of"
+                    dnd-dragover="admin.onInstructorDragover(event, index, external, 'Available')"
+                    dnd-drop="admin.onInstructorDrop(event, index, item, external, 'Available')">
+
+                    <li ng-repeat="item in admin.instructors.lists.List_Of"
+                        dnd-draggable="item"
+                        dnd-moved="admin.instructors.lists.List_Of.splice($index, 1)"
+                        dnd-effect-allowed="move"
+                        dnd-selected="admin.instructors.lists.List_Of.selected = item"
+                        ng-class="{'selected': admin.instructors.lists.List_Of === item}">
+                        {{item.name}}
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+

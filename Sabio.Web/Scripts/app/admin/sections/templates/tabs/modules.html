@@ -1,0 +1,58 @@
+﻿<div class="row" ng-cloak="">
+    <div class="col-md-8">
+
+        <uib-accordion close-others="true">
+            <uib-accordion-group ng-repeat="module in admin.sectionModules track by module.id" panel-class="panel-info">
+                <uib-accordion-heading>
+                    <h4 ng-click="admin.loadModulePages(module)">{{module.moduleName}} </h4>
+                </uib-accordion-heading>
+
+                <div class="col-md-12">
+                    <p>
+                        <a ng-href="#/manage/{{admin.$routeParams.sectionId}}/modules/{{module.id}}/wiki/create" class="btn btn-success">Add Wiki Page</a>
+                    </p>
+
+                    <p ng-if="!admin.wikiTree">No pages yet...</p>
+
+                    <div ui-tree="admin.wikiTreeOptions" id="tree-root">
+                        <ol ui-tree-nodes ng-model="admin.wikiTree">
+                            <li ng-repeat="node in admin.wikiTree" ui-tree-node ng-include="'/scripts/app/admin/wiki/templates/leaf.html'">
+                                {{node.nodes}}
+                            </li>
+                        </ol>
+                    </div>
+
+                </div>
+            </uib-accordion-group>
+        </uib-accordion>
+    </div>
+    <div class="col-sm-4">
+        <div class="block">
+            <div class="block-title">
+                <h2>Create <strong>Module</strong></h2>
+            </div>
+            <form method="post" class="form-bordered" name="admin.moduleForm" novalidate>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">Module Name</span>
+                        <input required type="text"
+                               class="form-control ng-class:{'error': admin.showModuleFormErrors && admin.moduleForm.moduleName.$error}"
+                               ng-model="admin.module.moduleName"
+                               name="moduleName">
+                        <span class="input-group-addon"><i class="gi gi-database_plus"></i></span>
+                    </div>
+
+                    <div role="alert" class="help-inline error">
+                        <span class="error" ng-show="admin.showModuleFormErrors && admin.moduleForm.moduleName.$error.required">Module Name is required</span>
+                    </div>
+                </div>
+                <div class="form-group form-actions">
+                    <button class="btn btn-sm btn-info" type="submit" ng-click="admin.createModule()"><i class="fa fa-power-off"></i> Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="form-group form-actions" style="width:100%; height:100%; text-align:center">
+        <button class=" btn btn-success" ng-click="admin.openModule(admin.section.id)"><i class="fa fa-copy"> Copy Module</i></button>
+    </div>
+</div>

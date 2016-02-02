@@ -1,0 +1,15 @@
+﻿<div class="row">
+    <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+        <h3 class="media-heading">Questions</h3>
+        <div class="block block-alt-noborder" ng-repeat="qa in dashboard.questions">
+            <div class="media-list">
+                <div class="media">
+                    <div class="media-body">
+                        <h5><strong>QA:  {{qa.question}}</strong></h5>
+                        <p>Ans:  {{qa.response}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
